@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Built-in captcha provider metadata",
   "author": "Finch",
-  "settings_page": "",
+  "settings_page": "/admin/extensions/plugin/settings?plugin=captcha-gd",
   "menu_location": "hidden",
   "preinstalled": true
 }

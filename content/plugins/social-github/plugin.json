@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Built-in social login provider for GitHub",
   "author": "Finch",
-  "settings_page": "",
+  "settings_page": "/admin/extensions/plugin/settings?plugin=social-github",
   "menu_location": "hidden",
   "preinstalled": true
 }

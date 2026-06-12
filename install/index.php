@@ -821,16 +821,20 @@ function fp_install_guess_site_url(): string
 function fp_install_render(array $state): void
 {
     $view = (string) $state['view'];
+    $step = (int) ($state['step'] ?? 1);
     $values = $state['values'];
     $errors = $state['errors'];
     $requirements = $state['requirements'];
+    $t = $state['t'];
+    $languages = fp_install_languages();
+    $currentLang = $values['lang'] ?? 'zh-cn';
 
     ?><!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="<?php echo fp_install_e($currentLang); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>安装 Finch PHP</title>
+    <title><?php echo fp_install_e($t['title']); ?></title>
     <style>
         :root { color-scheme: light; --border: #d8dee4; --muted: #57606a; --bg: #f6f8fa; --ok: #1a7f37; --bad: #cf222e; --brand: #0969da; }
         * { box-sizing: border-box; }
@@ -842,7 +846,8 @@ function fp_install_render(array $state): void
         p { color: var(--muted); line-height: 1.6; }
         .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
         label { display: block; font-weight: 600; margin-bottom: 6px; }
-        input, select { width: 100%; min-height: 40px; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font: inherit; }
+        input, select, textarea { width: 100%; min-height: 40px; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font: inherit; }
+        textarea { min-height: 200px; resize: vertical; }
         .full { grid-column: 1 / -1; }
         .hint { display: block; color: var(--muted); font-size: 13px; margin-top: 6px; }
         .checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; list-style: none; padding: 0; margin: 0; }
@@ -855,45 +860,69 @@ function fp_install_render(array $state): void
         button, .button { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; border: 0; border-radius: 6px; padding: 0 16px; background: var(--brand); color: #fff; font-weight: 700; text-decoration: none; cursor: pointer; }
         .button.secondary { background: #57606a; }
         .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+        .steps { display: flex; gap: 8px; margin-bottom: 24px; }
+        .step { flex: 1; padding: 12px; text-align: center; background: #e7ebf0; border-radius: 6px; font-weight: 600; color: var(--muted); }
+        .step.active { background: var(--brand); color: #fff; }
+        .step.done { background: var(--ok); color: #fff; }
+        .license-box { background: #f6f8fa; border: 1px solid var(--border); border-radius: 6px; padding: 16px; max-height: 300px; overflow-y: auto; margin-bottom: 16px; font-size: 14px; line-height: 1.6; }
+        .license-box ol { padding-left: 20px; }
+        .license-box li { margin-bottom: 8px; }
+        .lang-switch { text-align: right; margin-bottom: 16px; }
+        .lang-switch a { margin-left: 12px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: #24292f; }
+        .lang-switch a.active { background: var(--brand); color: #fff; border-color: var(--brand); }
         @media (max-width: 720px) { .grid, .checks { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 <main>
-    <section class="panel">
-        <h1>安装 Finch PHP</h1>
-        <p>安装向导会创建数据表、写入系统默认配置、创建内置角色和首个管理员，并生成站点根目录下的 config.php。</p>
-    </section>
+    <div class="lang-switch">
+        <?php foreach ($languages as $code => $name) : ?>
+            <a href="?step=<?php echo $step; ?>&lang=<?php echo $code; ?>" class="<?php echo $code === $currentLang ? 'active' : ''; ?>"><?php echo fp_install_e($name); ?></a>
+        <?php endforeach; ?>
+    </div>
+
+    <?php if ($view !== 'form') : ?>
+        <section class="panel">
+            <h1><?php echo fp_install_e($t['title']); ?></h1>
+        </section>
+    <?php else : ?>
+        <section class="panel">
+            <h1><?php echo fp_install_e($t['title']); ?></h1>
+            <div class="steps">
+                <div class="step <?php echo $step === 1 ? 'active' : ($step > 1 ? 'done' : ''); ?>"><?php echo fp_install_e($t['step']); ?> 1: <?php echo fp_install_e($t['step1_title']); ?></div>
+                <div class="step <?php echo $step === 2 ? 'active' : ($step > 2 ? 'done' : ''); ?>"><?php echo fp_install_e($t['step']); ?> 2: <?php echo fp_install_e($t['step2_title']); ?></div>
+                <div class="step <?php echo $step === 3 ? 'active' : ''; ?>"><?php echo fp_install_e($t['step']); ?> 3: <?php echo fp_install_e($t['step3_title']); ?></div>
+            </div>
+        </section>
+    <?php endif; ?>
 
     <?php if ($view === 'installed') : ?>
         <section class="panel">
-            <h2>系统已安装</h2>
-            <p>检测到当前站点已经完成安装。为避免覆盖现有数据，安装向导已停止。</p>
+            <h2><?php echo fp_install_e($t['installed_title']); ?></h2>
+            <p><?php echo fp_install_e($t['installed_desc']); ?></p>
             <div class="actions">
-                <a class="button" href="../admin">进入后台</a>
-                <a class="button secondary" href="../">访问首页</a>
+                <a class="button" href="../admin"><?php echo fp_install_e($t['enter_admin']); ?></a>
+                <a class="button secondary" href="../"><?php echo fp_install_e($t['visit_home']); ?></a>
             </div>
         </section>
     <?php elseif ($view === 'locked') : ?>
         <section class="panel">
-            <h2>检测到安装锁</h2>
-            <p>当前站点存在 storage/data/install.lock，但没有可用的已安装配置。若这是一次中断安装，请先备份数据，再手动删除安装锁后重新进入向导。</p>
+            <h2><?php echo fp_install_e($t['locked_title']); ?></h2>
+            <p><?php echo fp_install_e($t['locked_desc']); ?></p>
         </section>
     <?php elseif ($view === 'success') : ?>
         <section class="panel">
-            <h2>安装完成</h2>
-            <p>Finch PHP 已经完成初始化。已执行迁移 <?php echo count((array) ($state['applied'] ?? [])); ?> 个，config.php 已生成。</p>
+            <h2><?php echo fp_install_e($t['success_title']); ?></h2>
+            <p><?php echo sprintf(fp_install_e($t['success_desc']), count((array) ($state['applied'] ?? []))); ?></p>
             <div class="actions">
-                <a class="button" href="../admin/login">登录后台</a>
-                <a class="button secondary" href="../">访问首页</a>
+                <a class="button" href="../admin/login"><?php echo fp_install_e($t['login_admin']); ?></a>
+                <a class="button secondary" href="../"><?php echo fp_install_e($t['visit_home']); ?></a>
             </div>
         </section>
-    <?php else : ?>
-        <?php fp_install_render_requirements($requirements); ?>
-
+    <?php elseif ($step === 1) : ?>
         <?php if ($errors !== []) : ?>
             <section class="panel errors">
-                <h2>需要处理的问题</h2>
+                <h2><?php echo fp_install_e($t['errors_title']); ?></h2>
                 <ul>
                     <?php foreach ($errors as $error) : ?>
                         <li><?php echo fp_install_e($error); ?></li>
@@ -903,85 +932,159 @@ function fp_install_render(array $state): void
         <?php endif; ?>
 
         <form method="post" class="panel" autocomplete="off">
-            <h2>站点信息</h2>
+            <input type="hidden" name="step" value="1">
+            <input type="hidden" name="lang" value="<?php echo fp_install_e($currentLang); ?>">
+
+            <h2><?php echo fp_install_e($t['step1_title']); ?></h2>
+            <p><?php echo fp_install_e($t['step1_desc']); ?></p>
+
             <div class="grid">
-                <div>
-                    <label for="site_name">站点名称</label>
-                    <input id="site_name" name="site_name" value="<?php echo fp_install_e($values['site_name']); ?>" required>
-                </div>
-                <div>
-                    <label for="site_url">站点地址</label>
-                    <input id="site_url" name="site_url" value="<?php echo fp_install_e($values['site_url']); ?>" placeholder="https://example.com">
-                </div>
                 <div class="full">
-                    <label for="timezone">时区</label>
-                    <input id="timezone" name="timezone" value="<?php echo fp_install_e($values['timezone']); ?>" required>
-                    <span class="hint">例如 Asia/Shanghai、UTC、America/New_York。</span>
+                    <label for="lang"><?php echo fp_install_e($t['language']); ?></label>
+                    <select id="lang" name="lang" onchange="window.location.href='?step=1&lang='+this.value">
+                        <?php foreach ($languages as $code => $name) : ?>
+                            <option value="<?php echo fp_install_e($code); ?>" <?php echo $code === $currentLang ? 'selected' : ''; ?>><?php echo fp_install_e($name); ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
             </div>
 
-            <h2 style="margin-top:24px">数据库</h2>
+            <h2 style="margin-top:24px"><?php echo fp_install_e($t['license_title']); ?></h2>
+            <div class="license-box">
+                <?php echo $t['license_content']; ?>
+            </div>
+
+            <label style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" name="agree_license" value="1" style="width: auto;" <?php echo !empty($values['agree_license']) ? 'checked' : ''; ?>>
+                <?php echo fp_install_e($t['license_agree']); ?>
+            </label>
+
+            <div class="actions">
+                <button type="submit"><?php echo fp_install_e($t['next']); ?></button>
+            </div>
+        </form>
+    <?php elseif ($step === 2) : ?>
+        <?php fp_install_render_requirements($requirements, $t); ?>
+
+        <?php $hasErrors = fp_install_requirement_errors($requirements) !== []; ?>
+
+        <form method="post" class="panel" autocomplete="off">
+            <input type="hidden" name="step" value="2">
+            <input type="hidden" name="lang" value="<?php echo fp_install_e($currentLang); ?>">
+
+            <?php if ($hasErrors) : ?>
+                <p style="color: var(--bad); font-weight: 600;"><?php echo fp_install_e($t['check_blocked']); ?></p>
+            <?php else : ?>
+                <p style="color: var(--ok); font-weight: 600;"><?php echo fp_install_e($t['check_continue']); ?></p>
+            <?php endif; ?>
+
+            <div class="actions">
+                <a class="button secondary" href="?step=1&lang=<?php echo fp_install_e($currentLang); ?>"><?php echo fp_install_e($t['prev']); ?></a>
+                <?php if (!$hasErrors) : ?>
+                    <button type="submit"><?php echo fp_install_e($t['next']); ?></button>
+                <?php endif; ?>
+            </div>
+        </form>
+    <?php elseif ($step === 3) : ?>
+        <?php if ($errors !== []) : ?>
+            <section class="panel errors">
+                <h2><?php echo fp_install_e($t['errors_title']); ?></h2>
+                <ul>
+                    <?php foreach ($errors as $error) : ?>
+                        <li><?php echo fp_install_e($error); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </section>
+        <?php endif; ?>
+
+        <form method="post" class="panel" autocomplete="off">
+            <input type="hidden" name="step" value="3">
+            <input type="hidden" name="lang" value="<?php echo fp_install_e($currentLang); ?>">
+            <input type="hidden" name="agree_license" value="1">
+
+            <h2><?php echo fp_install_e($t['step3_title']); ?></h2>
+            <p><?php echo fp_install_e($t['step3_desc']); ?></p>
+
+            <h2 style="margin-top:24px"><?php echo fp_install_e($t['site_info']); ?></h2>
             <div class="grid">
                 <div>
-                    <label for="driver">数据库驱动</label>
+                    <label for="site_name"><?php echo fp_install_e($t['site_name']); ?></label>
+                    <input id="site_name" name="site_name" value="<?php echo fp_install_e($values['site_name']); ?>" required>
+                </div>
+                <div>
+                    <label for="site_url"><?php echo fp_install_e($t['site_url']); ?></label>
+                    <input id="site_url" name="site_url" value="<?php echo fp_install_e($values['site_url']); ?>" placeholder="https://example.com">
+                </div>
+                <div class="full">
+                    <label for="timezone"><?php echo fp_install_e($t['timezone']); ?></label>
+                    <input id="timezone" name="timezone" value="<?php echo fp_install_e($values['timezone']); ?>" required>
+                    <span class="hint"><?php echo fp_install_e($t['timezone_hint']); ?></span>
+                </div>
+            </div>
+
+            <h2 style="margin-top:24px"><?php echo fp_install_e($t['database']); ?></h2>
+            <div class="grid">
+                <div>
+                    <label for="driver"><?php echo fp_install_e($t['driver']); ?></label>
                     <select id="driver" name="driver">
                         <option value="sqlite" <?php echo $values['driver'] === 'sqlite' ? 'selected' : ''; ?>>SQLite</option>
                         <option value="mysql" <?php echo in_array($values['driver'], ['mysql', 'mariadb'], true) ? 'selected' : ''; ?>>MySQL / MariaDB</option>
                     </select>
                 </div>
                 <div>
-                    <label for="table_prefix">数据表前缀</label>
+                    <label for="table_prefix"><?php echo fp_install_e($t['table_prefix']); ?></label>
                     <input id="table_prefix" name="table_prefix" value="<?php echo fp_install_e($values['table_prefix']); ?>" required>
                 </div>
                 <div class="full">
-                    <label for="sqlite_database">SQLite 数据库路径</label>
+                    <label for="sqlite_database"><?php echo fp_install_e($t['sqlite_path']); ?></label>
                     <input id="sqlite_database" name="sqlite_database" value="<?php echo fp_install_e($values['sqlite_database']); ?>">
-                    <span class="hint">相对路径会基于站点根目录解析，默认写入 storage/data/finch.sqlite。</span>
+                    <span class="hint"><?php echo fp_install_e($t['sqlite_hint']); ?></span>
                 </div>
                 <div>
-                    <label for="mysql_host">MySQL 主机</label>
+                    <label for="mysql_host"><?php echo fp_install_e($t['mysql_host']); ?></label>
                     <input id="mysql_host" name="mysql_host" value="<?php echo fp_install_e($values['mysql_host']); ?>">
                 </div>
                 <div>
-                    <label for="mysql_port">MySQL 端口</label>
+                    <label for="mysql_port"><?php echo fp_install_e($t['mysql_port']); ?></label>
                     <input id="mysql_port" name="mysql_port" value="<?php echo fp_install_e($values['mysql_port']); ?>" inputmode="numeric">
                 </div>
                 <div>
-                    <label for="mysql_database">MySQL 数据库名</label>
+                    <label for="mysql_database"><?php echo fp_install_e($t['mysql_database']); ?></label>
                     <input id="mysql_database" name="mysql_database" value="<?php echo fp_install_e($values['mysql_database']); ?>">
                 </div>
                 <div>
-                    <label for="mysql_username">MySQL 用户名</label>
+                    <label for="mysql_username"><?php echo fp_install_e($t['mysql_username']); ?></label>
                     <input id="mysql_username" name="mysql_username" value="<?php echo fp_install_e($values['mysql_username']); ?>">
                 </div>
                 <div class="full">
-                    <label for="mysql_password">MySQL 密码</label>
+                    <label for="mysql_password"><?php echo fp_install_e($t['mysql_password']); ?></label>
                     <input id="mysql_password" type="password" name="mysql_password" value="<?php echo fp_install_e($values['mysql_password']); ?>">
                 </div>
             </div>
 
-            <h2 style="margin-top:24px">管理员</h2>
+            <h2 style="margin-top:24px"><?php echo fp_install_e($t['admin_info']); ?></h2>
             <div class="grid">
                 <div>
-                    <label for="admin_username">用户名</label>
+                    <label for="admin_username"><?php echo fp_install_e($t['admin_username']); ?></label>
                     <input id="admin_username" name="admin_username" value="<?php echo fp_install_e($values['admin_username']); ?>" required>
                 </div>
                 <div>
-                    <label for="admin_email">邮箱</label>
+                    <label for="admin_email"><?php echo fp_install_e($t['admin_email']); ?></label>
                     <input id="admin_email" type="email" name="admin_email" value="<?php echo fp_install_e($values['admin_email']); ?>" required>
                 </div>
                 <div>
-                    <label for="admin_password">密码</label>
+                    <label for="admin_password"><?php echo fp_install_e($t['admin_password']); ?></label>
                     <input id="admin_password" type="password" name="admin_password" required>
                 </div>
                 <div>
-                    <label for="admin_password_confirm">确认密码</label>
+                    <label for="admin_password_confirm"><?php echo fp_install_e($t['admin_password_confirm']); ?></label>
                     <input id="admin_password_confirm" type="password" name="admin_password_confirm" required>
                 </div>
             </div>
 
             <div class="actions">
-                <button type="submit">开始安装</button>
+                <a class="button secondary" href="?step=2&lang=<?php echo fp_install_e($currentLang); ?>"><?php echo fp_install_e($t['prev']); ?></a>
+                <button type="submit"><?php echo fp_install_e($t['submit']); ?></button>
             </div>
         </form>
     <?php endif; ?>
@@ -990,16 +1093,17 @@ function fp_install_render(array $state): void
 </html><?php
 }
 
-/** @param list<array{label:string,ok:bool,required:bool,help:string}> $requirements */
-function fp_install_render_requirements(array $requirements): void
+/** @param list<array{label:string,ok:bool,required:bool,help:string}> $requirements @param array<string, string> $t */
+function fp_install_render_requirements(array $requirements, array $t): void
 {
     ?>
     <section class="panel">
-        <h2>环境检查</h2>
+        <h2><?php echo fp_install_e($t['step2_title']); ?></h2>
+        <p><?php echo fp_install_e($t['step2_desc']); ?></p>
         <ul class="checks">
             <?php foreach ($requirements as $item) : ?>
                 <li>
-                    <span class="<?php echo $item['ok'] ? 'ok' : 'bad'; ?>"><?php echo $item['ok'] ? '通过' : '未通过'; ?></span>
+                    <span class="<?php echo $item['ok'] ? 'ok' : 'bad'; ?>"><?php echo $item['ok'] ? fp_install_e($t['check_pass']) : fp_install_e($t['check_fail']); ?></span>
                     <span><strong><?php echo fp_install_e($item['label']); ?></strong><br><?php echo fp_install_e($item['help']); ?></span>
                 </li>
             <?php endforeach; ?>

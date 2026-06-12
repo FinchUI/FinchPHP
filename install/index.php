@@ -13,6 +13,234 @@ use Finch\Core\Installer;
 
 require dirname(__DIR__) . '/system/bootstrap.php';
 
+/** @return array<string, array<string, string>> */
+function fp_install_languages(): array
+{
+    return [
+        'zh-cn' => '简体中文',
+        'en' => 'English',
+    ];
+}
+
+/** @return array<string, array<string, string>> */
+function fp_install_i18n(): array
+{
+    return [
+        'zh-cn' => [
+            'title' => '安装 Finch PHP',
+            'step' => '步骤',
+            'step1_title' => '选择语言与协议',
+            'step1_desc' => '请选择界面语言，并阅读同意用户协议。',
+            'step2_title' => '环境检查',
+            'step2_desc' => '安装向导正在检查服务器环境是否满足运行要求。',
+            'step3_title' => '站点信息',
+            'step3_desc' => '请填写站点基本信息、数据库配置和管理员账号。',
+            'next' => '下一步',
+            'prev' => '上一步',
+            'submit' => '开始安装',
+            'language' => '界面语言',
+            'license_agree' => '我已阅读并同意用户协议',
+            'license_title' => '用户协议与免责声明',
+            'license_content' => '<p>欢迎使用 Finch PHP 内容管理系统。在安装前，请仔细阅读以下条款：</p>
+<ol>
+<li><strong>软件性质</strong>：Finch PHP 是开源软件，按“原样”提供，不提供任何明示或暗示的保证。</li>
+<li><strong>使用责任</strong>：使用者需自行承担使用本软件的风险，作者不对因使用本软件造成的任何直接或间接损失负责。</li>
+<li><strong>数据安全</strong>：建议定期备份数据库和文件，作者不对数据丢失负责。</li>
+<li><strong>安全更新</strong>：使用者有责任及时应用安全更新和补丁。</li>
+<li><strong>合规使用</strong>：使用者应确保其使用方式符合当地法律法规。</li>
+<li><strong>开源协议</strong>：本软件遵循 MIT 开源协议，详见项目根目录 LICENSE 文件。</li>
+</ol>
+<p>如您不同意上述条款，请勿安装或使用本软件。</p>',
+            'license_required' => '请阅读并同意用户协议后才能继续安装。',
+            'check_pass' => '通过',
+            'check_fail' => '未通过',
+            'check_continue' => '所有必选检查已通过，可以继续安装。',
+            'check_blocked' => '存在必选检查未通过，请先解决上述问题。',
+            'site_info' => '站点信息',
+            'site_name' => '站点名称',
+            'site_url' => '站点地址',
+            'timezone' => '时区',
+            'timezone_hint' => '例如 Asia/Shanghai、UTC、America/New_York。',
+            'database' => '数据库',
+            'driver' => '数据库驱动',
+            'table_prefix' => '数据表前缀',
+            'sqlite_path' => 'SQLite 数据库路径',
+            'sqlite_hint' => '相对路径会基于站点根目录解析，默认写入 storage/data/finch.sqlite。',
+            'mysql_host' => 'MySQL 主机',
+            'mysql_port' => 'MySQL 端口',
+            'mysql_database' => 'MySQL 数据库名',
+            'mysql_username' => 'MySQL 用户名',
+            'mysql_password' => 'MySQL 密码',
+            'admin_info' => '管理员',
+            'admin_username' => '用户名',
+            'admin_email' => '邮箱',
+            'admin_password' => '密码',
+            'admin_password_confirm' => '确认密码',
+            'env_check' => '环境检查',
+            'installed_title' => '系统已安装',
+            'installed_desc' => '检测到当前站点已经完成安装。为避免覆盖现有数据，安装向导已停止。',
+            'enter_admin' => '进入后台',
+            'visit_home' => '访问首页',
+            'locked_title' => '检测到安装锁',
+            'locked_desc' => '当前站点存在 storage/data/install.lock，但没有可用的已安装配置。若这是一次中断安装，请先备份数据，再手动删除安装锁后重新进入向导。',
+            'success_title' => '安装完成',
+            'success_desc' => 'Finch PHP 已经完成初始化。已执行迁移 %d 个，config.php 已生成。',
+            'login_admin' => '登录后台',
+            'errors_title' => '需要处理的问题',
+            'error_site_name_empty' => '站点名称不能为空。',
+            'error_site_url_invalid' => '站点地址格式不正确。',
+            'error_timezone_invalid' => '时区不在 PHP 支持列表中。',
+            'error_driver_invalid' => '数据库驱动只能选择 sqlite 或 mysql。',
+            'error_prefix_invalid' => '数据表前缀只能包含字母、数字、下划线，并且不能以数字开头。',
+            'error_sqlite_no_ext' => '当前 PHP 未启用 pdo_sqlite，不能使用 SQLite 安装。',
+            'error_sqlite_path_empty' => 'SQLite 数据库路径不能为空，也不能使用 :memory:。',
+            'error_sqlite_dir_create' => '无法创建 SQLite 数据库目录：%s',
+            'error_sqlite_dir_write' => 'SQLite 数据库目录不可写：%s',
+            'error_sqlite_is_dir' => 'SQLite 数据库路径不能是目录。',
+            'error_mysql_no_ext' => '当前 PHP 未启用 pdo_mysql，不能使用 MySQL/MariaDB 安装。',
+            'error_mysql_host_empty' => 'MySQL 主机不能为空。',
+            'error_mysql_port_invalid' => 'MySQL 端口不正确。',
+            'error_mysql_db_empty' => 'MySQL 数据库名不能为空。',
+            'error_mysql_user_empty' => 'MySQL 用户名不能为空。',
+            'error_admin_username_invalid' => '管理员用户名需为 3-50 位字母、数字或下划线。',
+            'error_admin_email_invalid' => '管理员邮箱格式不正确。',
+            'error_admin_password_short' => '管理员密码至少 8 位。',
+            'error_admin_password_mismatch' => '两次输入的管理员密码不一致。',
+            'error_config_exists' => 'config.php 已存在。为避免覆盖现有站点，请先确认并手动移除该文件后再安装。',
+            'error_install_locked' => '检测到安装锁。若确需重新安装，请先备份数据并手动删除 storage/data/install.lock。',
+            'error_install_failed' => '安装失败：%s',
+            'env_php_version' => 'PHP 版本 >= 8.0',
+            'env_pdo' => 'PDO 扩展',
+            'env_pdo_driver' => '至少一种 PDO 数据库驱动',
+            'env_json' => 'json 扩展',
+            'env_mbstring' => 'mbstring 扩展',
+            'env_session' => 'session 扩展',
+            'env_openssl' => 'openssl 扩展',
+            'env_fileinfo' => 'fileinfo 扩展',
+            'env_gd' => 'gd 扩展',
+            'env_curl' => 'curl 扩展',
+            'env_pdo_sqlite' => 'pdo_sqlite 扩展',
+            'env_pdo_mysql' => 'pdo_mysql 扩展',
+            'env_config_writable' => '站点根目录可写 config.php',
+            'env_storage_writable' => 'storage/data 可写',
+            'env_logs_writable' => 'storage/logs 可写',
+            'env_uploads_writable' => 'content/uploads 可写',
+        ],
+        'en' => [
+            'title' => 'Install Finch PHP',
+            'step' => 'Step',
+            'step1_title' => 'Language & Agreement',
+            'step1_desc' => 'Please select your language and agree to the user agreement.',
+            'step2_title' => 'Environment Check',
+            'step2_desc' => 'The installer is checking if your server meets the requirements.',
+            'step3_title' => 'Site Information',
+            'step3_desc' => 'Please fill in your site information, database settings, and admin account.',
+            'next' => 'Next',
+            'prev' => 'Previous',
+            'submit' => 'Install Now',
+            'language' => 'Interface Language',
+            'license_agree' => 'I have read and agree to the user agreement',
+            'license_title' => 'User Agreement & Disclaimer',
+            'license_content' => '<p>Welcome to Finch PHP Content Management System. Before installing, please read the following terms carefully:</p>
+<ol>
+<li><strong>Software Nature</strong>: Finch PHP is open-source software provided "as is" without any express or implied warranty.</li>
+<li><strong>Usage Responsibility</strong>: Users assume all risks associated with using this software. The authors are not liable for any direct or indirect damages.</li>
+<li><strong>Data Security</strong>: Regular backups of databases and files are recommended. The authors are not responsible for data loss.</li>
+<li><strong>Security Updates</strong>: Users are responsible for applying security updates and patches in a timely manner.</li>
+<li><strong>Compliance</strong>: Users must ensure their usage complies with local laws and regulations.</li>
+<li><strong>Open Source License</strong>: This software is released under the MIT License. See the LICENSE file in the project root.</li>
+</ol>
+<p>If you do not agree to these terms, please do not install or use this software.</p>',
+            'license_required' => 'Please read and agree to the user agreement before continuing.',
+            'check_pass' => 'Pass',
+            'check_fail' => 'Fail',
+            'check_continue' => 'All required checks passed. You can continue with the installation.',
+            'check_blocked' => 'Some required checks failed. Please resolve the issues above first.',
+            'site_info' => 'Site Information',
+            'site_name' => 'Site Name',
+            'site_url' => 'Site URL',
+            'timezone' => 'Timezone',
+            'timezone_hint' => 'e.g. Asia/Shanghai, UTC, America/New_York.',
+            'database' => 'Database',
+            'driver' => 'Database Driver',
+            'table_prefix' => 'Table Prefix',
+            'sqlite_path' => 'SQLite Database Path',
+            'sqlite_hint' => 'Relative paths are resolved from the site root. Default: storage/data/finch.sqlite.',
+            'mysql_host' => 'MySQL Host',
+            'mysql_port' => 'MySQL Port',
+            'mysql_database' => 'MySQL Database',
+            'mysql_username' => 'MySQL Username',
+            'mysql_password' => 'MySQL Password',
+            'admin_info' => 'Administrator',
+            'admin_username' => 'Username',
+            'admin_email' => 'Email',
+            'admin_password' => 'Password',
+            'admin_password_confirm' => 'Confirm Password',
+            'env_check' => 'Environment Check',
+            'installed_title' => 'Already Installed',
+            'installed_desc' => 'This site has already been installed. The installer has stopped to prevent overwriting existing data.',
+            'enter_admin' => 'Go to Admin',
+            'visit_home' => 'Visit Homepage',
+            'locked_title' => 'Installation Lock Detected',
+            'locked_desc' => 'The file storage/data/install.lock exists but no valid configuration was found. If this was an interrupted installation, please backup your data and manually remove the lock file before retrying.',
+            'success_title' => 'Installation Complete',
+            'success_desc' => 'Finch PHP has been initialized successfully. %d migration(s) applied, config.php has been generated.',
+            'login_admin' => 'Login to Admin',
+            'errors_title' => 'Issues to Resolve',
+            'error_site_name_empty' => 'Site name cannot be empty.',
+            'error_site_url_invalid' => 'Site URL format is invalid.',
+            'error_timezone_invalid' => 'Timezone is not in the PHP supported list.',
+            'error_driver_invalid' => 'Database driver must be sqlite or mysql.',
+            'error_prefix_invalid' => 'Table prefix can only contain letters, numbers, and underscores, and cannot start with a number.',
+            'error_sqlite_no_ext' => 'pdo_sqlite extension is not enabled. Cannot install with SQLite.',
+            'error_sqlite_path_empty' => 'SQLite database path cannot be empty or :memory:.',
+            'error_sqlite_dir_create' => 'Cannot create SQLite database directory: %s',
+            'error_sqlite_dir_write' => 'SQLite database directory is not writable: %s',
+            'error_sqlite_is_dir' => 'SQLite database path cannot be a directory.',
+            'error_mysql_no_ext' => 'pdo_mysql extension is not enabled. Cannot install with MySQL/MariaDB.',
+            'error_mysql_host_empty' => 'MySQL host cannot be empty.',
+            'error_mysql_port_invalid' => 'MySQL port is invalid.',
+            'error_mysql_db_empty' => 'MySQL database name cannot be empty.',
+            'error_mysql_user_empty' => 'MySQL username cannot be empty.',
+            'error_admin_username_invalid' => 'Admin username must be 3-50 characters of letters, numbers, or underscores.',
+            'error_admin_email_invalid' => 'Admin email format is invalid.',
+            'error_admin_password_short' => 'Admin password must be at least 8 characters.',
+            'error_admin_password_mismatch' => 'The two passwords do not match.',
+            'error_config_exists' => 'config.php already exists. To prevent overwriting, please remove it manually before installing.',
+            'error_install_locked' => 'Installation lock detected. If you need to reinstall, please backup your data and remove storage/data/install.lock manually.',
+            'error_install_failed' => 'Installation failed: %s',
+            'env_php_version' => 'PHP Version >= 8.0',
+            'env_pdo' => 'PDO Extension',
+            'env_pdo_driver' => 'At least one PDO database driver',
+            'env_json' => 'json Extension',
+            'env_mbstring' => 'mbstring Extension',
+            'env_session' => 'session Extension',
+            'env_openssl' => 'openssl Extension',
+            'env_fileinfo' => 'fileinfo Extension',
+            'env_gd' => 'gd Extension',
+            'env_curl' => 'curl Extension',
+            'env_pdo_sqlite' => 'pdo_sqlite Extension',
+            'env_pdo_mysql' => 'pdo_mysql Extension',
+            'env_config_writable' => 'Site root writable for config.php',
+            'env_storage_writable' => 'storage/data Writable',
+            'env_logs_writable' => 'storage/logs Writable',
+            'env_uploads_writable' => 'content/uploads Writable',
+        ],
+    ];
+}
+
+/** @return array<string, string> */
+function fp_install_t(): array
+{
+    $lang = $_GET['lang'] ?? $_POST['lang'] ?? $_COOKIE['finch_install_lang'] ?? 'zh-cn';
+    $languages = fp_install_languages();
+    if (!isset($languages[$lang])) {
+        $lang = 'zh-cn';
+    }
+    $i18n = fp_install_i18n();
+    return $i18n[$lang] ?? $i18n['zh-cn'];
+}
+
 $state = fp_install_handle();
 fp_install_render($state);
 
@@ -25,54 +253,99 @@ function fp_install_handle(): array
     $requirements = fp_install_requirements();
     $values = fp_install_default_values();
     $errors = [];
+    $t = fp_install_t();
+    $step = (int) ($_GET['step'] ?? $_POST['step'] ?? 1);
+    $step = max(1, min(3, $step));
+
+    // Set language cookie if provided
+    if (isset($_GET['lang']) || isset($_POST['lang'])) {
+        $lang = $_GET['lang'] ?? $_POST['lang'] ?? 'zh-cn';
+        $languages = fp_install_languages();
+        if (isset($languages[$lang])) {
+            setcookie('finch_install_lang', $lang, time() + 86400, '/');
+        }
+    }
 
     if ($configState['installed'] === true) {
         return [
             'view'         => 'installed',
+            'step'         => $step,
             'requirements' => $requirements,
             'values'       => $values,
             'errors'       => [],
+            't'            => $t,
         ];
     }
 
     if ($configState['locked'] === true) {
         return [
             'view'         => 'locked',
+            'step'         => $step,
             'requirements' => $requirements,
             'values'       => $values,
             'errors'       => [],
+            't'            => $t,
         ];
     }
 
     if (fp_install_is_post()) {
         $values = fp_install_post_values();
-        $errors = array_merge(
-            fp_install_requirement_errors($requirements),
-            fp_install_validate($values, $configState),
-        );
+        $step = (int) ($values['step'] ?? $step);
 
-        if ($errors === []) {
-            try {
-                $applied = fp_install_run($values);
+        // Step 1: Validate language and license agreement
+        if ($step === 1) {
+            if (empty($values['agree_license'])) {
+                $errors[] = $t['license_required'];
+            } else {
+                // Move to step 2
+                header('Location: ?step=2&lang=' . urlencode($values['lang']));
+                exit;
+            }
+        }
 
-                return [
-                    'view'         => 'success',
-                    'requirements' => $requirements,
-                    'values'       => $values,
-                    'errors'       => [],
-                    'applied'      => $applied,
-                ];
-            } catch (Throwable $e) {
-                $errors[] = '安装失败：' . $e->getMessage();
+        // Step 2: Check requirements, move to step 3 if all pass
+        if ($step === 2) {
+            $requirementErrors = fp_install_requirement_errors($requirements);
+            if ($requirementErrors === []) {
+                header('Location: ?step=3&lang=' . urlencode($values['lang']));
+                exit;
+            }
+        }
+
+        // Step 3: Validate and run installation
+        if ($step === 3) {
+            $errors = array_merge(
+                fp_install_requirement_errors($requirements),
+                fp_install_validate($values, $configState),
+            );
+
+            if ($errors === []) {
+                try {
+                    $applied = fp_install_run($values);
+
+                    return [
+                        'view'         => 'success',
+                        'step'         => 3,
+                        'requirements' => $requirements,
+                        'values'       => $values,
+                        'errors'       => [],
+                        'applied'      => $applied,
+                        't'            => $t,
+                    ];
+                } catch (Throwable $e) {
+                    $errors[] = sprintf($t['error_install_failed'], $e->getMessage());
+                }
             }
         }
     }
 
     return [
         'view'         => 'form',
+        'step'         => $step,
         'requirements' => $requirements,
         'values'       => $values,
         'errors'       => $errors,
+        't'            => $t,
     ];
 }
 
@@ -240,7 +513,16 @@ function fp_install_requirement_errors(array $requirements): array
 /** @return array<string, string> */
 function fp_install_default_values(): array
 {
+    $lang = $_COOKIE['finch_install_lang'] ?? 'zh-cn';
+    $languages = fp_install_languages();
+    if (!isset($languages[$lang])) {
+        $lang = 'zh-cn';
+    }
+
     return [
+        'lang'                   => $lang,
+        'agree_license'          => '',
+        'step'                   => '1',
         'site_name'              => 'Finch',
         'site_url'               => fp_install_guess_site_url(),
         'timezone'               => 'Asia/Shanghai',

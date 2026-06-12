@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Built-in OpenAI-compatible AI provider skeleton",
   "author": "Finch",
-  "settings_page": "",
+  "settings_page": "/admin/extensions/plugin/settings?plugin=ai-openai",
   "menu_location": "hidden",
   "preinstalled": true
 }

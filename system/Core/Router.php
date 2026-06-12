@@ -436,6 +436,22 @@ final class Router
             'handler'    => 'Finch\\Admin\\ExtensionAdmin::togglePlugin',
         ]);
 
+        $this->add('admin_extensions_plugin_settings', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/extensions/plugin/settings',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\ExtensionAdmin::pluginSettings',
+        ]);
+
+        $this->add('admin_extensions_plugin_settings_save', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/extensions/plugin/settings',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ExtensionAdmin::savePluginSettings',
+        ]);
+
         $this->add('admin_posts', [
             'type'       => 'rewrite',
             'pattern'    => '/admin/posts',

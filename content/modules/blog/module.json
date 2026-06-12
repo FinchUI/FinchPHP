@@ -1,0 +1,7 @@
+{
+  "name": "Blog Module",
+  "version": "1.0.0",
+  "description": "Built-in blog capability module",
+  "author": "Finch",
+  "preinstalled": true
+}

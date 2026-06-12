@@ -1,0 +1,9 @@
+{
+  "name": "AI OpenAI Provider",
+  "version": "1.0.0",
+  "description": "Built-in OpenAI-compatible AI provider skeleton",
+  "author": "Finch",
+  "settings_page": "",
+  "menu_location": "hidden",
+  "preinstalled": true
+}

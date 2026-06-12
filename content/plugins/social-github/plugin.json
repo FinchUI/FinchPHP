@@ -1,0 +1,9 @@
+{
+  "name": "Social GitHub Provider",
+  "version": "1.0.0",
+  "description": "Built-in social login provider for GitHub",
+  "author": "Finch",
+  "settings_page": "",
+  "menu_location": "hidden",
+  "preinstalled": true
+}

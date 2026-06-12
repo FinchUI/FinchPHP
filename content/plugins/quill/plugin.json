@@ -1,0 +1,9 @@
+{
+  "name": "Quill Editor Provider",
+  "version": "1.0.0",
+  "description": "Built-in rich text editor provider metadata",
+  "author": "Finch",
+  "settings_page": "",
+  "menu_location": "hidden",
+  "preinstalled": true
+}

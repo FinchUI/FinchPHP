@@ -1,0 +1,7 @@
+location ~* ^/content/uploads/ {
+    autoindex off;
+
+    location ~* \.(php|phtml|php3|php4|php5|php7|phps|phar|inc)$ {
+        deny all;
+    }
+}

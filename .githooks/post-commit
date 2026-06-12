@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -u
+
+branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+if [[ -z "$branch" || "$branch" == "HEAD" ]]; then
+  exit 0
+fi
+
+if ! git push origin "$branch"; then
+  echo "[post-commit] Auto push failed. Run: git push origin $branch" >&2
+fi
+
+exit 0

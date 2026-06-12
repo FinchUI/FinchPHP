@@ -1,0 +1,9 @@
+{
+  "name": "Search LIKE Provider",
+  "version": "1.0.0",
+  "description": "Built-in search provider metadata",
+  "author": "Finch",
+  "settings_page": "",
+  "menu_location": "hidden",
+  "preinstalled": true
+}

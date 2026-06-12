@@ -1,0 +1,9 @@
+{
+  "name": "Captcha GD Provider",
+  "version": "1.0.0",
+  "description": "Built-in captcha provider metadata",
+  "author": "Finch",
+  "settings_page": "",
+  "menu_location": "hidden",
+  "preinstalled": true
+}

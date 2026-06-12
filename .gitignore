@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Finch runtime-generated files
+config.php
+storage/data/install.lock
+storage/data/*.sqlite
+storage/data/*.db
+storage/logs/*.log
+
+# Uploaded runtime files (keep guard files)
+content/uploads/**
+!content/uploads/.htaccess
+!content/uploads/index.html
+!content/uploads/**/
+!content/uploads/**/index.html

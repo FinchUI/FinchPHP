@@ -306,3 +306,29 @@ Execution result (2026-06-13):
 	- `config.php` removed
 	- `storage/data/install.lock` removed
 	- `storage/data/finch_workspace_step27.sqlite` removed
+
+## Step 28 - Built-In Plugin Settings Pages
+
+Status: Completed (2026-06-13)
+
+Goal: complete admin configuration pages for built-in plugins, beyond enable/disable controls.
+
+Scope:
+- Add plugin settings page routes and actions under extension admin.
+- Provide per-plugin settings forms for built-in plugins (`tabler`, `quill`, `search-like`, `notify-email`, `notify-sms`, `captcha-gd`, `social-github`, `ai-openai`).
+- Persist plugin config into `plugin_setting` and sync bound system provider keys into `system_setting` when required.
+- Expose plugin settings entry from extension list and fill plugin metadata `settings_page` URLs.
+
+Acceptance:
+- Built-in plugin settings pages are reachable from `/admin/extensions`.
+- Saving settings persists expected plugin values.
+- Provider binding from settings page updates current provider in system settings only when plugin is enabled.
+
+Execution result (2026-06-13):
+- Added admin plugin settings endpoints:
+	- `GET /admin/extensions/plugin/settings`
+	- `POST /admin/extensions/plugin/settings`
+- Extension admin now shows plugin-level "配置" links and built-in form rendering/saving.
+- Updated built-in plugin metadata `settings_page` fields in plugin manifests.
+- Isolated HTTP audit passed:
+	- `STEP28_AUDIT_PASS builtin_plugin_pages=8 plugin_setting_host=smtp.step28.local system_provider=notify-email`

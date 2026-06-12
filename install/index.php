@@ -265,7 +265,7 @@ function fp_install_handle(): array
     $errors = [];
     $t = fp_install_t();
     $step = (int) ($_GET['step'] ?? $_POST['step'] ?? 1);
-    $step = max(1, min(3, $step));
+    $step = max(1, min(4, $step));
 
     // Set language cookie if provided
     if (isset($_GET['lang']) || isset($_POST['lang'])) {
@@ -335,7 +335,7 @@ function fp_install_handle(): array
 
                     return [
                         'view'         => 'success',
-                        'step'         => 3,
+                        'step'         => 4,
                         'requirements' => $requirements,
                         'values'       => $values,
                         'errors'       => [],
@@ -901,7 +901,8 @@ function fp_install_render(array $state): void
             <div class="steps">
                 <div class="step <?php echo $step === 1 ? 'active' : ($step > 1 ? 'done' : ''); ?>"><?php echo fp_install_e($t['step']); ?> 1: <?php echo fp_install_e($t['step1_title']); ?></div>
                 <div class="step <?php echo $step === 2 ? 'active' : ($step > 2 ? 'done' : ''); ?>"><?php echo fp_install_e($t['step']); ?> 2: <?php echo fp_install_e($t['step2_title']); ?></div>
-                <div class="step <?php echo $step === 3 ? 'active' : ''; ?>"><?php echo fp_install_e($t['step']); ?> 3: <?php echo fp_install_e($t['step3_title']); ?></div>
+                <div class="step <?php echo $step === 3 ? 'active' : ($step > 3 ? 'done' : ''); ?>"><?php echo fp_install_e($t['step']); ?> 3: <?php echo fp_install_e($t['step3_title']); ?></div>
+                <div class="step <?php echo $step === 4 ? 'active' : ''; ?>"><?php echo fp_install_e($t['step']); ?> 4: <?php echo fp_install_e($t['step4_title']); ?></div>
             </div>
         </section>
     <?php endif; ?>
@@ -921,12 +922,17 @@ function fp_install_render(array $state): void
             <p><?php echo fp_install_e($t['locked_desc']); ?></p>
         </section>
     <?php elseif ($view === 'success') : ?>
+        <?php $siteUrl = rtrim((string) ($values['site_url'] ?? ''), '/'); ?>
         <section class="panel">
             <h2><?php echo fp_install_e($t['success_title']); ?></h2>
             <p><?php echo sprintf(fp_install_e($t['success_desc']), count((array) ($state['applied'] ?? []))); ?></p>
+            <div style="background: #f6f8fa; border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin: 16px 0;">
+                <p style="margin: 0 0 8px;"><strong><?php echo fp_install_e($t['success_home_url_label']); ?>：</strong><br><a href="<?php echo fp_install_e($siteUrl ?: '../'); ?>"><?php echo fp_install_e($siteUrl ?: '../'); ?></a></p>
+                <p style="margin: 0;"><strong><?php echo fp_install_e($t['success_admin_url_label']); ?>：</strong><br><a href="<?php echo fp_install_e($siteUrl ? $siteUrl . '/admin/login' : '../admin/login'); ?>"><?php echo fp_install_e($siteUrl ? $siteUrl . '/admin/login' : '../admin/login'); ?></a></p>
+            </div>
             <div class="actions">
-                <a class="button" href="../admin/login"><?php echo fp_install_e($t['login_admin']); ?></a>
-                <a class="button secondary" href="../"><?php echo fp_install_e($t['visit_home']); ?></a>
+                <a class="button" href="<?php echo fp_install_e($siteUrl ? $siteUrl . '/admin/login' : '../admin/login'); ?>"><?php echo fp_install_e($t['login_admin']); ?></a>
+                <a class="button secondary" href="<?php echo fp_install_e($siteUrl ?: '../'); ?>"><?php echo fp_install_e($t['visit_home']); ?></a>
             </div>
         </section>
     <?php elseif ($step === 1) : ?>
@@ -945,7 +951,8 @@ function fp_install_render(array $state): void
             <input type="hidden" name="step" value="1">
             <input type="hidden" name="lang" value="<?php echo fp_install_e($currentLang); ?>">
 
-            <h2><?php echo fp_install_e($t['step1_title']); ?></h2>
+            <h2><?php echo fp_install_e($t['welcome_heading']); ?></h2>
+            <p style="color: #24292f; font-size: 15px;"><?php echo fp_install_e($t['welcome_desc']); ?></p>
             <p><?php echo fp_install_e($t['step1_desc']); ?></p>
 
             <div class="grid">

@@ -393,103 +393,106 @@ function fp_install_prepare_runtime_dirs(): void
 /** @return list<array{label:string,ok:bool,required:bool,help:string}> */
 function fp_install_requirements(): array
 {
+    $t = fp_install_t();
     $configWritable = is_file(FP_CONFIG_FILE)
         ? is_writable(FP_CONFIG_FILE)
         : is_writable(FP_PATH);
 
+    $enabled = extension_loaded('pdo') ? ($t === fp_install_i18n()['en'] ? 'Enabled' : '已启用') : ($t === fp_install_i18n()['en'] ? 'Disabled' : '未启用');
+
     return [
         [
-            'label'    => 'PHP 版本 >= 8.0',
+            'label'    => $t['env_php_version'],
             'ok'       => version_compare(PHP_VERSION, '8.0.0', '>='),
             'required' => true,
             'help'     => PHP_VERSION,
         ],
         [
-            'label'    => 'PDO 扩展',
+            'label'    => $t['env_pdo'],
             'ok'       => extension_loaded('pdo'),
             'required' => true,
-            'help'     => extension_loaded('pdo') ? '已启用' : '未启用',
+            'help'     => $enabled,
         ],
         [
-            'label'    => '至少一种 PDO 数据库驱动',
+            'label'    => $t['env_pdo_driver'],
             'ok'       => extension_loaded('pdo_sqlite') || extension_loaded('pdo_mysql'),
             'required' => true,
             'help'     => 'pdo_sqlite / pdo_mysql',
         ],
         [
-            'label'    => 'json 扩展',
+            'label'    => $t['env_json'],
             'ok'       => extension_loaded('json'),
             'required' => true,
-            'help'     => extension_loaded('json') ? '已启用' : '未启用',
+            'help'     => extension_loaded('json') ? ($t === fp_install_i18n()['en'] ? 'Enabled' : '已启用') : ($t === fp_install_i18n()['en'] ? 'Disabled' : '未启用'),
         ],
         [
-            'label'    => 'mbstring 扩展',
+            'label'    => $t['env_mbstring'],
             'ok'       => extension_loaded('mbstring'),
             'required' => true,
-            'help'     => extension_loaded('mbstring') ? '已启用' : '未启用',
+            'help'     => extension_loaded('mbstring') ? ($t === fp_install_i18n()['en'] ? 'Enabled' : '已启用') : ($t === fp_install_i18n()['en'] ? 'Disabled' : '未启用'),
         ],
         [
-            'label'    => 'session 扩展',
+            'label'    => $t['env_session'],
             'ok'       => extension_loaded('session'),
             'required' => true,
-            'help'     => extension_loaded('session') ? '已启用' : '未启用',
+            'help'     => extension_loaded('session') ? ($t === fp_install_i18n()['en'] ? 'Enabled' : '已启用') : ($t === fp_install_i18n()['en'] ? 'Disabled' : '未启用'),
         ],
         [
-            'label'    => 'openssl 扩展',
+            'label'    => $t['env_openssl'],
             'ok'       => extension_loaded('openssl'),
             'required' => true,
-            'help'     => extension_loaded('openssl') ? '已启用' : '未启用',
+            'help'     => extension_loaded('openssl') ? ($t === fp_install_i18n()['en'] ? 'Enabled' : '已启用') : ($t === fp_install_i18n()['en'] ? 'Disabled' : '未启用'),
         ],
         [
-            'label'    => 'fileinfo 扩展',
+            'label'    => $t['env_fileinfo'],
             'ok'       => extension_loaded('fileinfo'),
             'required' => true,
-            'help'     => extension_loaded('fileinfo') ? '已启用' : '未启用',
+            'help'     => extension_loaded('fileinfo') ? ($t === fp_install_i18n()['en'] ? 'Enabled' : '已启用') : ($t === fp_install_i18n()['en'] ? 'Disabled' : '未启用'),
         ],
         [
-            'label'    => 'gd 扩展',
+            'label'    => $t['env_gd'],
             'ok'       => extension_loaded('gd'),
             'required' => true,
-            'help'     => extension_loaded('gd') ? '已启用' : '未启用',
+            'help'     => extension_loaded('gd') ? ($t === fp_install_i18n()['en'] ? 'Enabled' : '已启用') : ($t === fp_install_i18n()['en'] ? 'Disabled' : '未启用'),
         ],
         [
-            'label'    => 'curl 扩展',
+            'label'    => $t['env_curl'],
             'ok'       => extension_loaded('curl'),
             'required' => true,
-            'help'     => extension_loaded('curl') ? '已启用' : '未启用',
+            'help'     => extension_loaded('curl') ? ($t === fp_install_i18n()['en'] ? 'Enabled' : '已启用') : ($t === fp_install_i18n()['en'] ? 'Disabled' : '未启用'),
         ],
         [
-            'label'    => 'pdo_sqlite 扩展',
+            'label'    => $t['env_pdo_sqlite'],
             'ok'       => extension_loaded('pdo_sqlite'),
             'required' => false,
-            'help'     => extension_loaded('pdo_sqlite') ? '可用 SQLite 安装' : '如使用 SQLite 需启用',
+            'help'     => extension_loaded('pdo_sqlite') ? ($t === fp_install_i18n()['en'] ? 'SQLite available' : '可用 SQLite 安装') : ($t === fp_install_i18n()['en'] ? 'Required if using SQLite' : '如使用 SQLite 需启用'),
         ],
         [
-            'label'    => 'pdo_mysql 扩展',
+            'label'    => $t['env_pdo_mysql'],
             'ok'       => extension_loaded('pdo_mysql'),
             'required' => false,
-            'help'     => extension_loaded('pdo_mysql') ? '可用 MySQL/MariaDB 安装' : '如使用 MySQL 需启用',
+            'help'     => extension_loaded('pdo_mysql') ? ($t === fp_install_i18n()['en'] ? 'MySQL/MariaDB available' : '可用 MySQL/MariaDB 安装') : ($t === fp_install_i18n()['en'] ? 'Required if using MySQL' : '如使用 MySQL 需启用'),
         ],
         [
-            'label'    => '站点根目录可写 config.php',
+            'label'    => $t['env_config_writable'],
             'ok'       => $configWritable,
             'required' => true,
             'help'     => FP_CONFIG_FILE,
         ],
         [
-            'label'    => 'storage/data 可写',
+            'label'    => $t['env_storage_writable'],
             'ok'       => is_dir(FP_STORAGE_DIR . '/data') && is_writable(FP_STORAGE_DIR . '/data'),
             'required' => true,
             'help'     => FP_STORAGE_DIR . '/data',
         ],
         [
-            'label'    => 'storage/logs 可写',
+            'label'    => $t['env_logs_writable'],
             'ok'       => is_dir(FP_STORAGE_DIR . '/logs') && is_writable(FP_STORAGE_DIR . '/logs'),
             'required' => true,
             'help'     => FP_STORAGE_DIR . '/logs',
         ],
         [
-            'label'    => 'content/uploads 可写',
+            'label'    => $t['env_uploads_writable'],
             'ok'       => is_dir(FP_CONTENT_DIR . '/uploads') && is_writable(FP_CONTENT_DIR . '/uploads'),
             'required' => true,
             'help'     => FP_CONTENT_DIR . '/uploads',
@@ -500,10 +503,12 @@ function fp_install_requirements(): array
 /** @param list<array{label:string,ok:bool,required:bool,help:string}> $requirements @return list<string> */
 function fp_install_requirement_errors(array $requirements): array
 {
+    $t = fp_install_t();
     $errors = [];
     foreach ($requirements as $item) {
         if ($item['required'] && !$item['ok']) {
-            $errors[] = '环境检查未通过：' . $item['label'];
+            $prefix = $t === fp_install_i18n()['en'] ? 'Environment check failed: ' : '环境检查未通过：';
+            $errors[] = $prefix . $item['label'];
         }
     }
 
@@ -558,86 +563,87 @@ function fp_install_post_values(): array
 /** @param array<string, string> $values @param array<string, bool> $configState @return list<string> */
 function fp_install_validate(array $values, array $configState): array
 {
+    $t = fp_install_t();
     $errors = [];
 
     if ($configState['exists']) {
-        $errors[] = 'config.php 已存在。为避免覆盖现有站点，请先确认并手动移除该文件后再安装。';
+        $errors[] = $t['error_config_exists'];
     }
 
     if ($configState['locked']) {
-        $errors[] = '检测到安装锁。若确需重新安装，请先备份数据并手动删除 storage/data/install.lock。';
+        $errors[] = $t['error_install_locked'];
     }
 
     if ($values['site_name'] === '') {
-        $errors[] = '站点名称不能为空。';
+        $errors[] = $t['error_site_name_empty'];
     }
 
     if ($values['site_url'] !== '' && filter_var($values['site_url'], FILTER_VALIDATE_URL) === false) {
-        $errors[] = '站点地址格式不正确。';
+        $errors[] = $t['error_site_url_invalid'];
     }
 
     if (!in_array($values['timezone'], timezone_identifiers_list(), true)) {
-        $errors[] = '时区不在 PHP 支持列表中。';
+        $errors[] = $t['error_timezone_invalid'];
     }
 
     if (!in_array($values['driver'], ['sqlite', 'mysql', 'mariadb'], true)) {
-        $errors[] = '数据库驱动只能选择 sqlite 或 mysql。';
+        $errors[] = $t['error_driver_invalid'];
     }
 
     if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $values['table_prefix'])) {
-        $errors[] = '数据表前缀只能包含字母、数字、下划线，并且不能以数字开头。';
+        $errors[] = $t['error_prefix_invalid'];
     }
 
     if ($values['driver'] === 'sqlite') {
         if (!extension_loaded('pdo_sqlite')) {
-            $errors[] = '当前 PHP 未启用 pdo_sqlite，不能使用 SQLite 安装。';
+            $errors[] = $t['error_sqlite_no_ext'];
         }
 
         $sqlitePath = fp_install_sqlite_path($values['sqlite_database']);
         if ($sqlitePath === '' || $sqlitePath === ':memory:') {
-            $errors[] = 'SQLite 数据库路径不能为空，也不能使用 :memory:。';
+            $errors[] = $t['error_sqlite_path_empty'];
         } else {
             $dir = dirname($sqlitePath);
             if (!is_dir($dir) && !@mkdir($dir, 0775, true)) {
-                $errors[] = '无法创建 SQLite 数据库目录：' . $dir;
+                $errors[] = sprintf($t['error_sqlite_dir_create'], $dir);
             } elseif (!is_writable($dir)) {
-                $errors[] = 'SQLite 数据库目录不可写：' . $dir;
+                $errors[] = sprintf($t['error_sqlite_dir_write'], $dir);
             } elseif (is_dir($sqlitePath)) {
-                $errors[] = 'SQLite 数据库路径不能是目录。';
+                $errors[] = $t['error_sqlite_is_dir'];
             }
         }
     } else {
         if (!extension_loaded('pdo_mysql')) {
-            $errors[] = '当前 PHP 未启用 pdo_mysql，不能使用 MySQL/MariaDB 安装。';
+            $errors[] = $t['error_mysql_no_ext'];
         }
         if ($values['mysql_host'] === '') {
-            $errors[] = 'MySQL 主机不能为空。';
+            $errors[] = $t['error_mysql_host_empty'];
         }
         if ((int) $values['mysql_port'] <= 0) {
-            $errors[] = 'MySQL 端口不正确。';
+            $errors[] = $t['error_mysql_port_invalid'];
         }
         if ($values['mysql_database'] === '') {
-            $errors[] = 'MySQL 数据库名不能为空。';
+            $errors[] = $t['error_mysql_db_empty'];
         }
         if ($values['mysql_username'] === '') {
-            $errors[] = 'MySQL 用户名不能为空。';
+            $errors[] = $t['error_mysql_user_empty'];
         }
     }
 
     if (!preg_match('/^[A-Za-z0-9_]{3,50}$/', $values['admin_username'])) {
-        $errors[] = '管理员用户名需为 3-50 位字母、数字或下划线。';
+        $errors[] = $t['error_admin_username_invalid'];
     }
 
     if (filter_var($values['admin_email'], FILTER_VALIDATE_EMAIL) === false) {
-        $errors[] = '管理员邮箱格式不正确。';
+        $errors[] = $t['error_admin_email_invalid'];
     }
 
     if (mb_strlen($values['admin_password']) < 8) {
-        $errors[] = '管理员密码至少 8 位。';
+        $errors[] = $t['error_admin_password_short'];
     }
 
     if ($values['admin_password'] !== $values['admin_password_confirm']) {
-        $errors[] = '两次输入的管理员密码不一致。';
+        $errors[] = $t['error_admin_password_mismatch'];
     }
 
     return $errors;

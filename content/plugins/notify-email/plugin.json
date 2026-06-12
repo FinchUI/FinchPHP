@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Built-in mail provider metadata",
   "author": "Finch",
-  "settings_page": "",
+  "settings_page": "/admin/extensions/plugin/settings?plugin=notify-email",
   "menu_location": "hidden",
   "preinstalled": true
 }

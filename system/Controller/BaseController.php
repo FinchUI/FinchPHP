@@ -62,10 +62,26 @@ abstract class BaseController
 
     /**
      * 将后台路径转为动态地址（index.php?fp=...），不依赖伪静态。
+     *
+     * 支持带查询串的输入（如 /admin/categories?saved=1），内部会拆出 path
+     * 部分做 urlencode 并将查询串原样拼接，避免 Router 因 %3F/%3D 失配。
      */
     protected function adminUrl(string $path): string
     {
-        return 'index.php?fp=' . urlencode(ltrim($path, '/'));
+        $parts = parse_url($path);
+        $cleanPath = isset($parts['path']) && is_string($parts['path']) ? $parts['path'] : $path;
+
+        $result = 'index.php?fp=' . urlencode(ltrim($cleanPath, '/'));
+
+        if (isset($parts['query']) && is_string($parts['query']) && $parts['query'] !== '') {
+            $result .= '&' . $parts['query'];
+        }
+
+        if (isset($parts['fragment']) && is_string($parts['fragment']) && $parts['fragment'] !== '') {
+            $result .= '#' . $parts['fragment'];
+        }
+
+        return $result;
     }
 
     protected function authorize(string $capability): bool

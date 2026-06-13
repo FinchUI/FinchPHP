@@ -113,6 +113,38 @@ a:hover {
     text-decoration: none;
 }
 
+/* 导航下拉菜单 */
+.site-nav-dropdown {
+    position: relative;
+}
+.site-nav-sub {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    padding: 4px 0;
+    z-index: 200;
+}
+.site-nav-dropdown:hover .site-nav-sub {
+    display: block;
+}
+.site-nav-sub a {
+    display: block;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: var(--muted);
+    border-radius: 0;
+}
+.site-nav-sub a:hover {
+    color: var(--text);
+    background: var(--bg);
+}
+
 /* ── 内容区 ── */
 
 .content,

@@ -321,6 +321,24 @@ trait AdminLayout
         return $url;
     }
 
+    /** @return array{css: list<string>, js: list<string>} */
+    private function resolveEditorAssets(): array
+    {
+        $provider = $this->app->hooks->filter('fp_provider_editor_quill_resolve', null, [
+            'request' => $this->request,
+            'user' => $this->app->user,
+        ]);
+
+        if (!is_array($provider)) {
+            return ['css' => [], 'js' => []];
+        }
+
+        return [
+            'css' => $this->normalizeAssetList($provider['css'] ?? []),
+            'js'  => $this->normalizeAssetList($provider['js'] ?? []),
+        ];
+    }
+
     /** @param array<string, list<string>> $errors */
     private function fieldError(string $name, array $errors): string
     {

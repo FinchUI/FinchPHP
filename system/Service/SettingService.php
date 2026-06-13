@@ -91,14 +91,26 @@ final class SettingService
     private function meta(string $key): array
     {
         $row = $this->db->table('system_setting')->where('name', $key)->first();
-        if ($row === null) {
-            throw new InvalidArgumentException("未知系统设置项：{$key}");
+        if ($row !== null) {
+            return [
+                'type'     => (string) $row['type'],
+                'autoload' => (int) $row['autoload'] === 1,
+            ];
         }
 
-        return [
-            'type'     => (string) $row['type'],
-            'autoload' => (int) $row['autoload'] === 1,
+        // 新增设置项（如升级后新增的 debug_mode）首次保存时自动创建
+        return $this->defaultMeta($key);
+    }
+
+    /** 新设置项首次保存时的默认元信息 */
+    private function defaultMeta(string $key): array
+    {
+        static $defaults = [
+            'maintenance_mode' => ['type' => 'bool', 'autoload' => true],
+            'debug_mode'       => ['type' => 'bool', 'autoload' => true],
         ];
+
+        return $defaults[$key] ?? ['type' => 'string', 'autoload' => true];
     }
 
     private function normalizeValue(mixed $value, string $type): mixed

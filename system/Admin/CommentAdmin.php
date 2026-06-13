@@ -18,11 +18,12 @@ final class CommentAdmin extends BaseController
 
     public function index(): Response
     {
+        $lang = $this->app->lang;
         $page = max(1, (int) $this->request->query('page', 1));
         $status = trim((string) $this->request->query('status', ''));
         $list = $this->service()->page($page, 20, $status);
 
-        return $this->html($this->adminShell('评论管理', '<section class="panel">' . $this->table($list, $status) . '</section>'));
+        return $this->html($this->adminShell($lang->get('admin.comment.title'), '<section class="panel">' . $this->table($list, $status) . '</section>'));
     }
 
     public function approve(string|int $id): Response
@@ -62,6 +63,7 @@ final class CommentAdmin extends BaseController
      */
     private function table(array $list, string $status): string
     {
+        $lang = $this->app->lang;
         $rows = '';
         foreach ($list['data'] as $item) {
             $rows .= '<tr>'
@@ -73,28 +75,28 @@ final class CommentAdmin extends BaseController
                 . '<td>'
                 . '<form method="post" action="/admin/comments/' . (int) $item['id'] . '/approve" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-                . '<button type="submit" class="secondary fp-btn-compact">通过</button>'
+                . '<button type="submit" class="secondary fp-btn-compact">' . $this->escape($lang->get('admin.comment.approve')) . '</button>'
                 . '</form> '
                 . '<form method="post" action="/admin/comments/' . (int) $item['id'] . '/reject" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-                . '<button type="submit" class="secondary fp-btn-compact">驳回</button>'
+                . '<button type="submit" class="secondary fp-btn-compact">' . $this->escape($lang->get('admin.comment.reject')) . '</button>'
                 . '</form> '
                 . '<form method="post" action="/admin/comments/' . (int) $item['id'] . '/delete" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-                . '<button type="submit" class="secondary fp-btn-compact">删除</button>'
+                . '<button type="submit" class="secondary fp-btn-compact">' . $this->escape($lang->get('admin.common.delete')) . '</button>'
                 . '</form>'
                 . '</td>'
                 . '</tr>';
         }
 
         if ($rows === '') {
-            $rows = '<tr><td colspan="6" class="muted fp-table-empty">暂无评论</td></tr>';
+            $rows = '<tr><td colspan="6" class="muted fp-table-empty">' . $this->escape($lang->get('admin.comment.empty')) . '</td></tr>';
         }
 
-        return '<h1>评论管理</h1>'
-            . '<p class="fp-comment-filters"><a href="/admin/comments">全部</a> · <a href="/admin/comments?status=pending">待审核</a> · <a href="/admin/comments?status=approved">已通过</a> · <a href="/admin/comments?status=rejected">已驳回</a></p>'
+        return '<h1>' . $this->escape($lang->get('admin.comment.title')) . '</h1>'
+            . '<p class="fp-comment-filters"><a href="/admin/comments">' . $this->escape($lang->get('admin.comment.all')) . '</a> · <a href="/admin/comments?status=pending">' . $this->escape($lang->get('admin.comment.pending')) . '</a> · <a href="/admin/comments?status=approved">' . $this->escape($lang->get('admin.comment.approved')) . '</a> · <a href="/admin/comments?status=rejected">' . $this->escape($lang->get('admin.comment.rejected')) . '</a></p>'
             . '<table>'
-            . '<thead><tr><th>ID</th><th>文章</th><th>作者</th><th>内容</th><th>状态</th><th>操作</th></tr></thead><tbody>' . $rows . '</tbody></table>';
+            . '<thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.comment.th_post')) . '</th><th>' . $this->escape($lang->get('admin.comment.th_author')) . '</th><th>' . $this->escape($lang->get('admin.comment.th_content')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>' . $rows . '</tbody></table>';
     }
 
 }

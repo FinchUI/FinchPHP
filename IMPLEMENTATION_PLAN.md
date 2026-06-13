@@ -257,6 +257,8 @@ CREATE INDEX idx_expired_at ON cache(expired_at);
 
 ## 二、项目目录结构树
 
+> 说明（与当前实现对齐）：后台样式与后台交互资源由 `content/plugins/tabler/assets/` 提供（含 `css/admin.css`、`css/tabler-icons.min.css`、`js/admin.js` 等），并由后台样式插件注入；本节 `public/assets` 结构属于早期规划草案。
+
 ```
 finchphp/
 ├── public/                          # Web 服务器根目录

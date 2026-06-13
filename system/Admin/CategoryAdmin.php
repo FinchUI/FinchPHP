@@ -26,6 +26,7 @@ final class CategoryAdmin extends BaseController
 
     public function save(): Response
     {
+        $lang = $this->app->lang;
         $id = is_numeric($this->request->post('id')) ? (int) $this->request->post('id') : null;
         $validator = $this->validate([
             'name' => 'required|max:100',
@@ -37,7 +38,7 @@ final class CategoryAdmin extends BaseController
         if ($validator->fails()) {
             $items = $this->service()->categories();
 
-            return $this->html($this->adminShell('分类管理', '<section class="panel">' . $this->pageContent($items, $validator->errors()) . '</section>'), 422);
+            return $this->html($this->adminShell($lang->get('admin.category.title'), '<section class="panel">' . $this->pageContent($items, $validator->errors()) . '</section>'), 422);
         }
 
         $this->service()->saveCategory($this->request->all(), $id);

@@ -12,7 +12,7 @@
     </section>
     <?php
     // 获取分类列表
-    $categories = fp_app()->db->table('category')->where('status', 'active')->orderBy('sort_order', 'ASC')->limit(10)->get();
+    $categories = sidebar_categories(10);
     if ($categories !== []) :
     ?>
     <section class="sidebar-block">
@@ -20,8 +20,8 @@
         <ul class="cat-list">
             <?php foreach ($categories as $cat) : ?>
                 <li><a href="/category/<?= rawurlencode((string) $cat['slug']) ?>"><?= fp_escape((string) $cat['name']) ?></a>
-                    <?php if ((int) ($cat['post_count'] ?? 0) > 0) : ?>
-                        <span class="count"><?= (int) $cat['post_count'] ?></span>
+                    <?php if ($cat['post_count'] > 0) : ?>
+                        <span class="count"><?= $cat['post_count'] ?></span>
                     <?php endif; ?>
                 </li>
             <?php endforeach; ?>

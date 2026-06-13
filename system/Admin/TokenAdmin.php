@@ -113,22 +113,22 @@ final class TokenAdmin extends BaseController
             $plain = (string) $this->app->session->get('issued_plain_token', '');
             $tokenId = (int) $this->app->session->get('issued_token_id', 0);
             if ($plain !== '' && $tokenId > 0) {
-                $notice = '<div style="color:#067647">Token 已签发（ID ' . $tokenId . '），明文仅显示一次：</div>'
-                    . '<div style="word-break:break-all;background:#f6f8fa;border:1px solid #d0d7de;padding:8px;border-radius:6px">' . $this->escape($plain) . '</div>';
+                $notice = '<div class="fp-notice-success">Token 已签发（ID ' . $tokenId . '），明文仅显示一次：</div>'
+                    . '<div class="fp-token-plain">' . $this->escape($plain) . '</div>';
             }
             $this->app->session->forget('issued_plain_token');
             $this->app->session->forget('issued_token_id');
         }
 
         if ($revoked) {
-            $notice .= '<div style="color:#067647;margin-top:8px">Token 已撤销。</div>';
+            $notice .= '<div class="fp-notice-success fp-notice-gap-top">Token 已撤销。</div>';
         }
 
         foreach ($errors as $field => $messages) {
             if (!isset($messages[0])) {
                 continue;
             }
-            $notice .= '<div style="color:#b42318">' . $this->escape($field . ': ' . $messages[0]) . '</div>';
+            $notice .= '<div class="fp-error-text">' . $this->escape($field . ': ' . $messages[0]) . '</div>';
         }
 
         $rows = '';
@@ -143,7 +143,7 @@ final class TokenAdmin extends BaseController
                 . '<td>' . $this->escape((string) ($row['expires_at'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($row['last_used_at'] ?? '')) . '</td>'
                 . '<td>'
-                . '<form method="post" action="/admin/tokens/revoke?page=' . (int) $pageData['page'] . '" style="display:inline">'
+                . '<form method="post" action="/admin/tokens/revoke?page=' . (int) $pageData['page'] . '" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
                 . '<input type="hidden" name="id" value="' . $id . '">'
                 . '<button type="submit" class="secondary">撤销</button>'
@@ -168,7 +168,7 @@ final class TokenAdmin extends BaseController
 
         return '<section class="panel"><h1>API Token 管理</h1>'
             . $notice
-            . '<form method="post" action="/admin/tokens/issue" style="display:grid;gap:10px;max-width:560px;margin-top:10px">'
+            . '<form method="post" action="/admin/tokens/issue" class="fp-form-grid fp-form-grid-token">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . '<label>用户<select name="user_id">' . $userOptions . '</select></label>'
             . '<label>名称<input name="name" placeholder="例如：miniapp"></label>'
@@ -192,7 +192,7 @@ final class TokenAdmin extends BaseController
         $page = (int) $pageData['page'];
         $lastPage = max(1, (int) $pageData['last_page']);
 
-        $parts = ['<div class="actions" style="margin-top:12px">'];
+        $parts = ['<div class="actions fp-actions-gap-top">'];
         if ($page > 1) {
             $parts[] = '<a href="/admin/tokens?page=' . ($page - 1) . '">上一页</a>';
         }

@@ -412,22 +412,6 @@ final class Router
             'handler'    => 'Finch\\Admin\\ExtensionAdmin::index',
         ]);
 
-        $this->add('admin_extensions_theme', [
-            'type'       => 'rewrite',
-            'pattern'    => '/admin/extensions/theme',
-            'method'     => 'POST',
-            'middleware' => ['auth', 'role:access_admin', 'csrf'],
-            'handler'    => 'Finch\\Admin\\ExtensionAdmin::activateTheme',
-        ]);
-
-        $this->add('admin_extensions_module', [
-            'type'       => 'rewrite',
-            'pattern'    => '/admin/extensions/module',
-            'method'     => 'POST',
-            'middleware' => ['auth', 'role:access_admin', 'csrf'],
-            'handler'    => 'Finch\\Admin\\ExtensionAdmin::toggleModule',
-        ]);
-
         $this->add('admin_extensions_plugin', [
             'type'       => 'rewrite',
             'pattern'    => '/admin/extensions/plugin',
@@ -862,24 +846,6 @@ final class Router
             'method'     => 'GET',
             'middleware' => ['auth', 'role:access_admin'],
             'handler'    => 'Finch\\Admin\\ExtensionAdmin::index',
-        ]);
-
-        $this->add('admin_extensions_theme_active', [
-            'type'       => 'active',
-            'key'        => 'fp',
-            'value'      => 'admin/extensions/theme',
-            'method'     => 'POST',
-            'middleware' => ['auth', 'role:access_admin', 'csrf'],
-            'handler'    => 'Finch\\Admin\\ExtensionAdmin::activateTheme',
-        ]);
-
-        $this->add('admin_extensions_module_active', [
-            'type'       => 'active',
-            'key'        => 'fp',
-            'value'      => 'admin/extensions/module',
-            'method'     => 'POST',
-            'middleware' => ['auth', 'role:access_admin', 'csrf'],
-            'handler'    => 'Finch\\Admin\\ExtensionAdmin::toggleModule',
         ]);
 
         $this->add('admin_extensions_plugin_active', [

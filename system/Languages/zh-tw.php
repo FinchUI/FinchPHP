@@ -13,6 +13,9 @@ return [
     'admin.menu.users' => '使用者',
     'admin.menu.tokens' => 'Token',
     'admin.menu.extensions' => '擴充套件',
+    'admin.menu.modules' => '模組',
+    'admin.menu.themes' => '主題',
+    'admin.menu.ai' => 'AI',
     'admin.menu.uploads' => '媒體庫',
 
     // ========== 頂欄 ==========

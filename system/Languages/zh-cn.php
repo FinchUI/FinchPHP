@@ -13,6 +13,9 @@ return [
     'admin.menu.users' => '用户',
     'admin.menu.tokens' => 'Token',
     'admin.menu.extensions' => '扩展',
+    'admin.menu.modules' => '模块',
+    'admin.menu.themes' => '主题',
+    'admin.menu.ai' => 'AI',
     'admin.menu.uploads' => '媒体库',
 
     // ========== 顶栏 ==========

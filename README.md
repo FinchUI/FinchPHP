@@ -311,11 +311,118 @@ finchphp/
 ### 命令行快速启动（开发调试）
 
 ```bash
-# 使用 PHP 内置服务器
-php -S 127.0.0.1:8080 -t .
+# 使用 PHP 内置服务器（含路由脚本）
+php -S 127.0.0.1:8080 router.php
 
 # 浏览器访问
 open http://127.0.0.1:8080/install/
+```
+
+---
+
+## ⚙️ 服务器伪静态配置
+
+FinchPHP 使用 Rewrite 路由（如 `/post/hello-world`、`/category/tech`），需要服务器将非静态文件请求转发到 `index.php`。
+
+### Nginx（推荐）
+
+在 Nginx 站点配置的 `server { }` 块中添加：
+
+```nginx
+# 上传目录安全：禁止执行 PHP
+location ~* ^/content/uploads/ {
+    location ~* \.(php|phtml|php3|php4|php5|php7|phps|phar|inc)$ {
+        deny all;
+    }
+    autoindex off;
+}
+
+# 禁止访问敏感目录
+location ~* ^/(system|storage)/ {
+    deny all;
+}
+
+# 禁止访问隐藏文件
+location ~* /\.(?!well-known) {
+    deny all;
+}
+
+# 核心伪静态：所有非文件非目录的请求转发到 index.php
+location / {
+    try_files $uri $uri/ /index.php$is_args$args;
+}
+
+# PHP 文件交给 PHP-FPM 处理
+location ~ \.php$ {
+    fastcgi_pass unix:/tmp/php-cgi-82.sock;  # 按实际 PHP 版本和 socket 路径调整
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+}
+```
+
+> **注意**：`fastcgi_pass` 需根据实际 PHP 版本和 socket 路径调整。常见值：
+> - 宝塔面板：`unix:/tmp/php-cgi-82.sock`（82 对应 PHP 8.2）
+> - 自行安装：`unix:/run/php/php8.2-fpm.sock` 或 `127.0.0.1:9000`
+
+### 宝塔面板
+
+1. 进入网站设置 → 伪静态
+2. 将默认内容替换为上面的 **Nginx 配置**
+3. `fastcgi_pass` 保持与宝塔自动生成的一致即可（通常已有 `location ~ \.php$` 块，只需添加其余部分）
+
+### Apache
+
+项目根目录已内置 `.htaccess`，Apache 环境通常无需额外配置：
+
+```apache
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# 禁止访问敏感目录
+<IfModule mod_rewrite.c>
+    RewriteRule ^system/ - [F,L]
+    RewriteRule ^storage/ - [F,L]
+</IfModule>
+
+# 禁止访问隐藏文件和敏感配置
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+<FilesMatch "(config\.php|\.env)">
+    Require all denied
+</FilesMatch>
+```
+
+> 确保 Apache 已启用 `mod_rewrite` 模块：`a2enmod rewrite`
+
+### PHP 内置服务器（开发调试）
+
+项目已内置 `router.php`，启动时指定即可：
+
+```bash
+php -S 127.0.0.1:8080 router.php
+```
+
+`router.php` 会自动将非静态文件请求路由到 `index.php`。
+
+### Caddy
+
+```
+example.com {
+    root * /var/www/finchphp
+    php_fastcgi unix//run/php/php8.2-fpm.sock
+
+    # 禁止访问敏感目录
+    @blocked path /system/* /storage/* /.env /config.php
+    respond @blocked 403
+
+    file_server
+}
 ```
 
 ---

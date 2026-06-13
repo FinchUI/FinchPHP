@@ -297,6 +297,13 @@ final class SettingAdmin extends BaseController
                 . $error;
         }
 
+        if ($type === 'timezone') {
+            return '<label>' . $this->escape($label)
+                . '<select name="' . $this->escape($key) . '">' . $this->timezoneOptions((string) ($settings[$key] ?? '')) . '</select></label>'
+                . $help
+                . $error;
+        }
+
         $placeholder = isset($meta['placeholder']) ? ' placeholder="' . $this->escape($lang->get((string) $meta['placeholder'])) . '"' : '';
         $value = $type === 'password' ? '' : $this->escape((string) ($settings[$key] ?? ''));
 
@@ -309,5 +316,19 @@ final class SettingAdmin extends BaseController
     private function normalizeGroup(string $group): string
     {
         return array_key_exists($group, self::GROUPS) ? $group : 'basic';
+    }
+
+    /**
+     * 生成时区 <option> 列表，参考 install/index.php 的 fp_install_timezone_options()
+     */
+    private function timezoneOptions(string $current): string
+    {
+        $html = '';
+        foreach (timezone_identifiers_list() as $tz) {
+            $selected = $tz === $current ? ' selected' : '';
+            $label = str_replace('_', ' ', $tz);
+            $html .= '<option value="' . $this->escape($tz) . '"' . $selected . '>' . $this->escape($label) . '</option>';
+        }
+        return $html;
     }
 }

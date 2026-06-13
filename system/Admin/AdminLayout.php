@@ -12,51 +12,174 @@ trait AdminLayout
 {
     private function adminShell(string $title, string $body): string
     {
+        $assets = $this->resolveAdminStyleAssets();
+
         return '<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8">'
             . '<meta name="viewport" content="width=device-width, initial-scale=1">'
             . '<title>' . $this->escape($title) . ' - Finch PHP</title>'
-            . '<style>'
-            . 'body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;padding:24px;line-height:1.6;background:#f6f8fa;color:#24292f}'
-            . '.panel{background:#fff;border:1px solid #d0d7de;border-radius:8px;padding:16px;margin-bottom:16px}'
-            . 'table{width:100%;border-collapse:collapse;background:#fff}th,td{border-bottom:1px solid #d0d7de;padding:8px;text-align:left;vertical-align:top}'
-            . 'a{color:#0969da;text-decoration:none}.muted{color:#57606a}.actions{display:flex;gap:8px;flex-wrap:wrap}'
-            . 'input,textarea,select{width:100%;box-sizing:border-box;padding:8px;border:1px solid #d0d7de;border-radius:6px}'
-            . 'button{padding:7px 12px;border:1px solid #1f6feb;background:#1f6feb;color:#fff;border-radius:6px;cursor:pointer}'
-            . 'button.secondary{background:#fff;color:#24292f;border-color:#d0d7de}'
-            . '</style></head><body>'
-            . $this->adminNav()
-            . '<main>' . $body . '</main>'
+            . $this->adminStyleLinks($assets['css'])
+            . '</head><body class="fp-admin-body">'
+            . '<div class="fp-admin-shell">'
+            . $this->adminSidebar()
+            . '<div class="fp-admin-main">'
+            . $this->adminTopbar($title)
+            . '<main class="fp-admin-content">' . $body . '</main>'
+            . '</div>'
+            . '</div>'
+            . $this->adminScriptTags($assets['js'])
             . '</body></html>';
     }
 
-    private function adminNav(): string
+    private function adminSidebar(): string
     {
-        $u = fn (string $path): string => $this->adminUrl($path);
-        return '<nav class="panel">'
-            . '<div class="actions">'
-            . '<a href="' . $u('/admin') . '">仪表盘</a>'
-            . '<a href="' . $u('/admin/posts') . '">文章</a>'
-            . '<a href="' . $u('/admin/pages') . '">页面</a>'
-            . '<a href="' . $u('/admin/categories') . '">分类</a>'
-            . '<a href="' . $u('/admin/tags') . '">标签</a>'
-            . '<a href="' . $u('/admin/comments') . '">评论</a>'
-            . '<a href="' . $u('/admin/users') . '">用户</a>'
-            . '<a href="' . $u('/admin/tokens') . '">Token</a>'
-            . '<a href="' . $u('/admin/extensions') . '">扩展</a>'
-            . '<a href="' . $u('/admin/uploads') . '">媒体库</a>'
-            . '<a href="' . $u('/admin/settings') . '">设置</a>'
-            . '<a href="/">前台</a>'
+        $siteName = (string) $this->app->settings->get('site_name', 'Finch PHP');
+        $html = '<aside class="fp-admin-sidebar">'
+            . '<div class="fp-admin-brand">'
+            . '<div class="fp-admin-brand-mark" aria-hidden="true">FP</div>'
+            . '<div class="fp-admin-brand-text">'
+            . '<strong>Finch Admin</strong>'
+            . '<small>' . $this->escape($siteName) . '</small>'
             . '</div>'
-            . $this->logoutBar()
-            . '</nav>';
+            . '</div>'
+            . '<nav class="fp-admin-nav" aria-label="后台主菜单">';
+
+        foreach ($this->adminMenuItems() as $item) {
+            $active = $this->isMenuActive($item['path']) ? ' active' : '';
+            $html .= '<a class="fp-admin-nav-link' . $active . '" href="' . $this->adminUrl($item['path']) . '">' . $this->escape($item['label']) . '</a>';
+        }
+
+        return $html . '</nav></aside>';
     }
 
-    private function logoutBar(): string
+    private function adminTopbar(string $title): string
     {
-        return '<form method="post" action="' . $this->adminUrl('/admin/logout') . '" style="margin-top:10px">'
+        return '<header class="fp-admin-topbar">'
+            . '<div class="fp-admin-topbar-title">'
+            . '<h1>' . $this->escape($title) . '</h1>'
+            . '</div>'
+            . '<div class="fp-admin-topbar-actions">'
+            . '<span class="fp-admin-welcome">欢迎，' . $this->escape($this->currentAdminName()) . '</span>'
+            . '<a class="fp-admin-top-link" href="' . $this->adminUrl('/admin/settings') . '">设置</a>'
+            . '<a class="fp-admin-top-link" href="/">前台</a>'
+            . '<form method="post" action="' . $this->adminUrl('/admin/logout') . '" class="fp-admin-logout-form">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . '<button type="submit" class="secondary">退出登录</button>'
-            . '</form>';
+            . '</form></div></header>';
+    }
+
+    /** @return list<array{path: string, label: string}> */
+    private function adminMenuItems(): array
+    {
+        return [
+            ['path' => '/admin', 'label' => '仪表盘'],
+            ['path' => '/admin/posts', 'label' => '文章'],
+            ['path' => '/admin/pages', 'label' => '页面'],
+            ['path' => '/admin/categories', 'label' => '分类'],
+            ['path' => '/admin/tags', 'label' => '标签'],
+            ['path' => '/admin/comments', 'label' => '评论'],
+            ['path' => '/admin/users', 'label' => '用户'],
+            ['path' => '/admin/tokens', 'label' => 'Token'],
+            ['path' => '/admin/extensions', 'label' => '扩展'],
+            ['path' => '/admin/uploads', 'label' => '媒体库'],
+        ];
+    }
+
+    private function isMenuActive(string $path): bool
+    {
+        $current = trim((string) $this->request->query('fp', ''), '/');
+        if ($current === '') {
+            $current = trim($this->request->path(), '/');
+        }
+
+        $target = trim($path, '/');
+        if ($target === 'admin') {
+            return $current === 'admin' || $current === 'admin/dashboard';
+        }
+
+        return $current === $target || str_starts_with($current, $target . '/');
+    }
+
+    private function currentAdminName(): string
+    {
+        $user = $this->app->user;
+
+        return (string) ($user?->display_name ?: $user?->username ?: '管理员');
+    }
+
+    /** @param list<string> $css */
+    private function adminStyleLinks(array $css): string
+    {
+        $links = '';
+        foreach ($css as $href) {
+            $links .= '<link rel="stylesheet" href="' . $this->escape($href) . '">';
+        }
+
+        return $links;
+    }
+
+    /** @param list<string> $js */
+    private function adminScriptTags(array $js): string
+    {
+        $tags = '';
+        foreach ($js as $src) {
+            $tags .= '<script defer src="' . $this->escape($src) . '"></script>';
+        }
+
+        return $tags;
+    }
+
+    /** @return array{css: list<string>, js: list<string>} */
+    private function resolveAdminStyleAssets(): array
+    {
+        $css = [];
+        if (isset($this->app->asset)) {
+            $css[] = $this->app->asset->systemAsset('css/admin.css');
+        } else {
+            $css[] = '/system/assets/css/admin.css';
+        }
+
+        $provider = $this->app->hooks->filter('fp_provider_admin_style_tabler_resolve', null, [
+            'request' => $this->request,
+            'user' => $this->app->user,
+        ]);
+
+        if (is_array($provider)) {
+            $css = array_merge($css, $this->normalizeAssetList($provider['css'] ?? []));
+
+            return [
+                'css' => array_values(array_unique($css)),
+                'js' => $this->normalizeAssetList($provider['js'] ?? []),
+            ];
+        }
+
+        return [
+            'css' => array_values(array_unique($css)),
+            'js' => [],
+        ];
+    }
+
+    /** @return list<string> */
+    private function normalizeAssetList(mixed $assets): array
+    {
+        if (!is_array($assets)) {
+            return [];
+        }
+
+        $list = [];
+        foreach ($assets as $item) {
+            if (!is_string($item)) {
+                continue;
+            }
+
+            $trimmed = trim($item);
+            if ($trimmed === '') {
+                continue;
+            }
+
+            $list[] = $trimmed;
+        }
+
+        return $list;
     }
 
     /** @param array<string, list<string>> $errors */

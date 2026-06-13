@@ -51,7 +51,11 @@ final class Builder
             return $row !== null;
         }
 
-        $row = $this->driver->selectOne('SHOW TABLES LIKE ?', [$name]);
+        // SHOW TABLES 不与 MySQL 原生预处理兼容，改用 INFORMATION_SCHEMA
+        $row = $this->driver->selectOne(
+            'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?',
+            [$name],
+        );
 
         return $row !== null;
     }

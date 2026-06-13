@@ -15,11 +15,12 @@ declare(strict_types=1);
 
 return static function (\Finch\App $app, array $meta = []): void {
     // 在仪表盘页面注入开发工具面板
-    $app->hooks->add('fp_dashboard_after_shortcuts', static function () use ($app): string {
+    $app->hooks->add('fp_dashboard_after_shortcuts', static function (mixed $value) use ($app): string {
+        $existing = is_string($value) ? $value : '';
         $lang = $app->lang;
         $token = htmlspecialchars($app->session->csrfToken(), ENT_QUOTES, 'UTF-8');
 
-        return '<section class="panel fp-dev-panel">'
+        return $existing . '<section class="panel fp-dev-panel">'
             . '<h2 style="color:#dc2626;">' . htmlspecialchars($lang->get('dev.title'), ENT_QUOTES, 'UTF-8') . '</h2>'
             . '<p class="muted">' . htmlspecialchars($lang->get('dev.description'), ENT_QUOTES, 'UTF-8') . '</p>'
             . '<div class="fp-dev-actions">'

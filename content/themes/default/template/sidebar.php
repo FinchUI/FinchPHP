@@ -1,9 +1,31 @@
 <aside class="sidebar">
-    <h3>站点信息</h3>
-    <p class="muted"><?= fp_escape(site_subtitle() !== '' ? site_subtitle() : 'Finch PHP 默认主题') ?></p>
-    <form method="get" action="/search" class="search-form">
-        <label for="q">站内搜索</label>
-        <input id="q" name="q" value="<?= fp_escape((string) (query_data()['keyword'] ?? '')) ?>">
-        <button type="submit">搜索</button>
-    </form>
+    <section class="sidebar-block">
+        <h3>关于本站</h3>
+        <p class="muted"><?= fp_escape(site_subtitle() !== '' ? site_subtitle() : site_name() . ' 博客') ?></p>
+    </section>
+    <section class="sidebar-block">
+        <h3>站内搜索</h3>
+        <form method="get" action="/search" class="search-form">
+            <input type="text" name="q" value="<?= fp_escape((string) (query_data()['keyword'] ?? '')) ?>" placeholder="搜索文章..." aria-label="搜索">
+            <button type="submit">搜索</button>
+        </form>
+    </section>
+    <?php
+    // 获取分类列表
+    $categories = fp_app()->db->table('category')->where('status', 'active')->orderBy('sort_order', 'ASC')->limit(10)->get();
+    if ($categories !== []) :
+    ?>
+    <section class="sidebar-block">
+        <h3>分类</h3>
+        <ul class="cat-list">
+            <?php foreach ($categories as $cat) : ?>
+                <li><a href="/category/<?= rawurlencode((string) $cat['slug']) ?>"><?= fp_escape((string) $cat['name']) ?></a>
+                    <?php if ((int) ($cat['post_count'] ?? 0) > 0) : ?>
+                        <span class="count"><?= (int) $cat['post_count'] ?></span>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
+    <?php endif; ?>
 </aside>

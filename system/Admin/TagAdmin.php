@@ -18,9 +18,10 @@ final class TagAdmin extends BaseController
 
     public function index(): Response
     {
+        $lang = $this->app->lang;
         $items = $this->service()->tags();
 
-        return $this->html($this->adminShell('标签管理', '<section class="panel">' . $this->pageContent($items) . '</section>'));
+        return $this->html($this->adminShell($lang->get('admin.tag.title'), '<section class="panel">' . $this->pageContent($items) . '</section>'));
     }
 
     public function save(): Response

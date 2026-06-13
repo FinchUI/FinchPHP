@@ -61,7 +61,7 @@ final class AuthAdmin extends BaseController
         return '<main style="max-width:360px;margin:8vh auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">'
             . '<h1 style="font-size:1.6rem;margin-bottom:1rem">Finch 后台登录</h1>'
             . $errorHtml
-            . '<form method="post" action="/admin/login" style="display:grid;gap:.8rem">'
+            . '<form method="post" action="' . $this->adminUrl('/admin/login') . '" style="display:grid;gap:.8rem">'
             . '<input type="hidden" name="_token" value="' . $this->escape($token) . '">'
             . '<label>用户名<input name="username" autocomplete="username" style="width:100%;box-sizing:border-box;padding:.55rem;margin-top:.25rem"></label>'
             . '<label>密码<input type="password" name="password" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding:.55rem;margin-top:.25rem"></label>'

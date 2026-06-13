@@ -30,6 +30,12 @@ abstract class BaseModel
     /** 是否自动维护 created_at/updated_at */
     protected static bool $timestamps = true;
 
+    /** 字段类型转换映射（子类可覆盖） */
+    protected static array $casts = [];
+
+    /** 允许批量赋值的字段（空数组表示不限制） */
+    protected static array $fillable = [];
+
     /** @var array<string, mixed> 当前记录属性 */
     protected array $attributes = [];
 
@@ -67,13 +73,18 @@ abstract class BaseModel
     }
 
     /**
-     * 批量赋值。
+     * 批量赋值（遵守 $fillable 白名单）。
      *
      * @param array<string, mixed> $attributes
      */
     public function fill(array $attributes): static
     {
+        $fillable = static::$fillable;
+
         foreach ($attributes as $key => $value) {
+            if ($fillable !== [] && !in_array($key, $fillable, true)) {
+                continue;
+            }
             $this->attributes[$key] = $value;
         }
 
@@ -84,6 +95,43 @@ abstract class BaseModel
     public function toArray(): array
     {
         return $this->attributes;
+    }
+
+    /**
+     * 按 $casts 定义转换属性类型。
+     *
+     * @return array<string, mixed>
+     */
+    public function castAttributes(): array
+    {
+        $result = $this->attributes;
+
+        foreach (static::$casts as $key => $type) {
+            if (!array_key_exists($key, $result)) {
+                continue;
+            }
+
+            $result[$key] = self::castValue($result[$key], $type);
+        }
+
+        return $result;
+    }
+
+    /** 类型转换 */
+    private static function castValue(mixed $value, string $type): mixed
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return match ($type) {
+            'int' => (int) $value,
+            'float' => (float) $value,
+            'bool' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+            'string' => (string) $value,
+            'array', 'json' => is_string($value) ? (json_decode($value, true) ?? []) : $value,
+            default => $value,
+        };
     }
 
     // ---------------------------------------------------------------------
@@ -234,6 +282,43 @@ abstract class BaseModel
         return $this->hasMany($related, $foreignKey);
     }
 
+    /** 多对多关联：通过中间表查询 */
+    protected function belongsToMany(string $related, string $pivotTable, string $foreignKey = '', string $relatedKey = ''): Query
+    {
+        /** @var class-string<BaseModel> $related */
+        if ($foreignKey === '') {
+            $foreignKey = $this->guessForeignKey(static::class);
+        }
+        if ($relatedKey === '') {
+            $relatedKey = $this->guessForeignKey($related);
+        }
+
+        $relatedTable = $related::tableName();
+        $relatedPk = $related::primaryKeyName();
+        $currentId = $this->attributes[static::$primaryKey] ?? null;
+
+        if ($currentId === null) {
+            return $related::query()->whereRaw('1 = 0');
+        }
+
+        $prefix = self::db()->prefix();
+
+        return $related::query()
+            ->select("{$relatedTable}.*")
+            ->join($pivotTable, "{$pivotTable}.{$relatedKey}", "=", "{$relatedTable}.{$relatedPk}")
+            ->where("{$pivotTable}.{$foreignKey}", $currentId);
+    }
+
+    /** 根据类名猜测外键列名（如 Post → post_id） */
+    private function guessForeignKey(string $class): string
+    {
+        $parts = explode('\\', $class);
+        $short = array_pop($parts);
+        $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $short) ?? $short);
+
+        return $snake . '_id';
+    }
+
     /** 暴露主键列名供关联使用 */
     public static function primaryKeyName(): string
     {
@@ -257,6 +342,13 @@ abstract class BaseModel
      */
     protected static function newFromRow(array $row): static
     {
+        // 按 $casts 转换类型
+        foreach (static::$casts as $key => $type) {
+            if (array_key_exists($key, $row)) {
+                $row[$key] = self::castValue($row[$key], $type);
+            }
+        }
+
         $model = new static($row);
         $model->original = $row;
         $model->persisted = true;

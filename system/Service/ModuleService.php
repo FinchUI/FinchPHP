@@ -66,6 +66,43 @@ final class ModuleService
         return is_dir($this->moduleDir . '/' . $module);
     }
 
+    /**
+     * 按侧栏位置列出模块。
+     *
+     * @return list<array<string,mixed>>
+     */
+    public function listBySidebar(string $sidebar = 'side1'): array
+    {
+        try {
+            $rows = \Finch\App::getInstance()->db->table('module')
+                ->where('sidebar', $sidebar)
+                ->orderBy('position', 'ASC')
+                ->get();
+        } catch (\Throwable) {
+            return [];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * 按ID查找模块。
+     *
+     * @return array<string,mixed>|null
+     */
+    public function findById(int $id): ?array
+    {
+        try {
+            $row = \Finch\App::getInstance()->db->table('module')
+                ->where('id', $id)
+                ->first();
+        } catch (\Throwable) {
+            return null;
+        }
+
+        return $row;
+    }
+
     /** @return array<string,string> */
     private function directories(string $base): array
     {

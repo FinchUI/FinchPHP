@@ -589,7 +589,7 @@ final class ExtensionAdmin extends BaseController
         }
 
         return '<section class="panel"><h1>' . $this->escape($lang->get('admin.extension.title')) . '</h1>' . $notice . '</section>'
-            . '<section class="panel"><h2>' . $this->escape($lang->get('admin.extension.plugins')) . '</h2><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.extension.th_name')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_version')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_menu_location')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_preinstalled')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_runtime')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.config')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
+            . '<section class="panel"><h2>' . $this->escape($lang->get('admin.extension.plugins')) . '</h2><table><thead><tr><th></th><th>ID</th><th>' . $this->escape($lang->get('admin.extension.th_name')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_version')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_preinstalled')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_runtime')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.config')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
             . $pluginRows
             . '</tbody></table></section>';
     }
@@ -775,5 +775,57 @@ final class ExtensionAdmin extends BaseController
     private function settingService(): SettingService
     {
         return new SettingService($this->app->db, $this->app->settings);
+    }
+
+    /**
+     * 渲染插件图标 HTML。
+     *
+     * 优先使用插件目录中的 logo.svg / logo.png，
+     * 否则用首字母 + 确定性颜色背景。
+     */
+    private function pluginIcon(string $id, string $name, string $path): string
+    {
+        // 检查插件目录中的 logo 文件
+        $logoUrl = '';
+        if ($path !== '' && is_dir($path)) {
+            if (is_file($path . '/logo.svg')) {
+                $logoUrl = '/content/plugins/' . rawurlencode($id) . '/logo.svg';
+            } elseif (is_file($path . '/logo.png')) {
+                $logoUrl = '/content/plugins/' . rawurlencode($id) . '/logo.png';
+            }
+        }
+
+        if ($logoUrl !== '') {
+            return '<img src="' . $this->escape($logoUrl) . '" alt="" class="fp-plugin-icon" loading="lazy">';
+        }
+
+        // 无图标：首字母 + 确定性颜色
+        $letter = mb_strtoupper(mb_substr($name !== '' ? $name : $id, 0, 1));
+        $bg = $this->deterministicColor($id);
+        $fg = $this->contrastColor($bg);
+
+        return '<span class="fp-plugin-icon-letter" style="background:' . $this->escape($bg) . ';color:' . $this->escape($fg) . '">' . $this->escape($letter) . '</span>';
+    }
+
+    /** 基于字符串生成确定性颜色（HSL，饱和度 65%，亮度 55%） */
+    private function deterministicColor(string $seed): string
+    {
+        $hash = crc32($seed);
+        $hue = $hash % 360;
+
+        return 'hsl(' . $hue . ',65%,55%)';
+    }
+
+    /** 根据背景色亮度返回黑或白前景色 */
+    private function contrastColor(string $hsl): string
+    {
+        // 从 hsl(h,65%,55%) 中提取亮度值
+        if (preg_match('/hsl\(\d+,65%,(\d+)%\)/', $hsl, $m)) {
+            $lightness = (int) $m[1];
+
+            return $lightness > 55 ? '#1f2937' : '#ffffff';
+        }
+
+        return '#ffffff';
     }
 }

@@ -711,6 +711,7 @@ final class ExtensionAdmin extends BaseController
      */
     private function pluginField(array $field, array $values): string
     {
+        $lang = $this->app->lang;
         $name = trim((string) ($field['name'] ?? ''));
         if ($name === '') {
             return '';
@@ -725,9 +726,9 @@ final class ExtensionAdmin extends BaseController
             $checked = (bool) $value ? ' checked' : '';
 
             return '<label class="fp-check-row"><input type="checkbox" name="' . $this->escape($name) . '" value="1"' . $checked . '>'
-                . $this->escape($label)
+                . $this->escape($lang->get($label))
                 . '</label>'
-                . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($help) . '</div>' : '');
+                . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($lang->get($help)) . '</div>' : '');
         }
 
         if ($type === 'select') {
@@ -736,21 +737,21 @@ final class ExtensionAdmin extends BaseController
             if (is_array($options)) {
                 foreach ($options as $optionValue => $optionLabel) {
                     $selected = (string) $value === (string) $optionValue ? ' selected' : '';
-                    $optionHtml .= '<option value="' . $this->escape((string) $optionValue) . '"' . $selected . '>' . $this->escape((string) $optionLabel) . '</option>';
+                    $optionHtml .= '<option value="' . $this->escape((string) $optionValue) . '"' . $selected . '>' . $this->escape($lang->get((string) $optionLabel)) . '</option>';
                 }
             }
 
-            return '<label>' . $this->escape($label)
+            return '<label>' . $this->escape($lang->get($label))
                 . '<select name="' . $this->escape($name) . '">' . $optionHtml . '</select></label>'
-                . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($help) . '</div>' : '');
+                . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($lang->get($help)) . '</div>' : '');
         }
 
         $inputType = in_array($type, ['text', 'password', 'number'], true) ? $type : 'text';
         $displayValue = $inputType === 'password' ? '' : (string) $value;
 
-        return '<label>' . $this->escape($label)
+        return '<label>' . $this->escape($lang->get($label))
             . '<input type="' . $this->escape($inputType) . '" name="' . $this->escape($name) . '" value="' . $this->escape($displayValue) . '"></label>'
-            . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($help) . '</div>' : '');
+            . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($lang->get($help)) . '</div>' : '');
     }
 
     /**

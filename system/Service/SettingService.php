@@ -77,6 +77,13 @@ final class SettingService
                 date_default_timezone_set($value);
             }
 
+            if ($key === 'debug_mode') {
+                $app = \Finch\App::getInstance();
+                if (isset($app->errorHandler)) {
+                    $app->errorHandler->setDebug((bool) $value);
+                }
+            }
+
             $touched = true;
         }
 

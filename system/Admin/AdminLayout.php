@@ -87,6 +87,7 @@ trait AdminLayout
             ['path' => '/admin/users', 'label' => 'admin.menu.users', 'icon' => 'ti ti-users'],
             ['path' => '/admin/tokens', 'label' => 'admin.menu.tokens', 'icon' => 'ti ti-key'],
             ['path' => '/admin/extensions', 'label' => 'admin.menu.extensions', 'icon' => 'ti ti-puzzle'],
+            ['path' => '/admin/links', 'label' => 'admin.menu.links', 'icon' => 'ti ti-link'],
             ['path' => '/admin/modules', 'label' => 'admin.menu.modules', 'icon' => 'ti ti-box'],
             ['path' => '/admin/themes', 'label' => 'admin.menu.themes', 'icon' => 'ti ti-palette'],
             ['path' => '/admin/ai', 'label' => 'admin.menu.ai', 'icon' => 'ti ti-robot'],

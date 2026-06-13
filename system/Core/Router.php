@@ -1186,6 +1186,80 @@ final class Router
             'handler'    => 'Finch\\Admin\\ModuleAdmin::saveOrder',
         ]);
 
+        // ── 链接管理中心 (Active) ──
+
+        $this->add('admin_links_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/links',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::index',
+        ]);
+
+        $this->add('admin_links_create_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/links/create',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::create',
+        ]);
+
+        $this->add('admin_links_store_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/links/store',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::store',
+        ]);
+
+        $this->add('admin_links_edit_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/links/edit',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::edit',
+        ]);
+
+        $this->add('admin_links_update_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/links/update',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::update',
+        ]);
+
+        $this->add('admin_links_delete_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/links/delete',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::delete',
+        ]);
+
+        $this->add('admin_links_sort_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/links/sort',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::sort',
+        ]);
+
+        $this->add('admin_links_search_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/links/search',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::search',
+        ]);
+
         // ── 主题管理 (Active) ──
 
         $this->add('admin_themes_active', [

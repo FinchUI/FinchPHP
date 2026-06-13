@@ -1079,7 +1079,7 @@ function fp_install_render(array $state): void
             <div class="grid">
                 <div>
                     <label for="driver"><?php echo fp_install_e($t['driver']); ?></label>
-                    <select id="driver" name="driver">
+                    <select id="driver" name="driver" onchange="fpToggleDbFields()">
                         <option value="sqlite" <?php echo $values['driver'] === 'sqlite' ? 'selected' : ''; ?>>SQLite</option>
                         <option value="mysql" <?php echo in_array($values['driver'], ['mysql', 'mariadb'], true) ? 'selected' : ''; ?>>MySQL / MariaDB</option>
                     </select>
@@ -1088,11 +1088,17 @@ function fp_install_render(array $state): void
                     <label for="table_prefix"><?php echo fp_install_e($t['table_prefix']); ?></label>
                     <input id="table_prefix" name="table_prefix" value="<?php echo fp_install_e($values['table_prefix']); ?>" required>
                 </div>
+            </div>
+
+            <div class="grid db-fields" id="db-sqlite" style="<?php echo $values['driver'] === 'sqlite' ? '' : 'display:none;'; ?>">
                 <div class="full">
                     <label for="sqlite_database"><?php echo fp_install_e($t['sqlite_path']); ?></label>
                     <input id="sqlite_database" name="sqlite_database" value="<?php echo fp_install_e($values['sqlite_database']); ?>">
                     <span class="hint"><?php echo fp_install_e($t['sqlite_hint']); ?></span>
                 </div>
+            </div>
+
+            <div class="grid db-fields" id="db-mysql" style="<?php echo $values['driver'] === 'sqlite' ? 'display:none;' : ''; ?>">
                 <div>
                     <label for="mysql_host"><?php echo fp_install_e($t['mysql_host']); ?></label>
                     <input id="mysql_host" name="mysql_host" value="<?php echo fp_install_e($values['mysql_host']); ?>">
@@ -1142,6 +1148,20 @@ function fp_install_render(array $state): void
         </form>
     <?php endif; ?>
 </main>
+<script>
+function fpToggleDbFields() {
+    const driver = document.getElementById('driver').value;
+    const sqliteEl = document.getElementById('db-sqlite');
+    const mysqlEl = document.getElementById('db-mysql');
+    if (driver === 'sqlite') {
+        sqliteEl.style.display = '';
+        mysqlEl.style.display = 'none';
+    } else {
+        sqliteEl.style.display = 'none';
+        mysqlEl.style.display = '';
+    }
+}
+</script>
 </body>
 </html><?php
 }

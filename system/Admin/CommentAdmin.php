@@ -22,7 +22,7 @@ final class CommentAdmin extends BaseController
         $status = trim((string) $this->request->query('status', ''));
         $list = $this->service()->page($page, 20, $status);
 
-        return $this->html($this->adminShell('评论管理', $this->table($list, $status)));
+        return $this->html($this->adminShell('评论管理', '<section class="panel">' . $this->table($list, $status) . '</section>'));
     }
 
     public function approve(string|int $id): Response

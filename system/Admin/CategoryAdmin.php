@@ -20,7 +20,7 @@ final class CategoryAdmin extends BaseController
     {
         $items = $this->service()->categories();
 
-        return $this->html($this->adminShell('分类管理', $this->pageContent($items)));
+        return $this->html($this->adminShell('分类管理', '<section class="panel">' . $this->pageContent($items) . '</section>'));
     }
 
     public function save(): Response
@@ -36,7 +36,7 @@ final class CategoryAdmin extends BaseController
         if ($validator->fails()) {
             $items = $this->service()->categories();
 
-            return $this->html($this->adminShell('分类管理', $this->pageContent($items, $validator->errors())), 422);
+            return $this->html($this->adminShell('分类管理', '<section class="panel">' . $this->pageContent($items, $validator->errors()) . '</section>'), 422);
         }
 
         $this->service()->saveCategory($this->request->all(), $id);

@@ -20,7 +20,7 @@ final class TagAdmin extends BaseController
     {
         $items = $this->service()->tags();
 
-        return $this->html($this->adminShell('标签管理', $this->pageContent($items)));
+        return $this->html($this->adminShell('标签管理', '<section class="panel">' . $this->pageContent($items) . '</section>'));
     }
 
     public function save(): Response
@@ -34,7 +34,7 @@ final class TagAdmin extends BaseController
         if ($validator->fails()) {
             $items = $this->service()->tags();
 
-            return $this->html($this->adminShell('标签管理', $this->pageContent($items, $validator->errors())), 422);
+            return $this->html($this->adminShell('标签管理', '<section class="panel">' . $this->pageContent($items, $validator->errors()) . '</section>'), 422);
         }
 
         $this->service()->saveTag($this->request->all(), $id);

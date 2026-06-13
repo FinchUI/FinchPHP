@@ -121,7 +121,7 @@ final class UserAdmin extends BaseController
      */
     private function content(array $pageData, array $roleMap, string $q, array $errors = []): string
     {
-        $saved = $this->request->query('saved') === '1' ? '<div style="color:#067647">用户信息已保存。</div>' : '';
+        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">用户信息已保存。</div>' : '';
 
         $rows = '';
         foreach ($pageData['data'] as $user) {
@@ -142,7 +142,7 @@ final class UserAdmin extends BaseController
                 . '<td>' . $uid . '</td>'
                 . '<td>' . $this->escape((string) ($user['username'] ?? '')) . '</td>'
                 . '<td>'
-                . '<form method="post" action="' . $this->escape($baseAction) . '" style="display:grid;gap:8px">'
+                . '<form method="post" action="' . $this->escape($baseAction) . '" class="fp-form-stack">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
                 . '<input type="hidden" name="id" value="' . $uid . '">'
                 . '<input type="text" name="display_name" value="' . $this->escape((string) ($user['display_name'] ?? '')) . '" placeholder="显示名称">'
@@ -172,13 +172,13 @@ final class UserAdmin extends BaseController
             if (!isset($messages[0])) {
                 continue;
             }
-            $errorList .= '<div style="color:#b42318">' . $this->escape($field . ': ' . $messages[0]) . '</div>';
+            $errorList .= '<div class="fp-error-text">' . $this->escape($field . ': ' . $messages[0]) . '</div>';
         }
 
         return '<section class="panel"><h1>用户管理</h1>'
             . $saved
             . $errorList
-            . '<form method="get" action="/admin/users" style="display:flex;gap:8px;max-width:420px;margin:10px 0">'
+            . '<form method="get" action="/admin/users" class="fp-search-form">'
             . '<input name="q" value="' . $this->escape($q) . '" placeholder="按用户名搜索">'
             . '<button type="submit">搜索</button>'
             . '</form>'
@@ -198,7 +198,7 @@ final class UserAdmin extends BaseController
         $page = (int) $pageData['page'];
         $lastPage = max(1, (int) $pageData['last_page']);
 
-        $parts = ['<div class="actions" style="margin-top:12px">'];
+        $parts = ['<div class="actions fp-actions-gap-top">'];
         if ($page > 1) {
             $parts[] = '<a href="' . $this->pagerUrl($page - 1, $q) . '">上一页</a>';
         }

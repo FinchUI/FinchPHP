@@ -19,6 +19,17 @@ final class HomeController extends BaseController
         $perPage = max(1, (int) $this->app->settings->get('posts_per_page', 10));
         $pageData = $this->postService()->publishedPage($page, $perPage, 'article');
 
+        // 调试：写入日志便于排查前台文章不显示问题
+        $this->app->logger->debug('HomeController::index', [
+            'page' => $page,
+            'perPage' => $perPage,
+            'total' => $pageData['total'],
+            'data_count' => count($pageData['data']),
+            'gmdate' => gmdate('Y-m-d H:i:s'),
+            'date' => date('Y-m-d H:i:s'),
+            'timezone' => date_default_timezone_get(),
+        ]);
+
         return $this->html($this->app->template->render('index', [
             'query' => [
                 'mode' => 'home',

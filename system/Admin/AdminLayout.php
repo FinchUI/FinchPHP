@@ -12,6 +12,7 @@ trait AdminLayout
 {
     private function adminShell(string $title, string $body): string
     {
+        $body = $this->normalizeAdminLinks($body);
         $assets = $this->resolveAdminStyleAssets();
 
         return '<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8">'
@@ -131,12 +132,13 @@ trait AdminLayout
     /** @return array{css: list<string>, js: list<string>} */
     private function resolveAdminStyleAssets(): array
     {
-        $css = [];
+        $baseCss = '/system/assets/css/admin.css';
         if (isset($this->app->asset)) {
-            $css[] = $this->app->asset->systemAsset('css/admin.css');
-        } else {
-            $css[] = '/system/assets/css/admin.css';
+            $baseCss = $this->app->asset->systemAsset('css/admin.css');
         }
+
+        $css = [];
+        $js = [];
 
         $provider = $this->app->hooks->filter('fp_provider_admin_style_tabler_resolve', null, [
             'request' => $this->request,
@@ -144,17 +146,15 @@ trait AdminLayout
         ]);
 
         if (is_array($provider)) {
-            $css = array_merge($css, $this->normalizeAssetList($provider['css'] ?? []));
-
-            return [
-                'css' => array_values(array_unique($css)),
-                'js' => $this->normalizeAssetList($provider['js'] ?? []),
-            ];
+            $css = $this->normalizeAssetList($provider['css'] ?? []);
+            $js = $this->normalizeAssetList($provider['js'] ?? []);
         }
+
+        $css[] = $baseCss;
 
         return [
             'css' => array_values(array_unique($css)),
-            'js' => [],
+            'js' => array_values(array_unique($js)),
         ];
     }
 
@@ -180,6 +180,48 @@ trait AdminLayout
         }
 
         return $list;
+    }
+
+    private function normalizeAdminLinks(string $html): string
+    {
+        $normalized = preg_replace_callback(
+            '/\b(href|action)\s*=\s*(["\'])(\/admin[^"\']*)\2/i',
+            function (array $matches): string {
+                $attr = $matches[1];
+                $quote = $matches[2];
+                $url = $this->toDynamicAdminUrl($matches[3]);
+
+                return $attr . '=' . $quote . $this->escape($url) . $quote;
+            },
+            $html,
+        );
+
+        return is_string($normalized) ? $normalized : $html;
+    }
+
+    private function toDynamicAdminUrl(string $url): string
+    {
+        if (!str_starts_with($url, '/admin')) {
+            return $url;
+        }
+
+        $parts = parse_url($url);
+        if (!is_array($parts)) {
+            return $url;
+        }
+
+        $path = isset($parts['path']) && is_string($parts['path']) ? $parts['path'] : $url;
+        $dynamic = $this->adminUrl($path);
+
+        if (isset($parts['query']) && is_string($parts['query']) && $parts['query'] !== '') {
+            $dynamic .= '&' . $parts['query'];
+        }
+
+        if (isset($parts['fragment']) && is_string($parts['fragment']) && $parts['fragment'] !== '') {
+            $dynamic .= '#' . $parts['fragment'];
+        }
+
+        return $dynamic;
     }
 
     /** @param array<string, list<string>> $errors */

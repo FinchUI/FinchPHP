@@ -11,8 +11,13 @@ return static function (\Finch\App $app, array $meta = []): void {
         return [
             'ok' => true,
             'provider' => 'tabler',
-            'css' => [],
-            'js' => [],
+            'css' => [
+                'https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css',
+                'https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.40.0/tabler-icons.min.css',
+            ],
+            'js' => [
+                'https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js',
+            ],
             'message' => 'tabler style provider ready',
         ];
     });

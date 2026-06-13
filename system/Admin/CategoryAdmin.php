@@ -14,11 +14,13 @@ use Finch\Service\TaxonomyManageService;
 
 final class CategoryAdmin extends BaseController
 {
+    use AdminLayout;
+
     public function index(): Response
     {
         $items = $this->service()->categories();
 
-        return $this->html($this->layout('分类管理', $this->pageContent($items)));
+        return $this->html($this->adminShell('分类管理', $this->pageContent($items)));
     }
 
     public function save(): Response
@@ -34,7 +36,7 @@ final class CategoryAdmin extends BaseController
         if ($validator->fails()) {
             $items = $this->service()->categories();
 
-            return $this->html($this->layout('分类管理', $this->pageContent($items, $validator->errors())), 422);
+            return $this->html($this->adminShell('分类管理', $this->pageContent($items, $validator->errors())), 422);
         }
 
         $this->service()->saveCategory($this->request->all(), $id);
@@ -105,24 +107,4 @@ final class CategoryAdmin extends BaseController
             . '</tbody></table>';
     }
 
-    private function layout(string $title, string $body): string
-    {
-        return '<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>'
-            . $this->escape($title) . ' - Finch PHP</title></head>'
-            . '<body style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;padding:2rem;line-height:1.6;background:#f6f8fa">'
-            . '<nav style="margin-bottom:1rem"><a href="/admin">后台首页</a> · <a href="/admin/posts">文章</a> · <a href="/admin/pages">页面</a> · <a href="/admin/categories">分类</a> · <a href="/admin/tags">标签</a> · <a href="/admin/comments">评论</a></nav>'
-            . '<section style="background:#fff;border:1px solid #d0d7de;border-radius:8px;padding:1rem 1.25rem">'
-            . $body
-            . '</section>'
-            . $this->logoutForm()
-            . '</body></html>';
-    }
-
-    private function logoutForm(): string
-    {
-        return '<form method="post" action="/admin/logout" style="margin-top:1rem">'
-            . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-            . '<button type="submit" style="padding:.45rem .75rem;border:1px solid #d0d7de;background:#fff;cursor:pointer">退出登录</button>'
-            . '</form>';
-    }
 }

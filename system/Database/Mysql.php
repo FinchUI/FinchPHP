@@ -33,6 +33,9 @@ final class Mysql extends AbstractDriver
             (string) ($this->config['password'] ?? ''),
             $options,
         );
+
+        // 统一时区为 UTC，确保 gmdate() 存入的值与比较值含义一致
+        $this->pdo->exec("SET time_zone = '+00:00'");
     }
 
     public function getVersion(): string

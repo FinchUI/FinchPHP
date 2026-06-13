@@ -267,18 +267,14 @@ final class DevModeAdmin extends BaseController
 
             // 随机选择 1-2 个分类（优先叶子分类）
             $catCount = random_int(1, 2);
-            $postCats = $leafCats !== []
-                ? (array) array_rand(array_flip($leafCats), min($catCount, count($leafCats)))
-                : [];
-            if ($postCats === [] && $allCats !== []) {
-                $postCats = (array) array_rand(array_flip($allCats), min($catCount, count($allCats)));
-            }
+            $catPool = $leafCats !== [] ? $leafCats : $allCats;
+            $postCats = $catPool !== [] ? $this->randomPick($catPool, $catCount) : [];
             $primaryCat = !empty($postCats) ? (int) reset($postCats) : null;
 
             // 随机选 2-4 个标签
             $tagSlugs = array_keys($tagIds);
             $tagCount = random_int(2, min(4, count($tagSlugs)));
-            $postTagSlugs = (array) array_rand(array_flip($tagSlugs), $tagCount);
+            $postTagSlugs = $this->randomPick($tagSlugs, $tagCount);
 
             $slug = 'demo-post-' . $postIndex;
             $content = '<p>这是一篇演示文章，用于测试系统功能。</p>'

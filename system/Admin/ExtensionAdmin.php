@@ -77,7 +77,7 @@ final class ExtensionAdmin extends BaseController
                     'name' => 'placeholder',
                     'label' => 'admin.extension.quill_placeholder',
                     'type' => 'text',
-                    'default' => '开始编写内容...',
+                    'default' => 'Start writing...',
                     'store_type' => 'string',
                     'autoload' => true,
                 ],
@@ -657,7 +657,7 @@ final class ExtensionAdmin extends BaseController
             $moduleRows = '<tr><td colspan="5" class="muted">' . $this->escape($lang->get('admin.extension.no_module_meta')) . '</td></tr>';
         }
 
-        return '<section class="panel"><h1>' . $this->escape($lang->get('admin.extension.title')) . '</h1>' . $notice . '<p class="muted">Stage18 基础骨架：插件/主题/模块元数据发现与最小操作。</p></section>'
+        return '<section class="panel"><h1>' . $this->escape($lang->get('admin.extension.title')) . '</h1>' . $notice . '</section>'
             . '<section class="panel"><h2>' . $this->escape($lang->get('admin.extension.themes')) . '</h2><table><thead><tr><th>' . $this->escape($lang->get('admin.extension.th_name')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_version')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_author')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
             . $themeRows
             . '</tbody></table></section>'

@@ -82,7 +82,7 @@ final class UploadAdmin extends BaseController
             . '<form method="post" action="/admin/uploads/store" enctype="multipart/form-data" class="fp-form-grid fp-form-grid-upload">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . '<label>' . $this->escape($lang->get('admin.upload.file')) . '<input type="file" name="file" required></label>'
-            . '<label>' . $this->escape($lang->get('admin.upload.post_id')) . '<input type="number" name="post_id" min="1" placeholder="例如 12"></label>'
+            . '<label>' . $this->escape($lang->get('admin.upload.post_id')) . '<input type="number" name="post_id" min="1" placeholder="e.g. 12"></label>'
             . '<div class="actions"><button type="submit">' . $this->escape($lang->get('admin.upload.upload_btn')) . '</button></div>'
             . '</form>'
             . '</section>'

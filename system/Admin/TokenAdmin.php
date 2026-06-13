@@ -180,7 +180,7 @@ final class TokenAdmin extends BaseController
             . '<button type="submit">' . $this->escape($lang->get('admin.token.issue')) . '</button>'
             . '</form>'
             . '</section>'
-            . '<section class="panel"><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.token.th_user')) . '</th><th>' . $this->escape($lang->get('admin.token.th_name')) . '</th><th>' . $this->escape($lang->get('admin.token.th_abilities')) . '</th><th>' . $this->escape($lang->get('admin.token.th_expires')) . '</th><th>' . $this->escape($lang->get('admin.token.th_last_used')) . '</th><th>操作</th></tr></thead><tbody>'
+            . '<section class="panel"><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.token.th_user')) . '</th><th>' . $this->escape($lang->get('admin.token.th_name')) . '</th><th>' . $this->escape($lang->get('admin.token.th_abilities')) . '</th><th>' . $this->escape($lang->get('admin.token.th_expires')) . '</th><th>' . $this->escape($lang->get('admin.token.th_last_used')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
             . $rows
             . '</tbody></table>'
             . $this->pager($pageData)

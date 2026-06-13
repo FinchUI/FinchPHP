@@ -18,9 +18,10 @@ final class CategoryAdmin extends BaseController
 
     public function index(): Response
     {
+        $lang = $this->app->lang;
         $items = $this->service()->categories();
 
-        return $this->html($this->adminShell('分类管理', '<section class="panel">' . $this->pageContent($items) . '</section>'));
+        return $this->html($this->adminShell($lang->get('admin.category.title'), '<section class="panel">' . $this->pageContent($items) . '</section>'));
     }
 
     public function save(): Response

@@ -11,10 +11,8 @@ namespace Finch\Admin;
 use Finch\Controller\BaseController;
 use Finch\Core\Response;
 use Finch\Model\PluginSetting;
-use Finch\Service\ModuleService;
 use Finch\Service\PluginService;
 use Finch\Service\SettingService;
-use Finch\Service\ThemeService;
 use Throwable;
 
 final class ExtensionAdmin extends BaseController
@@ -555,50 +553,14 @@ final class ExtensionAdmin extends BaseController
     private function content(): string
     {
         $lang = $this->app->lang;
-        $themes = $this->themeService()->discover();
         $plugins = $this->pluginService()->discover();
-        $modules = $this->moduleService()->discover();
         $token = $this->escape($this->app->session->csrfToken());
 
         $notice = '';
-        if ($this->request->query('theme') === '1') {
-            $notice .= '<div class="fp-notice-success">' . $this->escape($lang->get('admin.extension.theme_switched')) . '</div>';
-        } elseif ($this->request->query('theme') === '0') {
-            $notice .= '<div class="fp-error-text">' . $this->escape($lang->get('admin.extension.theme_switch_failed')) . '</div>';
-        }
-
-        if ($this->request->query('module') === '1') {
-            $notice .= '<div class="fp-notice-success">' . $this->escape($lang->get('admin.extension.module_updated')) . '</div>';
-        } elseif ($this->request->query('module') === '0') {
-            $notice .= '<div class="fp-error-text">' . $this->escape($lang->get('admin.extension.module_update_failed')) . '</div>';
-        }
-
         if ($this->request->query('plugin') === '1') {
             $notice .= '<div class="fp-notice-success">' . $this->escape($lang->get('admin.extension.plugin_updated')) . '</div>';
         } elseif ($this->request->query('plugin') === '0') {
             $notice .= '<div class="fp-error-text">' . $this->escape($lang->get('admin.extension.plugin_update_failed')) . '</div>';
-        }
-
-        $themeRows = '';
-        foreach ($themes as $theme) {
-            $id = (string) ($theme['id'] ?? '');
-            $active = (bool) ($theme['active'] ?? false);
-            $themeRows .= '<tr>'
-                . '<td>' . $this->escape((string) ($theme['name'] ?? $id)) . '</td>'
-                . '<td>' . $this->escape((string) ($theme['version'] ?? '')) . '</td>'
-                . '<td>' . $this->escape((string) ($theme['author'] ?? '')) . '</td>'
-                . '<td>' . ($active ? '<strong>' . $this->escape($lang->get('admin.common.enabled')) . '</strong>' : $this->escape($lang->get('admin.common.not_enabled'))) . '</td>'
-                . '<td>'
-                . ($active ? '' : '<form method="post" action="/admin/extensions/theme" class="fp-inline-form">'
-                    . '<input type="hidden" name="_token" value="' . $token . '">'
-                    . '<input type="hidden" name="theme" value="' . $this->escape($id) . '">'
-                    . '<button type="submit">' . $this->escape($lang->get('admin.common.enable')) . '</button>'
-                    . '</form>')
-                . '</td>'
-                . '</tr>';
-        }
-        if ($themeRows === '') {
-            $themeRows = '<tr><td colspan="5" class="muted">' . $this->escape($lang->get('admin.extension.no_theme_meta')) . '</td></tr>';
         }
 
         $pluginRows = '';
@@ -636,36 +598,9 @@ final class ExtensionAdmin extends BaseController
             $pluginRows = '<tr><td colspan="9" class="muted">' . $this->escape($lang->get('admin.extension.no_plugin_meta')) . '</td></tr>';
         }
 
-        $moduleRows = '';
-        foreach ($modules as $module) {
-            $id = (string) ($module['id'] ?? '');
-            $enabled = (bool) ($module['enabled'] ?? true);
-            $moduleRows .= '<tr>'
-                . '<td>' . $this->escape($id) . '</td>'
-                . '<td>' . $this->escape((string) ($module['name'] ?? '')) . '</td>'
-                . '<td>' . $this->escape((string) ($module['version'] ?? '')) . '</td>'
-                . '<td>' . ($enabled ? '<strong>' . $this->escape($lang->get('admin.common.enable')) . '</strong>' : $this->escape($lang->get('admin.common.disable'))) . '</td>'
-                . '<td><form method="post" action="/admin/extensions/module" class="fp-inline-form">'
-                . '<input type="hidden" name="_token" value="' . $token . '">'
-                . '<input type="hidden" name="module" value="' . $this->escape($id) . '">'
-                . '<input type="hidden" name="enabled" value="' . ($enabled ? '0' : '1') . '">'
-                . '<button type="submit" class="secondary">' . ($enabled ? $this->escape($lang->get('admin.common.disable')) : $this->escape($lang->get('admin.common.enable'))) . '</button>'
-                . '</form></td>'
-                . '</tr>';
-        }
-        if ($moduleRows === '') {
-            $moduleRows = '<tr><td colspan="5" class="muted">' . $this->escape($lang->get('admin.extension.no_module_meta')) . '</td></tr>';
-        }
-
         return '<section class="panel"><h1>' . $this->escape($lang->get('admin.extension.title')) . '</h1>' . $notice . '</section>'
-            . '<section class="panel"><h2>' . $this->escape($lang->get('admin.extension.themes')) . '</h2><table><thead><tr><th>' . $this->escape($lang->get('admin.extension.th_name')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_version')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_author')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
-            . $themeRows
-            . '</tbody></table></section>'
             . '<section class="panel"><h2>' . $this->escape($lang->get('admin.extension.plugins')) . '</h2><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.extension.th_name')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_version')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_menu_location')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_preinstalled')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_runtime')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.config')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
             . $pluginRows
-            . '</tbody></table></section>'
-            . '<section class="panel"><h2>' . $this->escape($lang->get('admin.extension.modules')) . '</h2><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.extension.th_name')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_version')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
-            . $moduleRows
             . '</tbody></table></section>';
     }
 

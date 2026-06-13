@@ -1,0 +1,9 @@
+{
+    "name": "开发模式",
+    "version": "1.0.0",
+    "description": "开发调试工具：一键重装网站、导入/清空演示数据。仅供开发阶段使用，请勿在生产环境启用。",
+    "author": "Finch",
+    "preinstalled": false,
+    "menu_location": "hidden",
+    "settings_page": "/admin/dev-mode"
+}

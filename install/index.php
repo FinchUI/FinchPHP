@@ -815,6 +815,39 @@ function fp_install_write_config(array $config): void
     }
 }
 
+function fp_install_server_timezone(): string
+{
+    return date_default_timezone_get() ?: 'UTC';
+}
+
+/** @return list<array{value:string,label:string}> */
+function fp_install_timezone_options(): array
+{
+    $current = fp_install_server_timezone();
+    $options = [];
+    $found = false;
+
+    foreach (timezone_identifiers_list() as $tz) {
+        $options[] = [
+            'value' => $tz,
+            'label' => str_replace('_', ' ', $tz),
+        ];
+        if ($tz === $current) {
+            $found = true;
+        }
+    }
+
+    // If the server timezone is not in the list (shouldn't happen), add it
+    if (! $found && $current !== '') {
+        array_unshift($options, [
+            'value' => $current,
+            'label' => $current . ' (current)',
+        ]);
+    }
+
+    return $options;
+}
+
 function fp_install_guess_site_url(): string
 {
     $secure = (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off')
@@ -1034,8 +1067,11 @@ function fp_install_render(array $state): void
                 </div>
                 <div class="full">
                     <label for="timezone"><?php echo fp_install_e($t['timezone']); ?></label>
-                    <input id="timezone" name="timezone" value="<?php echo fp_install_e($values['timezone']); ?>" required>
-                    <span class="hint"><?php echo fp_install_e($t['timezone_hint']); ?></span>
+                    <select id="timezone" name="timezone" required>
+                        <?php foreach (fp_install_timezone_options() as $tz) : ?>
+                            <option value="<?php echo fp_install_e($tz['value']); ?>" <?php echo $tz['value'] === ($values['timezone'] ?? '') ? 'selected' : ''; ?>><?php echo fp_install_e($tz['label']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
             </div>
 

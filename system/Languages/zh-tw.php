@@ -41,6 +41,7 @@ return [
     'admin.common.has' => '有',
     'admin.common.none' => '無',
     'admin.common.config' => '設定',
+    'admin.common.cancel' => '取消',
     'admin.common.empty' => '(空)',
     'admin.common.back_list' => '返回列表',
     'admin.common.prev_page' => '上一頁',

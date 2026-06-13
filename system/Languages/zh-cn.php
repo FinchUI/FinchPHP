@@ -308,6 +308,8 @@ return [
     'admin.extension.captcha_code_length' => '验证码长度',
     'admin.extension.captcha_ttl' => '验证码有效期（秒）',
     'admin.extension.captcha_case_sensitive' => '区分大小写',
+    'admin.extension.link_title' => '链接管理中心',
+    'admin.extension.link_desc' => '管理导航栏、友情链接及其他链接，支持分类/页面/文章快速添加和拖拽排序。',
     'admin.extension.github_title' => 'Social GitHub 登录',
     'admin.extension.github_desc' => '配置 GitHub OAuth 登录参数。',
     'admin.extension.github_redirect_uri' => '回调地址',

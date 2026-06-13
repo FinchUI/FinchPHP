@@ -304,6 +304,8 @@ return [
     'admin.extension.captcha_code_length' => 'Code Length',
     'admin.extension.captcha_ttl' => 'Code TTL (seconds)',
     'admin.extension.captcha_case_sensitive' => 'Case Sensitive',
+    'admin.extension.link_title' => 'Link Manager',
+    'admin.extension.link_desc' => 'Manage navigation bars, friend links, and custom links with drag-and-drop sorting.',
     'admin.extension.github_title' => 'Social GitHub Login',
     'admin.extension.github_desc' => 'Configure GitHub OAuth login parameters.',
     'admin.extension.github_redirect_uri' => 'Redirect URI',

@@ -191,7 +191,12 @@ final class PostAdmin extends BaseController
             . '<label>' . $this->escape($lang->get('admin.post.is_top')) . ' <input type="checkbox" name="is_top" value="1" ' . ((int) ($post['is_top'] ?? 0) === 1 ? 'checked' : '') . '></label>'
             . '<label>' . $this->escape($lang->get('admin.post.published_at')) . '<input name="published_at" value="' . $this->escape((string) ($post['published_at'] ?? '')) . '" placeholder="YYYY-mm-dd HH:ii:ss"></label>'
             . '<label>' . $this->escape($lang->get('admin.post.excerpt')) . '<textarea name="excerpt" rows="3">' . $this->escape((string) ($post['excerpt'] ?? '')) . '</textarea></label>'
-            . '<label>' . $this->escape($lang->get('admin.post.content')) . '<textarea name="content" rows="12">' . $this->escape((string) ($post['content'] ?? '')) . '</textarea></label>'
+            . '<div class="fp-editor-field">'
+            . '<label>' . $this->escape($lang->get('admin.post.content')) . '</label>'
+            . '<div id="fp-quill-editor">' . ($post['content'] ?? '') . '</div>'
+            . '<input type="hidden" name="content" id="fp-quill-content">'
+            . $this->fieldError('content', $errors)
+            . '</div>'
             . '<fieldset><legend>' . $this->escape($lang->get('admin.post.category')) . '</legend>' . ($categoryOptions === '' ? '<p class="muted">' . $this->escape($lang->get('admin.post.no_category')) . '</p>' : $categoryOptions) . '</fieldset>'
             . '<label>' . $this->escape($lang->get('admin.post.tags')) . '<input name="tags" value="' . $this->escape($tags) . '"></label>'
             . '<div class="actions"><button type="submit">' . $this->escape($lang->get('admin.common.save')) . '</button><a href="/admin/posts">' . $this->escape($lang->get('admin.common.back_list')) . '</a></div>'

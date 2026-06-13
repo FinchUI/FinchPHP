@@ -173,7 +173,12 @@ final class PageAdmin extends BaseController
             . '</select>' . $this->fieldError('comment_status', $errors) . '</label>'
             . '<label>' . $this->escape($lang->get('admin.post.published_at')) . '<input name="published_at" value="' . $this->escape((string) ($item['published_at'] ?? '')) . '" placeholder="YYYY-mm-dd HH:ii:ss"></label>'
             . '<label>' . $this->escape($lang->get('admin.post.excerpt')) . '<textarea name="excerpt" rows="3">' . $this->escape((string) ($item['excerpt'] ?? '')) . '</textarea></label>'
-            . '<label>' . $this->escape($lang->get('admin.post.content')) . '<textarea name="content" rows="12">' . $this->escape((string) ($item['content'] ?? '')) . '</textarea></label>'
+            . '<div class="fp-editor-field">'
+            . '<label>' . $this->escape($lang->get('admin.post.content')) . '</label>'
+            . '<div id="fp-quill-editor">' . ($item['content'] ?? '') . '</div>'
+            . '<input type="hidden" name="content" id="fp-quill-content">'
+            . $this->fieldError('content', $errors)
+            . '</div>'
             . '<div class="actions"><button type="submit">' . $this->escape($lang->get('admin.common.save')) . '</button><a href="/admin/pages">' . $this->escape($lang->get('admin.common.back_list')) . '</a></div>'
             . '</form></section>';
     }

@@ -310,6 +310,8 @@ return [
     'admin.extension.captcha_case_sensitive' => '區分大小寫',
     'admin.extension.link_title' => '連結管理中心',
     'admin.extension.link_desc' => '管理導航列、友情連結及其他連結，支援分類/頁面/文章快速新增和拖曳排序。',
+    'admin.extension.dev_title' => '開發模式',
+    'admin.extension.dev_desc' => '開發偵錯工具：一鍵重裝網站、匯入/清空示範資料。僅供開發階段使用。',
     'admin.extension.github_title' => 'Social GitHub 登入',
     'admin.extension.github_desc' => '設定 GitHub OAuth 登入參數。',
     'admin.extension.github_redirect_uri' => '回呼地址',

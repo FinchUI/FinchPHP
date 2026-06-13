@@ -174,7 +174,7 @@ final class TokenAdmin extends BaseController
             . '<form method="post" action="/admin/tokens/issue" class="fp-form-grid fp-form-grid-token">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . '<label>' . $this->escape($lang->get('admin.token.th_user')) . '<select name="user_id">' . $userOptions . '</select></label>'
-            . '<label>' . $this->escape($lang->get('admin.token.th_name')) . '<input name="name" placeholder="例如：miniapp"></label>'
+            . '<label>' . $this->escape($lang->get('admin.token.th_name')) . '<input name="name" placeholder="e.g. miniapp"></label>'
             . '<label>' . $this->escape($lang->get('admin.token.abilities')) . '<input name="abilities" value="*" placeholder="posts:read,uploads:create"></label>'
             . '<label>' . $this->escape($lang->get('admin.token.expires_days')) . '<input type="number" name="expires_days" min="0" max="3650" value="0"></label>'
             . '<button type="submit">' . $this->escape($lang->get('admin.token.issue')) . '</button>'

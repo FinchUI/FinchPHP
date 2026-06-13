@@ -1125,6 +1125,111 @@ final class Router
             'handler'    => 'Finch\\Admin\\CommentAdmin::delete',
         ]);
 
+        // ── 模块管理 (Active) ──
+
+        $this->add('admin_modules_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/modules',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\ModuleAdmin::index',
+        ]);
+
+        $this->add('admin_modules_toggle_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/modules/toggle',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ModuleAdmin::toggle',
+        ]);
+
+        $this->add('admin_modules_save_order_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/modules/saveOrder',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ModuleAdmin::saveOrder',
+        ]);
+
+        // ── 主题管理 (Active) ──
+
+        $this->add('admin_themes_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/themes',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\ThemeAdmin::index',
+        ]);
+
+        $this->add('admin_themes_activate_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/themes/activate',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ThemeAdmin::activate',
+        ]);
+
+        $this->add('admin_themes_preview_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/themes/preview',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\ThemeAdmin::preview',
+        ]);
+
+        // ── AI 大模型设置 (Active) ──
+
+        $this->add('admin_ai_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/ai',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::index',
+        ]);
+
+        $this->add('admin_ai_create_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/ai/create',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::create',
+        ]);
+
+        $this->add('admin_ai_edit_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/ai/edit',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::edit',
+        ]);
+
+        $this->add('admin_ai_save_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/ai/save',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::save',
+        ]);
+
+        $this->add('admin_ai_delete_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/ai/delete',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::delete',
+        ]);
+
         $this->add('post_single', [
             'type'    => 'rewrite',
             'pattern' => '/post/{slug}',

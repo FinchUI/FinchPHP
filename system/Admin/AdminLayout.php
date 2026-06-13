@@ -62,12 +62,12 @@ trait AdminLayout
             . '<h1>' . $this->escape($title) . '</h1>'
             . '</div>'
             . '<div class="fp-admin-topbar-actions">'
-            . '<span class="fp-admin-welcome"><span class="ti ti-user-circle" aria-hidden="true"></span>欢迎，' . $this->escape($this->currentAdminName()) . '</span>'
-            . '<a class="fp-admin-top-link" href="' . $this->adminUrl('/admin/settings') . '"><span class="ti ti-settings" aria-hidden="true"></span><span>设置</span></a>'
-            . '<a class="fp-admin-top-link" href="/"><span class="ti ti-world" aria-hidden="true"></span><span>前台</span></a>'
+            . '<span class="fp-admin-welcome"><span class="ti ti-user-circle" aria-hidden="true"></span>' . $this->escape($this->app->lang->get('admin.topbar.welcome')) . $this->escape($this->currentAdminName()) . '</span>'
+            . '<a class="fp-admin-top-link" href="' . $this->adminUrl('/admin/settings') . '"><span class="ti ti-settings" aria-hidden="true"></span><span>' . $this->escape($this->app->lang->get('admin.topbar.settings')) . '</span></a>'
+            . '<a class="fp-admin-top-link" href="/"><span class="ti ti-world" aria-hidden="true"></span><span>' . $this->escape($this->app->lang->get('admin.topbar.frontend')) . '</span></a>'
             . '<form method="post" action="' . $this->adminUrl('/admin/logout') . '" class="fp-admin-logout-form">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-            . '<button type="submit" class="secondary"><span class="ti ti-logout" aria-hidden="true"></span><span>退出登录</span></button>'
+            . '<button type="submit" class="secondary"><span class="ti ti-logout" aria-hidden="true"></span><span>' . $this->escape($this->app->lang->get('admin.topbar.logout')) . '</span></button>'
             . '</form></div></header>';
     }
 

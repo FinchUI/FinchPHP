@@ -644,6 +644,393 @@ final class Router
             'handler'    => 'Finch\\Admin\\CommentAdmin::delete',
         ]);
 
+        // ── Active 模式回退（无需伪静态，?fp=admin/...） ──
+
+        $this->add('admin_login_active', [
+            'type'    => 'active',
+            'key'     => 'fp',
+            'value'   => 'admin/login',
+            'method'  => 'GET',
+            'handler' => 'Finch\\Admin\\AuthAdmin::login',
+        ]);
+
+        $this->add('admin_login_post_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/login',
+            'method'     => 'POST',
+            'middleware' => ['csrf'],
+            'handler'    => 'Finch\\Admin\\AuthAdmin::authenticate',
+        ]);
+
+        $this->add('admin_logout_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/logout',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'csrf'],
+            'handler'    => 'Finch\\Admin\\AuthAdmin::logout',
+        ]);
+
+        $this->add('admin_dashboard_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\DashboardAdmin::index',
+        ]);
+
+        $this->add('admin_uploads_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/uploads',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\UploadAdmin::index',
+        ]);
+
+        $this->add('admin_uploads_store_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/uploads/store',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\UploadAdmin::store',
+        ]);
+
+        $this->add('admin_settings_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/settings',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\SettingAdmin::index',
+        ]);
+
+        $this->add('admin_settings_save_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/settings',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\SettingAdmin::save',
+        ]);
+
+        $this->add('admin_users_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/users',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\UserAdmin::index',
+        ]);
+
+        $this->add('admin_users_save_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/users/save',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\UserAdmin::save',
+        ]);
+
+        $this->add('admin_tokens_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/tokens',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\TokenAdmin::index',
+        ]);
+
+        $this->add('admin_tokens_issue_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/tokens/issue',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\TokenAdmin::issue',
+        ]);
+
+        $this->add('admin_tokens_revoke_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/tokens/revoke',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\TokenAdmin::revoke',
+        ]);
+
+        $this->add('admin_extensions_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/extensions',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\ExtensionAdmin::index',
+        ]);
+
+        $this->add('admin_extensions_theme_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/extensions/theme',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ExtensionAdmin::activateTheme',
+        ]);
+
+        $this->add('admin_extensions_module_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/extensions/module',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ExtensionAdmin::toggleModule',
+        ]);
+
+        $this->add('admin_extensions_plugin_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/extensions/plugin',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ExtensionAdmin::togglePlugin',
+        ]);
+
+        $this->add('admin_extensions_plugin_settings_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/extensions/plugin/settings',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\ExtensionAdmin::pluginSettings',
+        ]);
+
+        $this->add('admin_extensions_plugin_settings_save_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/extensions/plugin/settings',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ExtensionAdmin::savePluginSettings',
+        ]);
+
+        $this->add('admin_posts_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/posts',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\PostAdmin::index',
+        ]);
+
+        $this->add('admin_posts_create_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/posts/create',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\PostAdmin::create',
+        ]);
+
+        $this->add('admin_posts_store_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/posts/store',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\PostAdmin::store',
+        ]);
+
+        $this->add('admin_posts_edit_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/posts/edit',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\PostAdmin::edit',
+        ]);
+
+        $this->add('admin_posts_update_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/posts/update',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\PostAdmin::update',
+        ]);
+
+        $this->add('admin_posts_trash_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/posts/trash',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\PostAdmin::trash',
+        ]);
+
+        $this->add('admin_posts_restore_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/posts/restore',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\PostAdmin::restore',
+        ]);
+
+        $this->add('admin_pages_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/pages',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\PageAdmin::index',
+        ]);
+
+        $this->add('admin_pages_create_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/pages/create',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\PageAdmin::create',
+        ]);
+
+        $this->add('admin_pages_store_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/pages/store',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\PageAdmin::store',
+        ]);
+
+        $this->add('admin_pages_edit_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/pages/edit',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\PageAdmin::edit',
+        ]);
+
+        $this->add('admin_pages_update_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/pages/update',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\PageAdmin::update',
+        ]);
+
+        $this->add('admin_pages_trash_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/pages/trash',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\PageAdmin::trash',
+        ]);
+
+        $this->add('admin_pages_restore_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/pages/restore',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\PageAdmin::restore',
+        ]);
+
+        $this->add('admin_categories_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/categories',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\CategoryAdmin::index',
+        ]);
+
+        $this->add('admin_categories_save_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/categories',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\CategoryAdmin::save',
+        ]);
+
+        $this->add('admin_categories_delete_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/categories/{id}/delete',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\CategoryAdmin::delete',
+        ]);
+
+        $this->add('admin_tags_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/tags',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\TagAdmin::index',
+        ]);
+
+        $this->add('admin_tags_save_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/tags',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\TagAdmin::save',
+        ]);
+
+        $this->add('admin_tags_delete_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/tags/{id}/delete',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\TagAdmin::delete',
+        ]);
+
+        $this->add('admin_comments_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/comments',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\CommentAdmin::index',
+        ]);
+
+        $this->add('admin_comments_approve_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/comments/{id}/approve',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\CommentAdmin::approve',
+        ]);
+
+        $this->add('admin_comments_reject_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/comments/{id}/reject',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\CommentAdmin::reject',
+        ]);
+
+        $this->add('admin_comments_delete_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/comments/{id}/delete',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\CommentAdmin::delete',
+        ]);
+
         $this->add('post_single', [
             'type'    => 'rewrite',
             'pattern' => '/post/{slug}',

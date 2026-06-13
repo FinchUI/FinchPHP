@@ -397,23 +397,6 @@ final class ExtensionAdmin extends BaseController
         return $this->html($this->adminShell($lang->get('admin.extension.title'), $this->content()));
     }
 
-    public function activateTheme(): Response
-    {
-        $theme = trim((string) $this->request->post('theme', ''));
-        $ok = $this->themeService()->activate($theme);
-
-        return $this->redirect('/admin/extensions?theme=' . ($ok ? '1' : '0'));
-    }
-
-    public function toggleModule(): Response
-    {
-        $module = trim((string) $this->request->post('module', ''));
-        $enabled = (string) $this->request->post('enabled', '1') === '1';
-        $ok = $this->moduleService()->setEnabled($module, $enabled);
-
-        return $this->redirect('/admin/extensions?module=' . ($ok ? '1' : '0'));
-    }
-
     public function togglePlugin(): Response
     {
         $plugin = trim((string) $this->request->post('plugin', ''));

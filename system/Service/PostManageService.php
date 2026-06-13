@@ -10,6 +10,7 @@ namespace Finch\Service;
 
 use Finch\Core\Cache;
 use Finch\Core\Database;
+use Finch\Core\HtmlCleaner;
 
 final class PostManageService
 {
@@ -177,7 +178,7 @@ final class PostManageService
     {
         $now = gmdate('Y-m-d H:i:s');
         $title = trim((string) ($input['title'] ?? ''));
-        $content = (string) ($input['content'] ?? '');
+        $content = HtmlCleaner::clean((string) ($input['content'] ?? ''), 'post_content');
         $excerpt = trim((string) ($input['excerpt'] ?? ''));
         if ($excerpt === '') {
             $excerpt = $this->excerpt($content);

@@ -644,6 +644,100 @@ final class Router
             'handler'    => 'Finch\\Admin\\CommentAdmin::delete',
         ]);
 
+        // ── 模块管理 ──
+
+        $this->add('admin_modules', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/modules',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\ModuleAdmin::index',
+        ]);
+
+        $this->add('admin_modules_toggle', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/modules/toggle',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ModuleAdmin::toggle',
+        ]);
+
+        $this->add('admin_modules_save_order', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/modules/saveOrder',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ModuleAdmin::saveOrder',
+        ]);
+
+        // ── 主题管理 ──
+
+        $this->add('admin_themes', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/themes',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\ThemeAdmin::index',
+        ]);
+
+        $this->add('admin_themes_activate', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/themes/activate',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\ThemeAdmin::activate',
+        ]);
+
+        $this->add('admin_themes_preview', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/themes/preview',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\ThemeAdmin::preview',
+        ]);
+
+        // ── AI 大模型设置 ──
+
+        $this->add('admin_ai', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/ai',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::index',
+        ]);
+
+        $this->add('admin_ai_create', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/ai/create',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::create',
+        ]);
+
+        $this->add('admin_ai_edit', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/ai/edit',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::edit',
+        ]);
+
+        $this->add('admin_ai_save', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/ai/save',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::save',
+        ]);
+
+        $this->add('admin_ai_delete', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/ai/delete',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\AiAdmin::delete',
+        ]);
+
         // ── Active 模式回退（无需伪静态，?fp=admin/...） ──
 
         $this->add('admin_login_active', [

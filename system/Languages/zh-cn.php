@@ -317,6 +317,48 @@ return [
     'admin.extension.help_empty_key' => '留空表示不修改已保存 Key。',
     'admin.extension.help_empty_secret' => '留空表示不修改已保存 Secret。',
 
+    // ========== 模块管理 ==========
+    'admin.module.title' => '模块管理',
+    'admin.module.sidebar_side1' => '左侧栏',
+    'admin.module.sidebar_side2' => '右侧栏',
+    'admin.module.th_name' => '名称',
+    'admin.module.th_type' => '类型',
+    'admin.module.th_position' => '排序',
+    'admin.module.no_modules' => '暂无模块',
+    'admin.module.saved' => '模块状态已更新。',
+
+    // ========== 主题管理 ==========
+    'admin.theme.title' => '主题管理',
+    'admin.theme.no_screenshot' => '无预览图',
+    'admin.theme.current' => '当前使用',
+    'admin.theme.activate' => '启用',
+    'admin.theme.no_themes' => '暂无主题',
+    'admin.theme.activated' => '主题已切换。',
+    'admin.theme.activate_failed' => '主题切换失败。',
+    'admin.theme.preview_on' => '预览模式已开启，请',
+    'admin.theme.view_site' => '查看站点',
+
+    // ========== AI 大模型 ==========
+    'admin.ai.title' => 'AI 大模型设置',
+    'admin.ai.add_model' => '新增模型',
+    'admin.ai.edit_model' => '编辑模型',
+    'admin.ai.default' => '默认',
+    'admin.ai.confirm_delete' => '确定要删除此模型配置吗？',
+    'admin.ai.no_models' => '暂未配置模型',
+    'admin.ai.saved' => '模型配置已保存。',
+    'admin.ai.deleted' => '模型已删除。',
+    'admin.ai.th_platform' => '平台',
+    'admin.ai.th_model' => '模型',
+    'admin.ai.th_protocol' => '协议',
+    'admin.ai.field_platform' => '平台名称',
+    'admin.ai.field_protocol' => '协议类型',
+    'admin.ai.field_base_url' => '接口地址 (Base URL)',
+    'admin.ai.field_api_key' => 'API Key（留空不修改）',
+    'admin.ai.api_key_placeholder' => 'sk-...',
+    'admin.ai.field_model' => '模型名称',
+    'admin.ai.field_params' => '额外参数 (JSON)',
+    'admin.ai.field_default' => '设为默认模型',
+
     // ========== 媒体库 ==========
     'admin.upload.title' => '媒体库',
     'admin.upload.empty' => '暂无上传文件',

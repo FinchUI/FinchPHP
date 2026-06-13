@@ -34,28 +34,15 @@ final class PostService
         $sort = in_array($sort, ['published_at', 'created_at', 'updated_at', 'id', 'view_count'], true) ? $sort : 'published_at';
         $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
 
-        $nowUtc = gmdate('Y-m-d H:i:s');
-
         $query = $this->db->table('post')
             ->where('type', $type)
             ->where('status', 'publish')
             ->whereNull('deleted_at')
-            ->where('published_at', '<=', $nowUtc)
+            ->where('published_at', '<=', gmdate('Y-m-d H:i:s'))
             ->orderBy($sort, $order)
             ->orderBy('id', 'DESC');
 
         $pageData = $query->paginate($page, $perPage);
-
-        // 调试日志：排查前台文章不显示
-        $rawCount = $this->db->table('post')->where('type', $type)->whereNull('deleted_at')->count();
-        $publishCount = $this->db->table('post')->where('type', $type)->where('status', 'publish')->whereNull('deleted_at')->count();
-        $futureCount = $this->db->table('post')->where('type', $type)->where('status', 'publish')->whereNull('deleted_at')->where('published_at', '>', $nowUtc)->count();
-
-        error_log(sprintf(
-            '[Finch DEBUG] publishedPage: type=%s nowUtc=%s totalRaw=%d totalPublish=%d futurePublish=%d resultTotal=%d resultData=%d',
-            $type, $nowUtc, $rawCount, $publishCount, $futureCount, $pageData['total'], count($pageData['data'])
-        ));
-
         $pageData['data'] = array_map(fn (array $row): array => $this->resource($row), $pageData['data']);
 
         return $pageData;

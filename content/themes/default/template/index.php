@@ -5,13 +5,6 @@
     <div class="empty-state">
         <h2>暂无内容</h2>
         <p>还没有发布任何文章，敬请期待。</p>
-        <?php if (fp_app()->isLoggedIn) : ?>
-        <details style="margin-top:1rem;font-size:13px;color:#57606a">
-            <summary>调试信息（仅管理员可见）</summary>
-            <pre style="margin-top:.5rem;padding:.75rem;background:#f6f8fa;border-radius:4px;overflow:auto"><?= fp_escape(json_encode($query, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) ?></pre>
-            <p>当前 UTC 时间：<?= fp_escape(gmdate('Y-m-d H:i:s')) ?> | 本地时间：<?= fp_escape(date('Y-m-d H:i:s')) ?> | 时区：<?= fp_escape(date_default_timezone_get()) ?></p>
-        </details>
-        <?php endif; ?>
     </div>
 <?php else : ?>
     <?php foreach (list_posts() as $item) : ?>

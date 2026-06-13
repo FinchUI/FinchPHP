@@ -26,6 +26,7 @@ final class TagAdmin extends BaseController
 
     public function save(): Response
     {
+        $lang = $this->app->lang;
         $id = is_numeric($this->request->post('id')) ? (int) $this->request->post('id') : null;
         $validator = $this->validate([
             'name' => 'required|max:100',
@@ -35,7 +36,7 @@ final class TagAdmin extends BaseController
         if ($validator->fails()) {
             $items = $this->service()->tags();
 
-            return $this->html($this->adminShell('标签管理', '<section class="panel">' . $this->pageContent($items, $validator->errors()) . '</section>'), 422);
+            return $this->html($this->adminShell($lang->get('admin.tag.title'), '<section class="panel">' . $this->pageContent($items, $validator->errors()) . '</section>'), 422);
         }
 
         $this->service()->saveTag($this->request->all(), $id);

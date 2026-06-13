@@ -1,0 +1,12 @@
+{
+    "name": "链接管理中心",
+    "version": "1.0.0",
+    "description": "管理导航栏、友情链接及其他链接，支持分类/页面/文章快速添加和拖拽排序",
+    "author": "Finch",
+    "preinstalled": true,
+    "menu_location": "sidebar",
+    "menu_title": "链接管理",
+    "menu_icon": "ti ti-link",
+    "menu_order": 65,
+    "settings_page": "/admin/links"
+}

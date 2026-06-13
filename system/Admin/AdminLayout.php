@@ -31,19 +31,20 @@ trait AdminLayout
 
     private function adminNav(): string
     {
+        $u = fn (string $path): string => $this->adminUrl($path);
         return '<nav class="panel">'
             . '<div class="actions">'
-            . '<a href="/admin">仪表盘</a>'
-            . '<a href="/admin/posts">文章</a>'
-            . '<a href="/admin/pages">页面</a>'
-            . '<a href="/admin/categories">分类</a>'
-            . '<a href="/admin/tags">标签</a>'
-            . '<a href="/admin/comments">评论</a>'
-            . '<a href="/admin/users">用户</a>'
-            . '<a href="/admin/tokens">Token</a>'
-            . '<a href="/admin/extensions">扩展</a>'
-            . '<a href="/admin/uploads">媒体库</a>'
-            . '<a href="/admin/settings">设置</a>'
+            . '<a href="' . $u('/admin') . '">仪表盘</a>'
+            . '<a href="' . $u('/admin/posts') . '">文章</a>'
+            . '<a href="' . $u('/admin/pages') . '">页面</a>'
+            . '<a href="' . $u('/admin/categories') . '">分类</a>'
+            . '<a href="' . $u('/admin/tags') . '">标签</a>'
+            . '<a href="' . $u('/admin/comments') . '">评论</a>'
+            . '<a href="' . $u('/admin/users') . '">用户</a>'
+            . '<a href="' . $u('/admin/tokens') . '">Token</a>'
+            . '<a href="' . $u('/admin/extensions') . '">扩展</a>'
+            . '<a href="' . $u('/admin/uploads') . '">媒体库</a>'
+            . '<a href="' . $u('/admin/settings') . '">设置</a>'
             . '<a href="/">前台</a>'
             . '</div>'
             . $this->logoutBar()
@@ -52,7 +53,7 @@ trait AdminLayout
 
     private function logoutBar(): string
     {
-        return '<form method="post" action="/admin/logout" style="margin-top:10px">'
+        return '<form method="post" action="' . $this->adminUrl('/admin/logout') . '" style="margin-top:10px">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . '<button type="submit" class="secondary">退出登录</button>'
             . '</form>';

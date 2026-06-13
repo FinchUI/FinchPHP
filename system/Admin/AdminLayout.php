@@ -15,7 +15,7 @@ trait AdminLayout
         $body = $this->normalizeAdminLinks($body);
         $assets = $this->resolveAdminStyleAssets();
 
-        return '<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8">'
+        return '<!DOCTYPE html><html lang="' . $this->escape($this->app->lang->locale()) . '"><head><meta charset="utf-8">'
             . '<meta name="viewport" content="width=device-width, initial-scale=1">'
             . '<title>' . $this->escape($title) . ' - Finch PHP</title>'
             . $this->adminStyleLinks($assets['css'])

@@ -111,6 +111,7 @@ function fp_install_i18n(): array
             'error_admin_email_invalid' => '管理员邮箱格式不正确。',
             'error_admin_password_short' => '管理员密码至少 8 位。',
             'error_admin_password_mismatch' => '两次输入的管理员密码不一致。',
+            'error_admin_password_complexity' => '管理员密码必须同时包含字母和数字。',
             'error_config_exists' => 'config.php 已存在。为避免覆盖现有站点，请先确认并手动移除该文件后再安装。',
             'error_install_locked' => '检测到安装锁。若确需重新安装，请先备份数据并手动删除 storage/data/install.lock。',
             'error_install_failed' => '安装失败：%s',
@@ -216,6 +217,7 @@ function fp_install_i18n(): array
             'error_admin_email_invalid' => 'Admin email format is invalid.',
             'error_admin_password_short' => 'Admin password must be at least 8 characters.',
             'error_admin_password_mismatch' => 'The two passwords do not match.',
+            'error_admin_password_complexity' => 'Admin password must contain both letters and numbers.',
             'error_config_exists' => 'config.php already exists. To prevent overwriting, please remove it manually before installing.',
             'error_install_locked' => 'Installation lock detected. If you need to reinstall, please backup your data and remove storage/data/install.lock manually.',
             'error_install_failed' => 'Installation failed: %s',
@@ -560,7 +562,7 @@ function fp_install_default_values(): array
         'mysql_host'             => 'localhost',
         'mysql_port'             => '3306',
         'mysql_database'         => 'finchphp',
-        'mysql_username'         => '',
+        'mysql_username'         => 'root',
         'mysql_password'         => '',
         'admin_username'         => 'admin',
         'admin_email'            => '',
@@ -663,6 +665,10 @@ function fp_install_validate(array $values, array $configState): array
 
     if (mb_strlen($values['admin_password']) < 8) {
         $errors[] = $t['error_admin_password_short'];
+    }
+
+    if (!preg_match('/[A-Za-z]/', $values['admin_password']) || !preg_match('/[0-9]/', $values['admin_password'])) {
+        $errors[] = $t['error_admin_password_complexity'];
     }
 
     if ($values['admin_password'] !== $values['admin_password_confirm']) {

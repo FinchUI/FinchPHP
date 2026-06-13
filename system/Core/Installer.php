@@ -119,6 +119,7 @@ final class Installer
             'admin_language'        => ['zh-cn', 'string', true],
             'site_timezone'         => ['Asia/Shanghai', 'string', true],
             'maintenance_mode'      => [false, 'bool', true],
+            'debug_mode'            => [false, 'bool', true],
             // 阅读
             'posts_per_page'        => [10, 'int', true],
             'feed_items'            => [10, 'int', true],

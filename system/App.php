@@ -80,7 +80,9 @@ final class App
 
         $logger = new Logger(FP_STORAGE_DIR . '/logs');
         $this->services['logger'] = $logger;
-        (new ErrorHandler($logger, (bool) $config->get('app.debug', false)))->register();
+        $errorHandler = new ErrorHandler($logger, (bool) $config->get('app.debug', false));
+        $errorHandler->register();
+        $this->services['errorHandler'] = $errorHandler;
 
         $this->services['hooks'] = new Hook();
         $this->services['request'] = Request::capture();
@@ -128,6 +130,12 @@ final class App
             $this->applyTimezone($siteTimezone);
         }
 
+        // 数据库 debug_mode 设置覆盖配置文件
+        $debugMode = $settings->get('debug_mode');
+        if ($debugMode !== null) {
+            $this->services['errorHandler']->setDebug((bool) $debugMode);
+        }
+
         $request = $this->services['request'];
         $sessionConfig = array_merge($config->section('cookie'), $config->section('session'));
         $session = new Session($sessionConfig, $request);
@@ -167,6 +175,24 @@ final class App
         }
 
         $this->hooks->do('fp_init');
+
+        // 维护模式拦截：管理员可正常访问后台，前台显示维护页
+        if ($this->installed && (bool) $this->settings->get('maintenance_mode', false)) {
+            $path = $this->request->path();
+            $fp = (string) $this->request->query('fp', '');
+            $isAdmin = str_starts_with($path, '/admin') || str_starts_with($fp, 'admin_');
+            $isLogin = str_starts_with($path, '/login') || str_contains($fp, 'login');
+
+            if (!$isAdmin && !$isLogin && !$this->isLoggedIn) {
+                $response = new Response();
+                $response->html($this->maintenancePage(), 503);
+                $this->applyResponsePolicies($response, $this->request);
+                $response->send();
+                $this->hooks->do('fp_shutdown');
+                return;
+            }
+        }
+
         $response = $this->router->dispatch($this->request);
         $this->applyResponsePolicies($response, $this->request);
         $response->send();
@@ -264,6 +290,25 @@ final class App
             . '<p>系统尚未安装，请运行安装向导完成初始化。</p>'
             . '<p><a href="/install/" style="display:inline-block;padding:.75rem 1rem;background:#0969da;color:#fff;border-radius:6px;text-decoration:none">开始安装</a></p>'
             . '</body></html>';
+    }
+
+    /** 维护模式提示页 */
+    private function maintenancePage(): string
+    {
+        $siteName = $this->installed ? (string) $this->settings->get('site_name', 'Finch') : 'Finch';
+
+        return '<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8">'
+            . '<title>' . htmlspecialchars($siteName, ENT_QUOTES) . ' - 维护中</title>'
+            . '<meta name="robots" content="noindex,nofollow">'
+            . '<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#f6f8fa;color:#24292f}'
+            . '.card{text-align:center;padding:3rem;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.1);max-width:460px}'
+            . 'h1{font-size:1.5rem;margin:0 0 .5rem}p{color:#57606a;margin:0 0 1.5rem}'
+            . 'svg{width:48px;height:48px;color:#0969da;margin-bottom:1rem}</style></head>'
+            . '<body><div class="card">'
+            . '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"/></svg>'
+            . '<h1>网站维护中</h1>'
+            . '<p>我们正在进行系统维护，请稍后再来访问。</p>'
+            . '</div></body></html>';
     }
 
     private function applyResponsePolicies(Response $response, Request $request): void

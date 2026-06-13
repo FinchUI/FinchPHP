@@ -18,10 +18,20 @@ use Throwable;
 
 final class ErrorHandler
 {
+    private bool $debug;
+
     public function __construct(
         private readonly Logger $logger,
-        private readonly bool $debug = false,
+        bool $debug = false,
     ) {
+        $this->debug = $debug;
+    }
+
+    /** 运行时切换调试模式（供 App 加载数据库设置后调用） */
+    public function setDebug(bool $debug): void
+    {
+        $this->debug = $debug;
+        ini_set('display_errors', $debug ? '1' : '0');
     }
 
     /** 注册为全局错误/异常/致命错误处理器 */

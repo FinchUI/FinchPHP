@@ -870,7 +870,7 @@ function fp_install_render(array $state): void
         button, .button { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; border: 0; border-radius: 6px; padding: 0 16px; background: var(--brand); color: #fff; font-weight: 700; text-decoration: none; cursor: pointer; }
         .button.secondary { background: #57606a; }
         .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
-        .steps { display: flex; gap: 8px; margin-bottom: 24px; }
+        .steps { display: flex; gap: 16px; }
         .step { flex: 1; padding: 12px; text-align: center; background: #e7ebf0; border-radius: 6px; font-weight: 600; color: var(--muted); }
         .step.active { background: var(--brand); color: #fff; }
         .step.done { background: var(--ok); color: #fff; }

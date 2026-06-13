@@ -57,6 +57,12 @@ final class DashboardAdmin extends BaseController
             . '</div>'
             . '</section>';
 
+        // 开发模式插件钩子：在快捷方式之后注入面板
+        $devPanel = $this->app->hooks->filter('fp_dashboard_after_shortcuts', '', []);
+        if (is_string($devPanel) && $devPanel !== '') {
+            $body .= $devPanel;
+        }
+
         return $this->html($this->adminShell($lang->get('admin.dashboard.title'), $body));
     }
 }

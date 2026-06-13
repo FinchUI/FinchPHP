@@ -264,3 +264,22 @@ if (!function_exists('get_sidebar')) {
         return fp_app()->template->render('sidebar');
     }
 }
+
+if (!function_exists('sidebar_categories')) {
+    /** @return list<array{id:int,name:string,slug:string,post_count:int}> */
+    function sidebar_categories(int $limit = 10): array
+    {
+        $rows = fp_app()->db->table('category')
+            ->where('status', 'active')
+            ->orderBy('sort_order', 'ASC')
+            ->limit($limit)
+            ->get();
+
+        return array_map(static fn (array $row): array => [
+            'id' => (int) $row['id'],
+            'name' => (string) $row['name'],
+            'slug' => (string) $row['slug'],
+            'post_count' => (int) ($row['post_count'] ?? 0),
+        ], $rows);
+    }
+}

@@ -298,6 +298,18 @@ function fp_install_handle(): array
         ];
     }
 
+    // Guard: steps 2+ require license agreement (step 1)
+    if ($step >= 2 && empty($_COOKIE['finch_install_agreed'])) {
+        header('Location: ?step=1&lang=' . urlencode($values['lang']));
+        exit;
+    }
+
+    // Guard: step 3 requires all environment checks to pass
+    if ($step >= 3 && fp_install_requirement_errors($requirements) !== []) {
+        header('Location: ?step=2&lang=' . urlencode($values['lang']));
+        exit;
+    }
+
     if (fp_install_is_post()) {
         $values = fp_install_post_values();
         $step = (int) ($values['step'] ?? $step);
@@ -307,7 +319,8 @@ function fp_install_handle(): array
             if (empty($values['agree_license'])) {
                 $errors[] = $t['license_required'];
             } else {
-                // Move to step 2
+                // Mark license as agreed, then move to step 2
+                setcookie('finch_install_agreed', '1', time() + 3600, '/');
                 header('Location: ?step=2&lang=' . urlencode($values['lang']));
                 exit;
             }

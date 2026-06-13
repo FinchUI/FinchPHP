@@ -541,7 +541,7 @@ function fp_install_requirement_errors(array $requirements): array
 /** @return array<string, string> */
 function fp_install_default_values(): array
 {
-    $lang = $_COOKIE['finch_install_lang'] ?? 'zh-cn';
+    $lang = $_GET['lang'] ?? $_POST['lang'] ?? $_COOKIE['finch_install_lang'] ?? 'zh-cn';
     $languages = fp_install_languages();
     if (!isset($languages[$lang])) {
         $lang = 'zh-cn';

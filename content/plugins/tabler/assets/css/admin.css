@@ -685,3 +685,64 @@ legend {
         grid-template-columns: 1fr;
     }
 }
+
+/* ========== Quill 编辑器 ========== */
+
+.fp-editor-field {
+    display: grid;
+    gap: 6px;
+}
+
+.fp-editor-field label {
+    font-weight: 600;
+}
+
+#fp-quill-editor {
+    min-height: 320px;
+    font-size: 15px;
+    line-height: 1.7;
+    border-radius: 0 0 6px 6px;
+}
+
+/* Quill 工具栏样式覆盖 */
+.ql-toolbar.ql-snow {
+    border-color: var(--finch-admin-border);
+    border-radius: 6px 6px 0 0;
+    background: #f8fafc;
+}
+
+.ql-container.ql-snow {
+    border-color: var(--finch-admin-border);
+    border-top: 0;
+}
+
+.ql-editor {
+    min-height: 280px;
+}
+
+.ql-editor.ql-blank::before {
+    color: var(--finch-admin-muted);
+    font-style: normal;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label:hover,
+.ql-toolbar.ql-snow button:hover {
+    color: var(--finch-admin-accent);
+}
+
+.ql-toolbar.ql-snow .ql-picker-label.ql-active,
+.ql-toolbar.ql-snow button.ql-active {
+    color: var(--finch-admin-accent);
+}
+
+.ql-snow .ql-stroke {
+    stroke: var(--finch-admin-muted);
+}
+
+.ql-snow .ql-fill {
+    fill: var(--finch-admin-muted);
+}
+
+.ql-snow .ql-picker-label {
+    color: var(--finch-admin-muted);
+}

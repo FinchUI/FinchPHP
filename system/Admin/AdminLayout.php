@@ -48,7 +48,7 @@ trait AdminLayout
             $active = $this->isMenuActive($item['path']) ? ' active' : '';
             $html .= '<a class="fp-admin-nav-link' . $active . '" href="' . $this->adminUrl($item['path']) . '">'
                 . '<span class="fp-admin-nav-icon ' . $this->escape($item['icon']) . '" aria-hidden="true"></span>'
-                . '<span class="fp-admin-nav-label">' . $this->escape($item['label']) . '</span>'
+                . '<span class="fp-admin-nav-label">' . $this->escape($this->app->lang->get($item['label'])) . '</span>'
                 . '</a>';
         }
 

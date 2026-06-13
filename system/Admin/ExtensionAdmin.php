@@ -300,6 +300,11 @@ final class ExtensionAdmin extends BaseController
             'description' => 'admin.extension.link_desc',
             'fields' => [],
         ],
+        'dev-mode' => [
+            'title' => 'admin.extension.dev_title',
+            'description' => 'admin.extension.dev_desc',
+            'fields' => [],
+        ],
         'social-github' => [
             'title' => 'admin.extension.github_title',
             'description' => 'admin.extension.github_desc',

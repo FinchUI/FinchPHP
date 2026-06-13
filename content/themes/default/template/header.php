@@ -7,14 +7,19 @@
     <link rel="stylesheet" href="<?= fp_escape(fp_app()->asset->themeAsset('css/theme.css')) ?>">
     <?= head() ?>
 </head>
-<body data-theme-source="content-default">
+<body>
 <header class="site-header">
-    <div class="wrap inner">
-        <h1><a href="/"><?= fp_escape(site_name()) ?></a></h1>
+    <div class="wrap site-header-inner">
+        <div class="site-brand">
+            <a href="/"><?= fp_escape(site_name()) ?></a>
+            <?php if (site_subtitle() !== '') : ?>
+                <span class="site-desc"><?= fp_escape(site_subtitle()) ?></span>
+            <?php endif; ?>
+        </div>
         <nav class="site-nav">
             <a href="/">首页</a>
             <a href="/search">搜索</a>
-            <a href="/admin/login">后台</a>
+            <a href="/admin/login">管理</a>
         </nav>
     </div>
 </header>

@@ -116,10 +116,14 @@ if (!function_exists('permalink')) {
 }
 
 if (!function_exists('post_date')) {
-    function post_date(string $format = 'Y-m-d H:i'): string
+    function post_date(string $format = 'Y-m-d H:i', string $dateValue = ''): string
     {
-        $post = current_post();
-        $value = (string) ($post['published_at'] ?? $post['created_at'] ?? '');
+        if ($dateValue !== '') {
+            $value = $dateValue;
+        } else {
+            $post = current_post();
+            $value = (string) ($post['published_at'] ?? $post['created_at'] ?? '');
+        }
         if ($value === '') {
             return '';
         }

@@ -22,6 +22,7 @@ use Finch\Core\Database;
 use Finch\Core\ErrorHandler;
 use Finch\Core\Gate;
 use Finch\Core\Hook;
+use Finch\Core\Lang;
 use Finch\Core\Logger;
 use Finch\Core\Middleware;
 use Finch\Core\Request;
@@ -112,6 +113,7 @@ final class App
         $settings->load();
         $this->services['settings'] = $settings;
         $this->services['cache'] = new Cache($db);
+        $this->services['lang'] = new Lang($settings);
         $this->services['context'] = new TemplateContext();
         $this->services['asset'] = new Asset($settings);
         $this->services['template'] = new Template($settings, $this->services['context'], $logger);

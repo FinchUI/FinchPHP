@@ -418,9 +418,7 @@ final class PostManageService
 
     private function excerpt(string $content): string
     {
-        $plain = trim(strip_tags($content));
-
-        return mb_substr($plain, 0, 200);
+        return mb_substr(HtmlCleaner::plainText($content), 0, 200);
     }
 
     /** @return list<int> */

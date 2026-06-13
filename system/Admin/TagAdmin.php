@@ -64,7 +64,8 @@ final class TagAdmin extends BaseController
      */
     private function pageContent(array $items, array $errors = []): string
     {
-        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">保存成功。</div>' : '';
+        $lang = $this->app->lang;
+        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">' . $this->escape($lang->get('admin.message.saved')) . '</div>' : '';
 
         $rows = '';
         foreach ($items as $item) {
@@ -76,28 +77,28 @@ final class TagAdmin extends BaseController
                 . '<td>'
                 . '<form method="post" action="/admin/tags/' . (int) $item['id'] . '/delete" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-                . '<button type="submit" class="secondary fp-btn-compact">删除</button>'
+                . '<button type="submit" class="secondary fp-btn-compact">' . $this->escape($lang->get('admin.common.delete')) . '</button>'
                 . '</form>'
                 . '</td>'
                 . '</tr>';
         }
 
         if ($rows === '') {
-            $rows = '<tr><td colspan="5" class="muted fp-table-empty">暂无标签</td></tr>';
+            $rows = '<tr><td colspan="5" class="muted fp-table-empty">' . $this->escape($lang->get('admin.tag.empty')) . '</td></tr>';
         }
 
         $nameError = isset($errors['name']) ? '<div class="fp-error-text">' . $this->escape($errors['name'][0]) . '</div>' : '';
 
-        return '<h1>标签管理</h1>'
+        return '<h1>' . $this->escape($lang->get('admin.tag.title')) . '</h1>'
             . $saved
             . '<form method="post" action="/admin/tags" class="fp-form-grid fp-form-grid-sm">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-            . '<div><label class="fp-field">名称<input name="name"></label>' . $nameError . '</div>'
-            . '<div><label class="fp-field">Slug<input name="slug"></label></div>'
-            . '<button type="submit" class="fp-btn-wide">保存标签</button>'
+            . '<div><label class="fp-field">' . $this->escape($lang->get('admin.common.name')) . '<input name="name"></label>' . $nameError . '</div>'
+            . '<div><label class="fp-field">' . $this->escape($lang->get('admin.category.th_slug')) . '<input name="slug"></label></div>'
+            . '<button type="submit" class="fp-btn-wide">' . $this->escape($lang->get('admin.tag.save')) . '</button>'
             . '</form>'
             . '<table>'
-            . '<thead><tr><th>ID</th><th>名称</th><th>Slug</th><th>文章数</th><th>操作</th></tr></thead><tbody>'
+            . '<thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.common.name')) . '</th><th>' . $this->escape($lang->get('admin.category.th_slug')) . '</th><th>' . $this->escape($lang->get('admin.tag.th_post_count')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
             . $rows
             . '</tbody></table>';
     }

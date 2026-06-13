@@ -48,14 +48,14 @@ final class UploadAdmin extends BaseController
      */
     private function content(array $pageData, string $error = ''): string
     {
-        $saved = $this->request->query('saved') === '1' ? '<div style="color:#067647">上传成功。</div>' : '';
-        $errorHtml = $error !== '' ? '<div style="color:#b42318">' . $this->escape($error) . '</div>' : '';
+        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">上传成功。</div>' : '';
+        $errorHtml = $error !== '' ? '<div class="fp-error-text">' . $this->escape($error) . '</div>' : '';
 
         $rows = '';
         foreach ($pageData['data'] as $item) {
             $preview = '-';
             if (str_starts_with((string) ($item['mime_type'] ?? ''), 'image/')) {
-                $preview = '<img src="' . $this->escape((string) $item['url']) . '" alt="preview" style="width:56px;height:56px;object-fit:cover;border:1px solid #d0d7de;border-radius:4px">';
+                $preview = '<img src="' . $this->escape((string) $item['url']) . '" alt="preview" class="fp-upload-thumb">';
             }
 
             $rows .= '<tr>'
@@ -76,7 +76,7 @@ final class UploadAdmin extends BaseController
         return '<section class="panel"><h1>媒体库</h1>'
             . $saved
             . $errorHtml
-            . '<form method="post" action="/admin/uploads/store" enctype="multipart/form-data" style="display:grid;gap:10px;max-width:540px;margin-top:10px">'
+            . '<form method="post" action="/admin/uploads/store" enctype="multipart/form-data" class="fp-form-grid fp-form-grid-upload">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . '<label>文件<input type="file" name="file" required></label>'
             . '<label>关联文章 ID（可空）<input type="number" name="post_id" min="1" placeholder="例如 12"></label>'
@@ -98,7 +98,7 @@ final class UploadAdmin extends BaseController
         $page = (int) $pageData['page'];
         $lastPage = max(1, (int) $pageData['last_page']);
 
-        $parts = ['<div class="actions" style="margin-top:12px">'];
+        $parts = ['<div class="actions fp-actions-gap-top">'];
         if ($page > 1) {
             $parts[] = '<a href="/admin/uploads?page=' . ($page - 1) . '">上一页</a>';
         }

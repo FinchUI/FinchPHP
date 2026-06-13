@@ -769,14 +769,4 @@ final class ExtensionAdmin extends BaseController
     {
         return new SettingService($this->app->db, $this->app->settings);
     }
-
-    private function themeService(): ThemeService
-    {
-        return new ThemeService($this->app->settings, FP_CONTENT_DIR . '/themes', $this->app->cache);
-    }
-
-    private function moduleService(): ModuleService
-    {
-        return new ModuleService(FP_CONTENT_DIR . '/modules', $this->app->cache);
-    }
 }

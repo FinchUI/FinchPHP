@@ -283,3 +283,32 @@ if (!function_exists('sidebar_categories')) {
         ], $rows);
     }
 }
+
+if (!function_exists('nav_items')) {
+    /**
+     * 获取导航栏项目（由链接管理中心插件提供）。
+     *
+     * @param string $group 分组：navbar（默认）/ friend / custom
+     * @return list<array{id:int,title:string,url:string,target:string,icon:string,type:string,ref_id:int,children?:list<array<mixed>>}>
+     */
+    function nav_items(string $group = 'navbar'): array
+    {
+        $items = fp_app()->hooks->filter('fp_nav_items', [], ['group' => $group]);
+
+        return is_array($items) ? $items : [];
+    }
+}
+
+if (!function_exists('friend_links')) {
+    /**
+     * 获取友情链接列表（由链接管理中心插件提供）。
+     *
+     * @return list<array{id:int,title:string,url:string,description:string,icon:string}>
+     */
+    function friend_links(): array
+    {
+        $items = fp_app()->hooks->filter('fp_friend_links', [], []);
+
+        return is_array($items) ? $items : [];
+    }
+}

@@ -746,3 +746,61 @@ legend {
 .ql-snow .ql-picker-label {
     color: var(--finch-admin-muted);
 }
+
+/* HTML 源码切换按钮 */
+.ql-html-source {
+    position: relative;
+    width: 28px !important;
+    height: 28px;
+    border-radius: 4px;
+    margin-left: 2px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--finch-admin-muted) !important;
+    background: transparent !important;
+    border: 1.5px solid transparent !important;
+    transition: all .15s;
+}
+
+.ql-html-source:hover {
+    color: var(--finch-admin-accent) !important;
+    border-color: var(--finch-admin-accent) !important;
+}
+
+.ql-html-source.ql-active {
+    color: #fff !important;
+    background-color: var(--finch-admin-accent) !important;
+    border-color: var(--finch-admin-accent) !important;
+}
+
+/* 源码编辑 textarea */
+.fp-quill-source-textarea {
+    display: none;
+    width: 100%;
+    min-height: 320px;
+    padding: 14px 16px;
+    font-family: 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #1f2328;
+    background-color: #f6f8fa;
+    border: 1px solid var(--finch-admin-border);
+    border-top: 0;
+    border-radius: 0 0 6px 6px;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+    tab-size: 2;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.fp-quill-source-textarea:focus {
+    border-color: var(--finch-admin-accent);
+    box-shadow: 0 0 0 3px rgba(9, 105, 218, .15);
+}
+
+.fp-quill-source-textarea.fp-quill-source-active {
+    display: block;
+}

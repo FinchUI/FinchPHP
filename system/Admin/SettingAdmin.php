@@ -21,7 +21,7 @@ final class SettingAdmin extends BaseController
      */
     private const GROUPS = [
         'basic' => [
-            'label' => '基本',
+            'label' => 'admin.settings.group_basic',
             'keys' => [
                 'site_name',
                 'site_subtitle',
@@ -41,7 +41,7 @@ final class SettingAdmin extends BaseController
             ],
         ],
         'reading' => [
-            'label' => '阅读',
+            'label' => 'admin.settings.group_reading',
             'keys' => [
                 'posts_per_page',
                 'feed_items',
@@ -55,7 +55,7 @@ final class SettingAdmin extends BaseController
             ],
         ],
         'comments' => [
-            'label' => '评论',
+            'label' => 'admin.settings.group_comments',
             'keys' => [
                 'comment_enabled',
                 'comment_need_audit',
@@ -71,7 +71,7 @@ final class SettingAdmin extends BaseController
             'rules' => [],
         ],
         'permalinks' => [
-            'label' => '固定链接',
+            'label' => 'admin.settings.group_permalinks',
             'keys' => [
                 'permalink_structure',
                 'category_base',
@@ -85,7 +85,7 @@ final class SettingAdmin extends BaseController
             ],
         ],
         'api' => [
-            'label' => 'API',
+            'label' => 'admin.settings.group_api',
             'keys' => [
                 'api_enabled',
                 'api_cors_origins',
@@ -96,7 +96,7 @@ final class SettingAdmin extends BaseController
             ],
         ],
         'mail' => [
-            'label' => '邮件',
+            'label' => 'admin.settings.group_mail',
             'keys' => [
                 'mail_provider',
                 'mail_from_name',
@@ -121,41 +121,41 @@ final class SettingAdmin extends BaseController
         ],
     ];
 
-    /** @var array<string, array{label:string,type:string,placeholder?:string,help?:string}> */
+    /** @var array<string, array{label:string,type:string,placeholder?:string,help?:string,options?:array<string,string>}> */
     private const FIELDS = [
-        'site_name' => ['label' => '站点名称', 'type' => 'text'],
-        'site_subtitle' => ['label' => '站点副标题', 'type' => 'text'],
-        'site_url' => ['label' => '站点 URL', 'type' => 'text'],
-        'site_description' => ['label' => '站点描述', 'type' => 'text'],
-        'site_keywords' => ['label' => '关键词', 'type' => 'text'],
-        'admin_language' => ['label' => '后台语言', 'type' => 'text'],
-        'site_timezone' => ['label' => '业务时区', 'type' => 'text', 'placeholder' => 'Asia/Shanghai'],
-        'maintenance_mode' => ['label' => '维护模式', 'type' => 'checkbox'],
+        'site_name' => ['label' => 'admin.settings.site_name', 'type' => 'text'],
+        'site_subtitle' => ['label' => 'admin.settings.site_subtitle', 'type' => 'text'],
+        'site_url' => ['label' => 'admin.settings.site_url', 'type' => 'text'],
+        'site_description' => ['label' => 'admin.settings.site_description', 'type' => 'text'],
+        'site_keywords' => ['label' => 'admin.settings.site_keywords', 'type' => 'text'],
+        'admin_language' => ['label' => 'admin.settings.admin_language', 'type' => 'select', 'options' => ['zh-cn' => '简体中文', 'zh-tw' => '繁體中文', 'en' => 'English']],
+        'site_timezone' => ['label' => 'admin.settings.site_timezone', 'type' => 'text', 'placeholder' => 'Asia/Shanghai'],
+        'maintenance_mode' => ['label' => 'admin.settings.maintenance_mode', 'type' => 'checkbox'],
 
-        'posts_per_page' => ['label' => '每页文章数', 'type' => 'number'],
-        'feed_items' => ['label' => 'Feed 条目数', 'type' => 'number'],
-        'default_post_type' => ['label' => '默认文章类型', 'type' => 'text'],
+        'posts_per_page' => ['label' => 'admin.settings.posts_per_page', 'type' => 'number'],
+        'feed_items' => ['label' => 'admin.settings.feed_items', 'type' => 'number'],
+        'default_post_type' => ['label' => 'admin.settings.default_post_type', 'type' => 'text'],
 
-        'comment_enabled' => ['label' => '启用评论', 'type' => 'checkbox'],
-        'comment_need_audit' => ['label' => '新评论需要审核', 'type' => 'checkbox'],
-        'comment_guest_allowed' => ['label' => '允许游客评论', 'type' => 'checkbox'],
-        'comment_login_required' => ['label' => '评论必须登录', 'type' => 'checkbox'],
+        'comment_enabled' => ['label' => 'admin.settings.comment_enabled', 'type' => 'checkbox'],
+        'comment_need_audit' => ['label' => 'admin.settings.comment_need_audit', 'type' => 'checkbox'],
+        'comment_guest_allowed' => ['label' => 'admin.settings.comment_guest_allowed', 'type' => 'checkbox'],
+        'comment_login_required' => ['label' => 'admin.settings.comment_login_required', 'type' => 'checkbox'],
 
-        'permalink_structure' => ['label' => '文章固定链接', 'type' => 'text', 'placeholder' => '/post/{id}'],
-        'category_base' => ['label' => '分类前缀', 'type' => 'text'],
-        'tag_base' => ['label' => '标签前缀', 'type' => 'text'],
+        'permalink_structure' => ['label' => 'admin.settings.permalink_structure', 'type' => 'text', 'placeholder' => '/post/{id}'],
+        'category_base' => ['label' => 'admin.settings.category_base', 'type' => 'text'],
+        'tag_base' => ['label' => 'admin.settings.tag_base', 'type' => 'text'],
 
-        'api_enabled' => ['label' => '启用 API', 'type' => 'checkbox'],
-        'api_cors_origins' => ['label' => '允许跨域来源', 'type' => 'text', 'help' => '多个来源请用逗号分隔。'],
+        'api_enabled' => ['label' => 'admin.settings.api_enabled', 'type' => 'checkbox'],
+        'api_cors_origins' => ['label' => 'admin.settings.api_cors_origins', 'type' => 'text', 'help' => 'admin.settings.api_cors_help'],
 
-        'mail_provider' => ['label' => '邮件 Provider', 'type' => 'text'],
-        'mail_from_name' => ['label' => '发件人名称', 'type' => 'text'],
-        'mail_from_address' => ['label' => '发件人地址', 'type' => 'text'],
-        'smtp_host' => ['label' => 'SMTP Host', 'type' => 'text'],
-        'smtp_port' => ['label' => 'SMTP Port', 'type' => 'text'],
-        'smtp_user' => ['label' => 'SMTP 用户名', 'type' => 'text'],
-        'smtp_pass' => ['label' => 'SMTP 密码', 'type' => 'password', 'placeholder' => '留空表示不修改'],
-        'smtp_secure' => ['label' => 'SMTP 加密方式', 'type' => 'text', 'placeholder' => 'tls/ssl'],
+        'mail_provider' => ['label' => 'admin.settings.mail_provider', 'type' => 'text'],
+        'mail_from_name' => ['label' => 'admin.settings.mail_from_name', 'type' => 'text'],
+        'mail_from_address' => ['label' => 'admin.settings.mail_from_address', 'type' => 'text'],
+        'smtp_host' => ['label' => 'admin.settings.smtp_host', 'type' => 'text'],
+        'smtp_port' => ['label' => 'admin.settings.smtp_port', 'type' => 'text'],
+        'smtp_user' => ['label' => 'admin.settings.smtp_user', 'type' => 'text'],
+        'smtp_pass' => ['label' => 'admin.settings.smtp_pass', 'type' => 'password', 'placeholder' => 'admin.settings.smtp_pass_placeholder'],
+        'smtp_secure' => ['label' => 'admin.settings.smtp_secure', 'type' => 'text', 'placeholder' => 'tls/ssl'],
     ];
 
     public function index(): Response
@@ -164,7 +164,7 @@ final class SettingAdmin extends BaseController
         $config = self::GROUPS[$group];
         $settings = $this->settingService()->getMany($config['keys']);
 
-        return $this->html($this->adminShell('系统设置', $this->content($group, $settings)));
+        return $this->html($this->adminShell($this->app->lang->get('admin.settings.title'), $this->content($group, $settings)));
     }
 
     public function save(): Response
@@ -179,7 +179,7 @@ final class SettingAdmin extends BaseController
                 $this->request->all(),
             );
 
-            return $this->html($this->adminShell('系统设置', $this->content($group, $settings, $validator->errors())), 422);
+            return $this->html($this->adminShell($this->app->lang->get('admin.settings.title'), $this->content($group, $settings, $validator->errors())), 422);
         }
 
         $input = $this->request->all();
@@ -199,8 +199,8 @@ final class SettingAdmin extends BaseController
                     $this->request->all(),
                 );
 
-                return $this->html($this->adminShell('系统设置', $this->content($group, $settings, [
-                    'site_timezone' => ['时区不存在。'],
+                return $this->html($this->adminShell($this->app->lang->get('admin.settings.title'), $this->content($group, $settings, [
+                    'site_timezone' => [$this->app->lang->get('admin.message.timezone_invalid')],
                 ])), 422);
             }
         }
@@ -221,9 +221,10 @@ final class SettingAdmin extends BaseController
      */
     private function content(string $group, array $settings, array $errors = []): string
     {
+        $lang = $this->app->lang;
         $config = self::GROUPS[$group];
         $saved = $this->request->query('saved') === '1'
-            ? '<div class="fp-notice-success">设置已保存。</div>'
+            ? '<div class="fp-notice-success">' . $this->escape($lang->get('admin.message.settings_saved')) . '</div>'
             : '';
 
         $fields = '';
@@ -231,24 +232,25 @@ final class SettingAdmin extends BaseController
             $fields .= $this->field($key, $settings, $errors);
         }
 
-        return '<section class="panel"><h1>系统设置</h1>'
+        return '<section class="panel"><h1>' . $this->escape($lang->get('admin.settings.title')) . '</h1>'
             . $saved
             . $this->tabs($group)
             . '<form method="post" action="/admin/settings?group=' . $this->escape($group) . '" class="fp-form-grid">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . $fields
-            . '<button type="submit" class="fp-btn-wide">保存设置</button>'
+            . '<button type="submit" class="fp-btn-wide">' . $this->escape($lang->get('admin.settings.save')) . '</button>'
             . '</form>'
             . '</section>';
     }
 
     private function tabs(string $group): string
     {
+        $lang = $this->app->lang;
         $parts = ['<div class="actions fp-actions-gap-bottom">'];
         foreach (self::GROUPS as $name => $item) {
             $url = '/admin/settings?group=' . rawurlencode($name);
             $active = $name === $group ? ' fp-tab-active' : '';
-            $parts[] = '<a class="fp-tab-link' . $active . '" href="' . $this->escape($url) . '">' . $this->escape($item['label']) . '</a>';
+            $parts[] = '<a class="fp-tab-link' . $active . '" href="' . $this->escape($url) . '">' . $this->escape($lang->get($item['label'])) . '</a>';
         }
         $parts[] = '</div>';
 
@@ -261,10 +263,11 @@ final class SettingAdmin extends BaseController
      */
     private function field(string $key, array $settings, array $errors): string
     {
+        $lang = $this->app->lang;
         $meta = self::FIELDS[$key] ?? ['label' => $key, 'type' => 'text'];
-        $label = (string) $meta['label'];
+        $label = $lang->get((string) $meta['label']);
         $type = (string) $meta['type'];
-        $help = isset($meta['help']) ? '<div class="muted fp-help-text">' . $this->escape((string) $meta['help']) . '</div>' : '';
+        $help = isset($meta['help']) ? '<div class="muted fp-help-text">' . $this->escape($lang->get((string) $meta['help'])) . '</div>' : '';
         $error = isset($errors[$key][0])
             ? '<div class="fp-error-text">' . $this->escape($errors[$key][0]) . '</div>'
             : '';
@@ -279,7 +282,22 @@ final class SettingAdmin extends BaseController
                 . $error;
         }
 
-        $placeholder = isset($meta['placeholder']) ? ' placeholder="' . $this->escape((string) $meta['placeholder']) . '"' : '';
+        if ($type === 'select') {
+            $options = $meta['options'] ?? [];
+            $optionHtml = '';
+            $currentValue = (string) ($settings[$key] ?? '');
+            foreach ($options as $optionValue => $optionLabel) {
+                $selected = $currentValue === (string) $optionValue ? ' selected' : '';
+                $optionHtml .= '<option value="' . $this->escape((string) $optionValue) . '"' . $selected . '>' . $this->escape((string) $optionLabel) . '</option>';
+            }
+
+            return '<label>' . $this->escape($label)
+                . '<select name="' . $this->escape($key) . '">' . $optionHtml . '</select></label>'
+                . $help
+                . $error;
+        }
+
+        $placeholder = isset($meta['placeholder']) ? ' placeholder="' . $this->escape($lang->get((string) $meta['placeholder'])) . '"' : '';
         $value = $type === 'password' ? '' : $this->escape((string) ($settings[$key] ?? ''));
 
         return '<label>' . $this->escape($label)

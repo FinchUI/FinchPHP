@@ -416,4 +416,14 @@ return [
     'admin.link.quick_add' => '快速添加',
     'admin.link.search' => '搜索',
     'admin.link.search_placeholder' => '输入关键词搜索…',
+
+    // ========== 开发模式 ==========
+    'dev.title' => '开发模式',
+    'dev.description' => '⚠️ 以下操作仅限开发环境使用，会破坏现有数据！',
+    'dev.reinstall' => '一键重装网站',
+    'dev.seed' => '一键导入演示数据',
+    'dev.clean' => '一键清空演示数据',
+    'dev.confirm_reinstall' => '确定要重装网站吗？所有数据将被清空并重新初始化！',
+    'dev.confirm_seed' => '确定要导入演示数据吗？',
+    'dev.confirm_clean' => '确定要清空所有演示数据吗？',
 ];

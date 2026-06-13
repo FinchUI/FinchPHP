@@ -370,4 +370,14 @@ return [
     'admin.link.quick_add' => 'Quick Add',
     'admin.link.search' => 'Search',
     'admin.link.search_placeholder' => 'Type to search…',
+
+    // ========== Dev Mode ==========
+    'dev.title' => 'Dev Mode',
+    'dev.description' => '⚠️ These actions are for development only and will destroy existing data!',
+    'dev.reinstall' => 'Reinstall Site',
+    'dev.seed' => 'Seed Demo Data',
+    'dev.clean' => 'Clean Demo Data',
+    'dev.confirm_reinstall' => 'Are you sure? All data will be wiped and re-initialized!',
+    'dev.confirm_seed' => 'Are you sure you want to seed demo data?',
+    'dev.confirm_clean' => 'Are you sure you want to clean all demo data?',
 ];

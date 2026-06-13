@@ -416,4 +416,14 @@ return [
     'admin.link.quick_add' => '快速新增',
     'admin.link.search' => '搜尋',
     'admin.link.search_placeholder' => '輸入關鍵字搜尋…',
+
+    // ========== 開發模式 ==========
+    'dev.title' => '開發模式',
+    'dev.description' => '⚠️ 以下操作僅限開發環境使用，會破壞現有資料！',
+    'dev.reinstall' => '一鍵重裝網站',
+    'dev.seed' => '一鍵匯入示範資料',
+    'dev.clean' => '一鍵清空示範資料',
+    'dev.confirm_reinstall' => '確定要重裝網站嗎？所有資料將被清空並重新初始化！',
+    'dev.confirm_seed' => '確定要匯入示範資料嗎？',
+    'dev.confirm_clean' => '確定要清空所有示範資料嗎？',
 ];

@@ -26,17 +26,17 @@ final class ExtensionAdmin extends BaseController
      */
     private const BUILTIN_PLUGIN_CONFIGS = [
         'tabler' => [
-            'title' => 'Tabler 后台样式',
-            'description' => '配置后台样式插件的基础行为。',
+            'title' => 'admin.extension.tabler_title',
+            'description' => 'admin.extension.tabler_desc',
             'binding' => [
                 'system_key' => 'admin_style',
-                'label' => '设为当前后台样式提供者',
-                'help' => '勾选后保存将切换 system_setting.admin_style 为 tabler。',
+                'label' => 'admin.extension.tabler_bind_label',
+                'help' => 'admin.extension.tabler_bind_help',
             ],
             'fields' => [
                 [
                     'name' => 'brand_title',
-                    'label' => '后台品牌标题',
+                    'label' => 'admin.extension.tabler_brand_title',
                     'type' => 'text',
                     'default' => 'Finch Admin',
                     'store_type' => 'string',
@@ -44,7 +44,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'sidebar_compact',
-                    'label' => '紧凑侧栏',
+                    'label' => 'admin.extension.tabler_sidebar_compact',
                     'type' => 'checkbox',
                     'default' => false,
                     'store_type' => 'bool',
@@ -53,21 +53,21 @@ final class ExtensionAdmin extends BaseController
             ],
         ],
         'quill' => [
-            'title' => 'Quill 编辑器',
-            'description' => '配置编辑器插件基础参数。',
+            'title' => 'admin.extension.quill_title',
+            'description' => 'admin.extension.quill_desc',
             'binding' => [
                 'system_key' => 'editor',
-                'label' => '设为当前编辑器',
-                'help' => '勾选后保存将切换 system_setting.editor 为 quill。',
+                'label' => 'admin.extension.quill_bind_label',
+                'help' => 'admin.extension.quill_bind_help',
             ],
             'fields' => [
                 [
                     'name' => 'toolbar_mode',
-                    'label' => '工具栏模式',
+                    'label' => 'admin.extension.quill_toolbar_mode',
                     'type' => 'select',
                     'options' => [
-                        'simple' => '简洁',
-                        'full' => '完整',
+                        'simple' => 'admin.extension.quill_toolbar_simple',
+                        'full' => 'admin.extension.quill_toolbar_full',
                     ],
                     'default' => 'simple',
                     'store_type' => 'string',
@@ -75,7 +75,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'placeholder',
-                    'label' => '编辑器占位文本',
+                    'label' => 'admin.extension.quill_placeholder',
                     'type' => 'text',
                     'default' => '开始编写内容...',
                     'store_type' => 'string',
@@ -84,17 +84,17 @@ final class ExtensionAdmin extends BaseController
             ],
         ],
         'search-like' => [
-            'title' => 'Search LIKE 搜索',
-            'description' => '配置 SQL LIKE 搜索 Provider 的行为。',
+            'title' => 'admin.extension.search_title',
+            'description' => 'admin.extension.search_desc',
             'binding' => [
                 'system_key' => 'search_provider',
-                'label' => '设为当前搜索 Provider',
-                'help' => '勾选后保存将切换 system_setting.search_provider 为 search-like。',
+                'label' => 'admin.extension.search_bind_label',
+                'help' => 'admin.extension.search_bind_help',
             ],
             'fields' => [
                 [
                     'name' => 'match_title',
-                    'label' => '匹配标题',
+                    'label' => 'admin.extension.search_match_title',
                     'type' => 'checkbox',
                     'default' => true,
                     'store_type' => 'bool',
@@ -102,7 +102,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'match_excerpt',
-                    'label' => '匹配摘要',
+                    'label' => 'admin.extension.search_match_excerpt',
                     'type' => 'checkbox',
                     'default' => true,
                     'store_type' => 'bool',
@@ -110,7 +110,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'match_content',
-                    'label' => '匹配正文',
+                    'label' => 'admin.extension.search_match_content',
                     'type' => 'checkbox',
                     'default' => true,
                     'store_type' => 'bool',
@@ -118,7 +118,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'per_page_limit',
-                    'label' => '单页结果上限',
+                    'label' => 'admin.extension.search_per_page_limit',
                     'type' => 'number',
                     'default' => 50,
                     'store_type' => 'int',
@@ -127,17 +127,17 @@ final class ExtensionAdmin extends BaseController
             ],
         ],
         'notify-email' => [
-            'title' => 'Notify Email 邮件通道',
-            'description' => '配置邮件 Provider 与 SMTP 参数。',
+            'title' => 'admin.extension.email_title',
+            'description' => 'admin.extension.email_desc',
             'binding' => [
                 'system_key' => 'mail_provider',
-                'label' => '设为当前邮件 Provider',
-                'help' => '勾选后保存将切换 system_setting.mail_provider 为 notify-email。',
+                'label' => 'admin.extension.email_bind_label',
+                'help' => 'admin.extension.email_bind_help',
             ],
             'fields' => [
                 [
                     'name' => 'mail_from_name',
-                    'label' => '发件人名称',
+                    'label' => 'admin.extension.email_from_name',
                     'type' => 'text',
                     'default' => 'Finch',
                     'store_type' => 'string',
@@ -146,7 +146,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'mail_from_address',
-                    'label' => '发件人地址',
+                    'label' => 'admin.extension.email_from_address',
                     'type' => 'text',
                     'default' => '',
                     'store_type' => 'string',
@@ -173,7 +173,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'smtp_user',
-                    'label' => 'SMTP 用户名',
+                    'label' => 'admin.extension.email_smtp_user',
                     'type' => 'text',
                     'default' => '',
                     'store_type' => 'string',
@@ -182,21 +182,21 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'smtp_pass',
-                    'label' => 'SMTP 密码',
+                    'label' => 'admin.extension.email_smtp_pass',
                     'type' => 'password',
                     'default' => '',
                     'store_type' => 'string',
                     'autoload' => false,
                     'skip_if_empty' => true,
-                    'help' => '留空表示不修改已保存密码。',
+                    'help' => 'admin.extension.help_empty_password',
                     'sync_system_key' => 'smtp_pass',
                 ],
                 [
                     'name' => 'smtp_secure',
-                    'label' => 'SMTP 加密方式',
+                    'label' => 'admin.extension.email_smtp_secure',
                     'type' => 'select',
                     'options' => [
-                        '' => '无',
+                        '' => 'admin.extension.email_smtp_secure_none',
                         'tls' => 'TLS',
                         'ssl' => 'SSL',
                     ],
@@ -208,17 +208,17 @@ final class ExtensionAdmin extends BaseController
             ],
         ],
         'notify-sms' => [
-            'title' => 'Notify SMS 短信通道',
-            'description' => '配置短信 Provider 的通道参数。',
+            'title' => 'admin.extension.sms_title',
+            'description' => 'admin.extension.sms_desc',
             'binding' => [
                 'system_key' => 'sms_provider',
-                'label' => '设为当前短信 Provider',
-                'help' => '勾选后保存将切换 system_setting.sms_provider 为 notify-sms。',
+                'label' => 'admin.extension.sms_bind_label',
+                'help' => 'admin.extension.sms_bind_help',
             ],
             'fields' => [
                 [
                     'name' => 'vendor',
-                    'label' => '服务商标识',
+                    'label' => 'admin.extension.sms_vendor',
                     'type' => 'text',
                     'default' => 'mock',
                     'store_type' => 'string',
@@ -232,7 +232,7 @@ final class ExtensionAdmin extends BaseController
                     'store_type' => 'string',
                     'autoload' => false,
                     'skip_if_empty' => true,
-                    'help' => '留空表示不修改已保存 Key。',
+                    'help' => 'admin.extension.help_empty_key',
                 ],
                 [
                     'name' => 'api_secret',
@@ -242,11 +242,11 @@ final class ExtensionAdmin extends BaseController
                     'store_type' => 'string',
                     'autoload' => false,
                     'skip_if_empty' => true,
-                    'help' => '留空表示不修改已保存 Secret。',
+                    'help' => 'admin.extension.help_empty_secret',
                 ],
                 [
                     'name' => 'sign_name',
-                    'label' => '签名',
+                    'label' => 'admin.extension.sms_sign_name',
                     'type' => 'text',
                     'default' => '',
                     'store_type' => 'string',
@@ -254,7 +254,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'template_code',
-                    'label' => '模板编号',
+                    'label' => 'admin.extension.sms_template_code',
                     'type' => 'text',
                     'default' => '',
                     'store_type' => 'string',
@@ -263,17 +263,17 @@ final class ExtensionAdmin extends BaseController
             ],
         ],
         'captcha-gd' => [
-            'title' => 'Captcha GD 验证码',
-            'description' => '配置图形验证码基础参数。',
+            'title' => 'admin.extension.captcha_title',
+            'description' => 'admin.extension.captcha_desc',
             'binding' => [
                 'system_key' => 'captcha_provider',
-                'label' => '设为当前验证码 Provider',
-                'help' => '勾选后保存将切换 system_setting.captcha_provider 为 captcha-gd。',
+                'label' => 'admin.extension.captcha_bind_label',
+                'help' => 'admin.extension.captcha_bind_help',
             ],
             'fields' => [
                 [
                     'name' => 'code_length',
-                    'label' => '验证码长度',
+                    'label' => 'admin.extension.captcha_code_length',
                     'type' => 'number',
                     'default' => 4,
                     'store_type' => 'int',
@@ -281,7 +281,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'ttl_seconds',
-                    'label' => '验证码有效期（秒）',
+                    'label' => 'admin.extension.captcha_ttl',
                     'type' => 'number',
                     'default' => 300,
                     'store_type' => 'int',
@@ -289,7 +289,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'case_sensitive',
-                    'label' => '区分大小写',
+                    'label' => 'admin.extension.captcha_case_sensitive',
                     'type' => 'checkbox',
                     'default' => false,
                     'store_type' => 'bool',
@@ -298,8 +298,8 @@ final class ExtensionAdmin extends BaseController
             ],
         ],
         'social-github' => [
-            'title' => 'Social GitHub 登录',
-            'description' => '配置 GitHub OAuth 登录参数。',
+            'title' => 'admin.extension.github_title',
+            'description' => 'admin.extension.github_desc',
             'fields' => [
                 [
                     'name' => 'client_id',
@@ -317,11 +317,11 @@ final class ExtensionAdmin extends BaseController
                     'store_type' => 'string',
                     'autoload' => false,
                     'skip_if_empty' => true,
-                    'help' => '留空表示不修改已保存 Secret。',
+                    'help' => 'admin.extension.help_empty_secret',
                 ],
                 [
                     'name' => 'redirect_uri',
-                    'label' => '回调地址',
+                    'label' => 'admin.extension.github_redirect_uri',
                     'type' => 'text',
                     'default' => '',
                     'store_type' => 'string',
@@ -329,7 +329,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'auto_create_user',
-                    'label' => '自动创建本地账号',
+                    'label' => 'admin.extension.github_auto_create',
                     'type' => 'checkbox',
                     'default' => true,
                     'store_type' => 'bool',
@@ -338,17 +338,17 @@ final class ExtensionAdmin extends BaseController
             ],
         ],
         'ai-openai' => [
-            'title' => 'AI OpenAI 协议',
-            'description' => '配置 OpenAI 协议 Provider 的请求参数。',
+            'title' => 'admin.extension.ai_title',
+            'description' => 'admin.extension.ai_desc',
             'binding' => [
                 'system_key' => 'ai_provider',
-                'label' => '设为当前 AI Provider',
-                'help' => '勾选后保存将切换 system_setting.ai_provider 为 ai-openai。',
+                'label' => 'admin.extension.ai_bind_label',
+                'help' => 'admin.extension.ai_bind_help',
             ],
             'fields' => [
                 [
                     'name' => 'base_url',
-                    'label' => '接口地址',
+                    'label' => 'admin.extension.ai_base_url',
                     'type' => 'text',
                     'default' => 'https://api.openai.com/v1',
                     'store_type' => 'string',
@@ -362,11 +362,11 @@ final class ExtensionAdmin extends BaseController
                     'store_type' => 'string',
                     'autoload' => false,
                     'skip_if_empty' => true,
-                    'help' => '留空表示不修改已保存 Key。',
+                    'help' => 'admin.extension.help_empty_key',
                 ],
                 [
                     'name' => 'model',
-                    'label' => '默认模型',
+                    'label' => 'admin.extension.ai_model',
                     'type' => 'text',
                     'default' => 'gpt-4o-mini',
                     'store_type' => 'string',
@@ -382,7 +382,7 @@ final class ExtensionAdmin extends BaseController
                 ],
                 [
                     'name' => 'timeout_seconds',
-                    'label' => '超时秒数',
+                    'label' => 'admin.extension.ai_timeout',
                     'type' => 'number',
                     'default' => 120,
                     'store_type' => 'int',
@@ -394,7 +394,9 @@ final class ExtensionAdmin extends BaseController
 
     public function index(): Response
     {
-        return $this->html($this->adminShell('扩展管理', $this->content()));
+        $lang = $this->app->lang;
+
+        return $this->html($this->adminShell($lang->get('admin.extension.title'), $this->content()));
     }
 
     public function activateTheme(): Response

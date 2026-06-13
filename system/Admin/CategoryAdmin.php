@@ -66,7 +66,8 @@ final class CategoryAdmin extends BaseController
      */
     private function pageContent(array $items, array $errors = []): string
     {
-        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">保存成功。</div>' : '';
+        $lang = $this->app->lang;
+        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">' . $this->escape($lang->get('admin.message.saved')) . '</div>' : '';
 
         $rows = '';
         foreach ($items as $item) {
@@ -79,32 +80,32 @@ final class CategoryAdmin extends BaseController
                 . '<td>'
                 . '<form method="post" action="/admin/categories/' . (int) $item['id'] . '/delete" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-                . '<button type="submit" class="secondary fp-btn-compact">删除</button>'
+                . '<button type="submit" class="secondary fp-btn-compact">' . $this->escape($lang->get('admin.common.delete')) . '</button>'
                 . '</form>'
                 . '</td>'
                 . '</tr>';
         }
 
         if ($rows === '') {
-            $rows = '<tr><td colspan="6" class="muted fp-table-empty">暂无分类</td></tr>';
+            $rows = '<tr><td colspan="6" class="muted fp-table-empty">' . $this->escape($lang->get('admin.category.empty')) . '</td></tr>';
         }
 
         $nameError = isset($errors['name']) ? '<div class="fp-error-text">' . $this->escape($errors['name'][0]) . '</div>' : '';
 
-        return '<h1>分类管理</h1>'
+        return '<h1>' . $this->escape($lang->get('admin.category.title')) . '</h1>'
             . $saved
             . '<form method="post" action="/admin/categories" class="fp-form-grid">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-            . '<div><label class="fp-field">名称<input name="name"></label>' . $nameError . '</div>'
-            . '<div><label class="fp-field">Slug<input name="slug"></label></div>'
-            . '<div><label class="fp-field">父分类 ID（可空）<input name="parent_id"></label></div>'
-            . '<div><label class="fp-field">描述<textarea name="description" rows="2"></textarea></label></div>'
-            . '<div><label class="fp-field">排序<input type="number" name="sort_order" value="0"></label></div>'
-            . '<div><label class="fp-field">状态<select name="status"><option value="active">启用</option><option value="inactive">停用</option></select></label></div>'
-            . '<button type="submit" class="fp-btn-wide">保存分类</button>'
+            . '<div><label class="fp-field">' . $this->escape($lang->get('admin.common.name')) . '<input name="name"></label>' . $nameError . '</div>'
+            . '<div><label class="fp-field">' . $this->escape($lang->get('admin.category.th_slug')) . '<input name="slug"></label></div>'
+            . '<div><label class="fp-field">' . $this->escape($lang->get('admin.category.parent_id')) . '<input name="parent_id"></label></div>'
+            . '<div><label class="fp-field">' . $this->escape($lang->get('admin.category.description')) . '<textarea name="description" rows="2"></textarea></label></div>'
+            . '<div><label class="fp-field">' . $this->escape($lang->get('admin.category.sort_order')) . '<input type="number" name="sort_order" value="0"></label></div>'
+            . '<div><label class="fp-field">' . $this->escape($lang->get('admin.common.status')) . '<select name="status"><option value="active">' . $this->escape($lang->get('admin.common.active')) . '</option><option value="inactive">' . $this->escape($lang->get('admin.common.inactive')) . '</option></select></label></div>'
+            . '<button type="submit" class="fp-btn-wide">' . $this->escape($lang->get('admin.category.save')) . '</button>'
             . '</form>'
             . '<table>'
-            . '<thead><tr><th>ID</th><th>名称</th><th>Slug</th><th>文章数</th><th>状态</th><th>操作</th></tr></thead><tbody>'
+            . '<thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.common.name')) . '</th><th>' . $this->escape($lang->get('admin.category.th_slug')) . '</th><th>' . $this->escape($lang->get('admin.category.th_post_count')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
             . $rows
             . '</tbody></table>';
     }

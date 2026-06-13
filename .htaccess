@@ -1,0 +1,29 @@
+# Finch PHP - Apache URL 重写规则
+# 所有非静态文件请求均经 index.php 路由
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 不重写已存在的文件和目录
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # 将请求转发到 index.php
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# 禁止访问敏感目录
+<IfModule mod_rewrite.c>
+    RewriteRule ^system/ - [F,L]
+    RewriteRule ^storage/ - [F,L]
+</IfModule>
+
+# 禁止访问隐藏文件
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# 禁止访问配置文件
+<FilesMatch "(config\.php|\.env)">
+    Require all denied
+</FilesMatch>

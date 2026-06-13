@@ -553,4 +553,23 @@ final class DevModeAdmin extends BaseController
     {
         return '`' . str_replace('`', '', $name) . '`';
     }
+
+    /**
+     * 从数组中随机选取 $count 个元素，始终返回数组。
+     *
+     * @param list<mixed> $pool
+     * @return list<mixed>
+     */
+    private function randomPick(array $pool, int $count): array
+    {
+        if ($pool === []) {
+            return [];
+        }
+
+        $count = min($count, count($pool));
+        $keys = array_rand($pool, $count);
+        $keys = is_array($keys) ? $keys : [$keys];
+
+        return array_values(array_map(static fn ($k) => $pool[$k], $keys));
+    }
 }

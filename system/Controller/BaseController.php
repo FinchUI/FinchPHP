@@ -61,25 +61,11 @@ abstract class BaseController
     }
 
     /**
-     * 将后台路径转换为当前路由模式对应的 URL。
-     * rewrite 模式：原样返回（如 /admin/posts）
-     * active 模式：转为 index.php?fp=admin/posts
+     * 将后台路径转为动态地址（index.php?fp=...），不依赖伪静态。
      */
     protected function adminUrl(string $path): string
     {
-        if ($this->isActiveRequest()) {
-            return 'index.php?fp=' . urlencode(ltrim($path, '/'));
-        }
-
-        return $path;
-    }
-
-    /** 当前请求是否以 active（query string）模式路由 */
-    protected function isActiveRequest(): bool
-    {
-        $uri = (string) ($_SERVER['REQUEST_URI'] ?? '');
-
-        return str_contains($uri, 'index.php');
+        return 'index.php?fp=' . urlencode(ltrim($path, '/'));
     }
 
     protected function authorize(string $capability): bool

@@ -430,7 +430,7 @@ final class ExtensionAdmin extends BaseController
         $config = $this->pluginConfig($plugin);
 
         if ($plugin === '' || $meta === null || $config === null || !(bool) ($meta['preinstalled'] ?? false)) {
-            return $this->html($this->adminShell('插件配置', '<section class="panel"><h1>插件配置</h1><div style="color:#b42318">未找到可配置的内置插件。</div><p><a href="/admin/extensions">返回扩展管理</a></p></section>'), 404);
+            return $this->html($this->adminShell('插件配置', '<section class="panel"><h1>插件配置</h1><div class="fp-error-text">未找到可配置的内置插件。</div><p><a href="/admin/extensions">返回扩展管理</a></p></section>'), 404);
         }
 
         $values = $this->pluginSettingsValues($plugin, $config);
@@ -438,13 +438,13 @@ final class ExtensionAdmin extends BaseController
         $bind = (string) $this->request->query('bind', '');
         $notice = '';
         if ($saved === '1') {
-            $notice .= '<div style="color:#067647">插件配置已保存。</div>';
+            $notice .= '<div class="fp-notice-success">插件配置已保存。</div>';
         } elseif ($saved === '0') {
-            $notice .= '<div style="color:#b42318">插件配置保存失败，请检查输入后重试。</div>';
+            $notice .= '<div class="fp-error-text">插件配置保存失败，请检查输入后重试。</div>';
         }
 
         if ($bind === '0') {
-            $notice .= '<div style="color:#b54708">插件当前为停用状态，未切换为系统默认 Provider。</div>';
+            $notice .= '<div class="fp-notice-warn">插件当前为停用状态，未切换为系统默认 Provider。</div>';
         }
 
         $status = (bool) ($meta['enabled'] ?? false) ? '<strong>启用</strong>' : '停用';
@@ -464,7 +464,7 @@ final class ExtensionAdmin extends BaseController
             . $notice
             . '<p class="muted">' . $this->escape((string) ($config['description'] ?? '')) . '</p>'
             . '<p>插件 ID：<strong>' . $this->escape($plugin) . '</strong>；当前状态：' . $status . '</p>'
-            . '<form method="post" action="/admin/extensions/plugin/settings?plugin=' . rawurlencode($plugin) . '" style="display:grid;gap:12px;max-width:760px">'
+            . '<form method="post" action="/admin/extensions/plugin/settings?plugin=' . rawurlencode($plugin) . '" class="fp-form-grid">'
             . '<input type="hidden" name="_token" value="' . $token . '">'
             . $bindingBlock
             . $fields
@@ -558,21 +558,21 @@ final class ExtensionAdmin extends BaseController
 
         $notice = '';
         if ($this->request->query('theme') === '1') {
-            $notice .= '<div style="color:#067647">主题已切换。</div>';
+            $notice .= '<div class="fp-notice-success">主题已切换。</div>';
         } elseif ($this->request->query('theme') === '0') {
-            $notice .= '<div style="color:#b42318">主题切换失败。</div>';
+            $notice .= '<div class="fp-error-text">主题切换失败。</div>';
         }
 
         if ($this->request->query('module') === '1') {
-            $notice .= '<div style="color:#067647">模块状态已更新。</div>';
+            $notice .= '<div class="fp-notice-success">模块状态已更新。</div>';
         } elseif ($this->request->query('module') === '0') {
-            $notice .= '<div style="color:#b42318">模块状态更新失败。</div>';
+            $notice .= '<div class="fp-error-text">模块状态更新失败。</div>';
         }
 
         if ($this->request->query('plugin') === '1') {
-            $notice .= '<div style="color:#067647">插件状态已更新。</div>';
+            $notice .= '<div class="fp-notice-success">插件状态已更新。</div>';
         } elseif ($this->request->query('plugin') === '0') {
-            $notice .= '<div style="color:#b42318">插件状态更新失败。</div>';
+            $notice .= '<div class="fp-error-text">插件状态更新失败。</div>';
         }
 
         $themeRows = '';
@@ -585,7 +585,7 @@ final class ExtensionAdmin extends BaseController
                 . '<td>' . $this->escape((string) ($theme['author'] ?? '')) . '</td>'
                 . '<td>' . ($active ? '<strong>已启用</strong>' : '未启用') . '</td>'
                 . '<td>'
-                . ($active ? '' : '<form method="post" action="/admin/extensions/theme" style="display:inline">'
+                . ($active ? '' : '<form method="post" action="/admin/extensions/theme" class="fp-inline-form">'
                     . '<input type="hidden" name="_token" value="' . $token . '">'
                     . '<input type="hidden" name="theme" value="' . $this->escape($id) . '">'
                     . '<button type="submit">启用</button>'
@@ -620,7 +620,7 @@ final class ExtensionAdmin extends BaseController
                 . '<td>' . ($hasRuntime ? '有' : '无') . '</td>'
                 . '<td>' . ($enabled ? '<strong>启用</strong>' : '停用') . '</td>'
                 . '<td>' . $configAction . '</td>'
-                . '<td><form method="post" action="/admin/extensions/plugin" style="display:inline">'
+                . '<td><form method="post" action="/admin/extensions/plugin" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $token . '">'
                 . '<input type="hidden" name="plugin" value="' . $this->escape($id) . '">'
                 . '<input type="hidden" name="enabled" value="' . ($enabled ? '0' : '1') . '">'
@@ -641,7 +641,7 @@ final class ExtensionAdmin extends BaseController
                 . '<td>' . $this->escape((string) ($module['name'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($module['version'] ?? '')) . '</td>'
                 . '<td>' . ($enabled ? '<strong>启用</strong>' : '停用') . '</td>'
-                . '<td><form method="post" action="/admin/extensions/module" style="display:inline">'
+                . '<td><form method="post" action="/admin/extensions/module" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $token . '">'
                 . '<input type="hidden" name="module" value="' . $this->escape($id) . '">'
                 . '<input type="hidden" name="enabled" value="' . ($enabled ? '0' : '1') . '">'
@@ -690,13 +690,13 @@ final class ExtensionAdmin extends BaseController
         $enabled = (bool) ($meta['enabled'] ?? false);
         $enabledHint = $enabled
             ? ''
-            : '<div style="color:#b54708;margin-top:4px">当前插件处于停用状态，勾选后不会切换系统默认 Provider。</div>';
+            : '<div class="fp-notice-warn fp-help-text">当前插件处于停用状态，勾选后不会切换系统默认 Provider。</div>';
 
-        return '<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="bind_as_active" value="1"' . $checked . '>'
+        return '<label class="fp-check-row"><input type="checkbox" name="bind_as_active" value="1"' . $checked . '>'
             . $this->escape($label)
             . '</label>'
             . '<div class="muted">当前 system_setting.' . $this->escape($systemKey) . ' = <strong>' . $this->escape($current === '' ? '(空)' : $current) . '</strong></div>'
-            . ($help !== '' ? '<div class="muted" style="margin-top:4px">' . $this->escape($help) . '</div>' : '')
+            . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($help) . '</div>' : '')
             . $enabledHint;
     }
 
@@ -719,10 +719,10 @@ final class ExtensionAdmin extends BaseController
         if ($type === 'checkbox') {
             $checked = (bool) $value ? ' checked' : '';
 
-            return '<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="' . $this->escape($name) . '" value="1"' . $checked . '>'
+            return '<label class="fp-check-row"><input type="checkbox" name="' . $this->escape($name) . '" value="1"' . $checked . '>'
                 . $this->escape($label)
                 . '</label>'
-                . ($help !== '' ? '<div class="muted" style="margin-top:4px">' . $this->escape($help) . '</div>' : '');
+                . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($help) . '</div>' : '');
         }
 
         if ($type === 'select') {
@@ -737,7 +737,7 @@ final class ExtensionAdmin extends BaseController
 
             return '<label>' . $this->escape($label)
                 . '<select name="' . $this->escape($name) . '">' . $optionHtml . '</select></label>'
-                . ($help !== '' ? '<div class="muted" style="margin-top:4px">' . $this->escape($help) . '</div>' : '');
+                . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($help) . '</div>' : '');
         }
 
         $inputType = in_array($type, ['text', 'password', 'number'], true) ? $type : 'text';
@@ -745,7 +745,7 @@ final class ExtensionAdmin extends BaseController
 
         return '<label>' . $this->escape($label)
             . '<input type="' . $this->escape($inputType) . '" name="' . $this->escape($name) . '" value="' . $this->escape($displayValue) . '"></label>'
-            . ($help !== '' ? '<div class="muted" style="margin-top:4px">' . $this->escape($help) . '</div>' : '');
+            . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($help) . '</div>' : '');
     }
 
     /**

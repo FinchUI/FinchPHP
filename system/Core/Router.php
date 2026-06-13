@@ -654,6 +654,72 @@ final class Router
             'handler'    => 'Finch\\Admin\\ModuleAdmin::saveOrder',
         ]);
 
+        // ── 链接管理中心 ──
+
+        $this->add('admin_links', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/links',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::index',
+        ]);
+
+        $this->add('admin_links_create', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/links/create',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::create',
+        ]);
+
+        $this->add('admin_links_store', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/links/store',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::store',
+        ]);
+
+        $this->add('admin_links_edit', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/links/edit',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::edit',
+        ]);
+
+        $this->add('admin_links_update', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/links/update',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::update',
+        ]);
+
+        $this->add('admin_links_delete', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/links/delete',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::delete',
+        ]);
+
+        $this->add('admin_links_sort', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/links/sort',
+            'method'     => 'POST',
+            'middleware' => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::sort',
+        ]);
+
+        $this->add('admin_links_search', [
+            'type'       => 'rewrite',
+            'pattern'    => '/admin/links/search',
+            'method'     => 'GET',
+            'middleware' => ['auth', 'role:access_admin'],
+            'handler'    => 'Finch\\Admin\\LinkAdmin::search',
+        ]);
+
         // ── 主题管理 ──
 
         $this->add('admin_themes', [

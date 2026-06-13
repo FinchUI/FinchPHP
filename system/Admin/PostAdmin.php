@@ -19,6 +19,8 @@ final class PostAdmin extends BaseController
 
     public function index(): Response
     {
+        $lang = $this->app->lang;
+
         $page = max(1, (int) $this->request->query('page', 1));
         $status = trim((string) $this->request->query('status', ''));
         $data = $this->service()->page('article', $page, 20, $status);
@@ -31,33 +33,37 @@ final class PostAdmin extends BaseController
                 . '<td>' . $this->escape((string) $post['status']) . '</td>'
                 . '<td>' . $this->escape((string) ($post['updated_at'] ?? '')) . '</td>'
                 . '<td class="actions">'
-                . '<a href="/admin/posts/edit?id=' . (int) $post['id'] . '">编辑</a>'
+                . '<a href="/admin/posts/edit?id=' . (int) $post['id'] . '">' . $this->escape($lang->get('admin.common.edit')) . '</a>'
                 . '<form method="post" action="/admin/posts/' . ($status === 'trash' ? 'restore' : 'trash') . '" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
                 . '<input type="hidden" name="id" value="' . (int) $post['id'] . '">'
-                . '<button type="submit" class="secondary">' . ($status === 'trash' ? '恢复' : '回收站') . '</button>'
+                . '<button type="submit" class="secondary">' . ($status === 'trash' ? $this->escape($lang->get('admin.post.restore')) : $this->escape($lang->get('admin.post.trash'))) . '</button>'
                 . '</form>'
                 . '</td>'
                 . '</tr>';
         }
 
-        $html = '<section class="panel"><h1>文章管理</h1>'
-            . '<div class="actions"><a href="/admin/posts/create">新建文章</a><a href="/admin/posts?status=trash">查看回收站</a></div>'
+        $html = '<section class="panel"><h1>' . $this->escape($lang->get('admin.post.title')) . '</h1>'
+            . '<div class="actions"><a href="/admin/posts/create">' . $this->escape($lang->get('admin.post.create')) . '</a><a href="/admin/posts?status=trash">' . $this->escape($lang->get('admin.post.view_trash')) . '</a></div>'
             . '</section>'
-            . '<section class="panel"><table><thead><tr><th>ID</th><th>标题</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody>'
-            . ($rows === '' ? '<tr><td colspan="5" class="muted">暂无文章</td></tr>' : $rows)
+            . '<section class="panel"><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.post.th_title')) . '</th><th>' . $this->escape($lang->get('admin.post.status')) . '</th><th>' . $this->escape($lang->get('admin.post.th_updated_at')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
+            . ($rows === '' ? '<tr><td colspan="5" class="muted">' . $this->escape($lang->get('admin.post.empty')) . '</td></tr>' : $rows)
             . '</tbody></table></section>';
 
-        return $this->html($this->adminShell('文章管理', $html));
+        return $this->html($this->adminShell($lang->get('admin.post.title'), $html));
     }
 
     public function create(): Response
     {
-        return $this->html($this->adminShell('新建文章', $this->form('/admin/posts/store', null)));
+        $lang = $this->app->lang;
+
+        return $this->html($this->adminShell($lang->get('admin.post.create'), $this->form('/admin/posts/store', null)));
     }
 
     public function store(): Response
     {
+        $lang = $this->app->lang;
+
         $validator = $this->validate([
             'title' => 'required|max:255',
             'status' => 'required|in:draft,publish,pending,private',
@@ -66,7 +72,7 @@ final class PostAdmin extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->html($this->adminShell('新建文章', $this->form('/admin/posts/store', $this->request->all(), $validator->errors())), 422);
+            return $this->html($this->adminShell($lang->get('admin.post.create'), $this->form('/admin/posts/store', $this->request->all(), $validator->errors())), 422);
         }
 
         $id = $this->service()->create($this->request->all(), (int) $this->app->user->id, 'article');
@@ -76,17 +82,21 @@ final class PostAdmin extends BaseController
 
     public function edit(): Response
     {
+        $lang = $this->app->lang;
+
         $id = (int) $this->request->query('id', 0);
         $post = $this->service()->find($id);
         if ($post === null || (string) $post['type'] !== 'article') {
-            return $this->html($this->adminShell('文章管理', '<section class="panel"><h1>文章不存在</h1></section>'), 404);
+            return $this->html($this->adminShell($lang->get('admin.post.title'), '<section class="panel"><h1>' . $this->escape($lang->get('admin.post.not_found')) . '</h1></section>'), 404);
         }
 
-        return $this->html($this->adminShell('编辑文章', $this->form('/admin/posts/update', $post, [], $id)));
+        return $this->html($this->adminShell($lang->get('admin.post.edit'), $this->form('/admin/posts/update', $post, [], $id)));
     }
 
     public function update(): Response
     {
+        $lang = $this->app->lang;
+
         $id = (int) $this->request->post('id', 0);
         $validator = $this->validate([
             'title' => 'required|max:255',
@@ -98,12 +108,12 @@ final class PostAdmin extends BaseController
         if ($validator->fails()) {
             $post = array_replace((array) $this->service()->find($id), $this->request->all());
 
-            return $this->html($this->adminShell('编辑文章', $this->form('/admin/posts/update', $post, $validator->errors(), $id)), 422);
+            return $this->html($this->adminShell($lang->get('admin.post.edit'), $this->form('/admin/posts/update', $post, $validator->errors(), $id)), 422);
         }
 
         $ok = $this->service()->update($id, $this->request->all(), 'article');
         if (!$ok) {
-            return $this->html($this->adminShell('编辑文章', '<section class="panel"><h1>文章不存在</h1></section>'), 404);
+            return $this->html($this->adminShell($lang->get('admin.post.edit'), '<section class="panel"><h1>' . $this->escape($lang->get('admin.post.not_found')) . '</h1></section>'), 404);
         }
 
         return $this->redirect('/admin/posts/edit?id=' . $id . '&saved=1');
@@ -131,6 +141,8 @@ final class PostAdmin extends BaseController
      */
     private function form(string $action, ?array $post, array $errors = [], int $id = 0): string
     {
+        $lang = $this->app->lang;
+
         $post ??= [
             'title' => '',
             'slug' => '',
@@ -158,31 +170,31 @@ final class PostAdmin extends BaseController
         $tags = is_array($post['tag_names'] ?? null)
             ? implode(', ', $post['tag_names'])
             : (string) ($post['tags'] ?? '');
-        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">保存成功。</div>' : '';
+        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">' . $this->escape($lang->get('admin.message.saved')) . '</div>' : '';
 
-        return '<section class="panel"><h1>' . ($id > 0 ? '编辑文章' : '新建文章') . '</h1>' . $saved
+        return '<section class="panel"><h1>' . ($id > 0 ? $this->escape($lang->get('admin.post.edit')) : $this->escape($lang->get('admin.post.create'))) . '</h1>' . $saved
             . '<form method="post" action="' . $this->escape($action) . '" class="fp-form-grid">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . ($id > 0 ? '<input type="hidden" name="id" value="' . $id . '">' : '')
-            . '<label>标题<input name="title" value="' . $this->escape((string) ($post['title'] ?? '')) . '">' . $this->fieldError('title', $errors) . '</label>'
-            . '<label>Slug<input name="slug" value="' . $this->escape((string) ($post['slug'] ?? '')) . '"></label>'
-            . '<label>状态<select name="status">'
-            . $this->option('draft', '草稿', (string) ($post['status'] ?? 'draft'))
-            . $this->option('publish', '发布', (string) ($post['status'] ?? 'draft'))
-            . $this->option('pending', '待审核', (string) ($post['status'] ?? 'draft'))
-            . $this->option('private', '私密', (string) ($post['status'] ?? 'draft'))
+            . '<label>' . $this->escape($lang->get('admin.post.th_title')) . '<input name="title" value="' . $this->escape((string) ($post['title'] ?? '')) . '">' . $this->fieldError('title', $errors) . '</label>'
+            . '<label>' . $this->escape($lang->get('admin.post.slug')) . '<input name="slug" value="' . $this->escape((string) ($post['slug'] ?? '')) . '"></label>'
+            . '<label>' . $this->escape($lang->get('admin.post.status')) . '<select name="status">'
+            . $this->option('draft', $lang->get('admin.post.draft'), (string) ($post['status'] ?? 'draft'))
+            . $this->option('publish', $lang->get('admin.post.publish'), (string) ($post['status'] ?? 'draft'))
+            . $this->option('pending', $lang->get('admin.post.pending'), (string) ($post['status'] ?? 'draft'))
+            . $this->option('private', $lang->get('admin.post.private'), (string) ($post['status'] ?? 'draft'))
             . '</select>' . $this->fieldError('status', $errors) . '</label>'
-            . '<label>评论<select name="comment_status">'
-            . $this->option('open', '开启', (string) ($post['comment_status'] ?? 'open'))
-            . $this->option('closed', '关闭', (string) ($post['comment_status'] ?? 'open'))
+            . '<label>' . $this->escape($lang->get('admin.post.comment_status')) . '<select name="comment_status">'
+            . $this->option('open', $lang->get('admin.common.open'), (string) ($post['comment_status'] ?? 'open'))
+            . $this->option('closed', $lang->get('admin.common.closed'), (string) ($post['comment_status'] ?? 'open'))
             . '</select>' . $this->fieldError('comment_status', $errors) . '</label>'
-            . '<label>是否置顶 <input type="checkbox" name="is_top" value="1" ' . ((int) ($post['is_top'] ?? 0) === 1 ? 'checked' : '') . '></label>'
-            . '<label>发布时间(UTC)<input name="published_at" value="' . $this->escape((string) ($post['published_at'] ?? '')) . '" placeholder="YYYY-mm-dd HH:ii:ss"></label>'
-            . '<label>摘要<textarea name="excerpt" rows="3">' . $this->escape((string) ($post['excerpt'] ?? '')) . '</textarea></label>'
-            . '<label>内容<textarea name="content" rows="12">' . $this->escape((string) ($post['content'] ?? '')) . '</textarea></label>'
-            . '<fieldset><legend>分类</legend>' . ($categoryOptions === '' ? '<p class="muted">暂无分类</p>' : $categoryOptions) . '</fieldset>'
-            . '<label>标签（逗号分隔）<input name="tags" value="' . $this->escape($tags) . '"></label>'
-            . '<div class="actions"><button type="submit">保存</button><a href="/admin/posts">返回列表</a></div>'
+            . '<label>' . $this->escape($lang->get('admin.post.is_top')) . ' <input type="checkbox" name="is_top" value="1" ' . ((int) ($post['is_top'] ?? 0) === 1 ? 'checked' : '') . '></label>'
+            . '<label>' . $this->escape($lang->get('admin.post.published_at')) . '<input name="published_at" value="' . $this->escape((string) ($post['published_at'] ?? '')) . '" placeholder="YYYY-mm-dd HH:ii:ss"></label>'
+            . '<label>' . $this->escape($lang->get('admin.post.excerpt')) . '<textarea name="excerpt" rows="3">' . $this->escape((string) ($post['excerpt'] ?? '')) . '</textarea></label>'
+            . '<label>' . $this->escape($lang->get('admin.post.content')) . '<textarea name="content" rows="12">' . $this->escape((string) ($post['content'] ?? '')) . '</textarea></label>'
+            . '<fieldset><legend>' . $this->escape($lang->get('admin.post.category')) . '</legend>' . ($categoryOptions === '' ? '<p class="muted">' . $this->escape($lang->get('admin.post.no_category')) . '</p>' : $categoryOptions) . '</fieldset>'
+            . '<label>' . $this->escape($lang->get('admin.post.tags')) . '<input name="tags" value="' . $this->escape($tags) . '"></label>'
+            . '<div class="actions"><button type="submit">' . $this->escape($lang->get('admin.common.save')) . '</button><a href="/admin/posts">' . $this->escape($lang->get('admin.common.back_list')) . '</a></div>'
             . '</form></section>';
     }
 

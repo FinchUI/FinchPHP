@@ -554,6 +554,7 @@ final class ExtensionAdmin extends BaseController
 
     private function content(): string
     {
+        $lang = $this->app->lang;
         $themes = $this->themeService()->discover();
         $plugins = $this->pluginService()->discover();
         $modules = $this->moduleService()->discover();
@@ -561,21 +562,21 @@ final class ExtensionAdmin extends BaseController
 
         $notice = '';
         if ($this->request->query('theme') === '1') {
-            $notice .= '<div class="fp-notice-success">主题已切换。</div>';
+            $notice .= '<div class="fp-notice-success">' . $this->escape($lang->get('admin.extension.theme_switched')) . '</div>';
         } elseif ($this->request->query('theme') === '0') {
-            $notice .= '<div class="fp-error-text">主题切换失败。</div>';
+            $notice .= '<div class="fp-error-text">' . $this->escape($lang->get('admin.extension.theme_switch_failed')) . '</div>';
         }
 
         if ($this->request->query('module') === '1') {
-            $notice .= '<div class="fp-notice-success">模块状态已更新。</div>';
+            $notice .= '<div class="fp-notice-success">' . $this->escape($lang->get('admin.extension.module_updated')) . '</div>';
         } elseif ($this->request->query('module') === '0') {
-            $notice .= '<div class="fp-error-text">模块状态更新失败。</div>';
+            $notice .= '<div class="fp-error-text">' . $this->escape($lang->get('admin.extension.module_update_failed')) . '</div>';
         }
 
         if ($this->request->query('plugin') === '1') {
-            $notice .= '<div class="fp-notice-success">插件状态已更新。</div>';
+            $notice .= '<div class="fp-notice-success">' . $this->escape($lang->get('admin.extension.plugin_updated')) . '</div>';
         } elseif ($this->request->query('plugin') === '0') {
-            $notice .= '<div class="fp-error-text">插件状态更新失败。</div>';
+            $notice .= '<div class="fp-error-text">' . $this->escape($lang->get('admin.extension.plugin_update_failed')) . '</div>';
         }
 
         $themeRows = '';
@@ -586,18 +587,18 @@ final class ExtensionAdmin extends BaseController
                 . '<td>' . $this->escape((string) ($theme['name'] ?? $id)) . '</td>'
                 . '<td>' . $this->escape((string) ($theme['version'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($theme['author'] ?? '')) . '</td>'
-                . '<td>' . ($active ? '<strong>已启用</strong>' : '未启用') . '</td>'
+                . '<td>' . ($active ? '<strong>' . $this->escape($lang->get('admin.common.enabled')) . '</strong>' : $this->escape($lang->get('admin.common.not_enabled'))) . '</td>'
                 . '<td>'
                 . ($active ? '' : '<form method="post" action="/admin/extensions/theme" class="fp-inline-form">'
                     . '<input type="hidden" name="_token" value="' . $token . '">'
                     . '<input type="hidden" name="theme" value="' . $this->escape($id) . '">'
-                    . '<button type="submit">启用</button>'
+                    . '<button type="submit">' . $this->escape($lang->get('admin.common.enable')) . '</button>'
                     . '</form>')
                 . '</td>'
                 . '</tr>';
         }
         if ($themeRows === '') {
-            $themeRows = '<tr><td colspan="5" class="muted">暂无主题元数据</td></tr>';
+            $themeRows = '<tr><td colspan="5" class="muted">' . $this->escape($lang->get('admin.extension.no_theme_meta')) . '</td></tr>';
         }
 
         $pluginRows = '';
@@ -611,7 +612,7 @@ final class ExtensionAdmin extends BaseController
             }
 
             $configAction = $settingsPage !== ''
-                ? '<a href="' . $this->escape($settingsPage) . '">配置</a>'
+                ? '<a href="' . $this->escape($settingsPage) . '">' . $this->escape($lang->get('admin.common.config')) . '</a>'
                 : '<span class="muted">-</span>';
 
             $pluginRows .= '<tr>'
@@ -619,20 +620,20 @@ final class ExtensionAdmin extends BaseController
                 . '<td>' . $this->escape((string) ($plugin['name'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($plugin['version'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($plugin['menu_location'] ?? 'hidden')) . '</td>'
-                . '<td>' . ((bool) ($plugin['preinstalled'] ?? false) ? '是' : '否') . '</td>'
-                . '<td>' . ($hasRuntime ? '有' : '无') . '</td>'
-                . '<td>' . ($enabled ? '<strong>启用</strong>' : '停用') . '</td>'
+                . '<td>' . ((bool) ($plugin['preinstalled'] ?? false) ? $this->escape($lang->get('admin.common.yes')) : $this->escape($lang->get('admin.common.no'))) . '</td>'
+                . '<td>' . ($hasRuntime ? $this->escape($lang->get('admin.common.has')) : $this->escape($lang->get('admin.common.none'))) . '</td>'
+                . '<td>' . ($enabled ? '<strong>' . $this->escape($lang->get('admin.common.enable')) . '</strong>' : $this->escape($lang->get('admin.common.disable'))) . '</td>'
                 . '<td>' . $configAction . '</td>'
                 . '<td><form method="post" action="/admin/extensions/plugin" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $token . '">'
                 . '<input type="hidden" name="plugin" value="' . $this->escape($id) . '">'
                 . '<input type="hidden" name="enabled" value="' . ($enabled ? '0' : '1') . '">'
-                . '<button type="submit" class="secondary">' . ($enabled ? '停用' : '启用') . '</button>'
+                . '<button type="submit" class="secondary">' . ($enabled ? $this->escape($lang->get('admin.common.disable')) : $this->escape($lang->get('admin.common.enable'))) . '</button>'
                 . '</form></td>'
                 . '</tr>';
         }
         if ($pluginRows === '') {
-            $pluginRows = '<tr><td colspan="9" class="muted">暂无插件元数据</td></tr>';
+            $pluginRows = '<tr><td colspan="9" class="muted">' . $this->escape($lang->get('admin.extension.no_plugin_meta')) . '</td></tr>';
         }
 
         $moduleRows = '';
@@ -643,27 +644,27 @@ final class ExtensionAdmin extends BaseController
                 . '<td>' . $this->escape($id) . '</td>'
                 . '<td>' . $this->escape((string) ($module['name'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($module['version'] ?? '')) . '</td>'
-                . '<td>' . ($enabled ? '<strong>启用</strong>' : '停用') . '</td>'
+                . '<td>' . ($enabled ? '<strong>' . $this->escape($lang->get('admin.common.enable')) . '</strong>' : $this->escape($lang->get('admin.common.disable'))) . '</td>'
                 . '<td><form method="post" action="/admin/extensions/module" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $token . '">'
                 . '<input type="hidden" name="module" value="' . $this->escape($id) . '">'
                 . '<input type="hidden" name="enabled" value="' . ($enabled ? '0' : '1') . '">'
-                . '<button type="submit" class="secondary">' . ($enabled ? '停用' : '启用') . '</button>'
+                . '<button type="submit" class="secondary">' . ($enabled ? $this->escape($lang->get('admin.common.disable')) : $this->escape($lang->get('admin.common.enable'))) . '</button>'
                 . '</form></td>'
                 . '</tr>';
         }
         if ($moduleRows === '') {
-            $moduleRows = '<tr><td colspan="5" class="muted">暂无模块元数据</td></tr>';
+            $moduleRows = '<tr><td colspan="5" class="muted">' . $this->escape($lang->get('admin.extension.no_module_meta')) . '</td></tr>';
         }
 
-        return '<section class="panel"><h1>扩展管理</h1>' . $notice . '<p class="muted">Stage18 基础骨架：插件/主题/模块元数据发现与最小操作。</p></section>'
-            . '<section class="panel"><h2>主题</h2><table><thead><tr><th>名称</th><th>版本</th><th>作者</th><th>状态</th><th>操作</th></tr></thead><tbody>'
+        return '<section class="panel"><h1>' . $this->escape($lang->get('admin.extension.title')) . '</h1>' . $notice . '<p class="muted">Stage18 基础骨架：插件/主题/模块元数据发现与最小操作。</p></section>'
+            . '<section class="panel"><h2>' . $this->escape($lang->get('admin.extension.themes')) . '</h2><table><thead><tr><th>' . $this->escape($lang->get('admin.extension.th_name')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_version')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_author')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
             . $themeRows
             . '</tbody></table></section>'
-            . '<section class="panel"><h2>插件</h2><table><thead><tr><th>ID</th><th>名称</th><th>版本</th><th>菜单位置</th><th>预装</th><th>运行时</th><th>状态</th><th>配置</th><th>操作</th></tr></thead><tbody>'
+            . '<section class="panel"><h2>' . $this->escape($lang->get('admin.extension.plugins')) . '</h2><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.extension.th_name')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_version')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_menu_location')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_preinstalled')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_runtime')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.config')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
             . $pluginRows
             . '</tbody></table></section>'
-            . '<section class="panel"><h2>模块</h2><table><thead><tr><th>ID</th><th>名称</th><th>版本</th><th>状态</th><th>操作</th></tr></thead><tbody>'
+            . '<section class="panel"><h2>' . $this->escape($lang->get('admin.extension.modules')) . '</h2><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.extension.th_name')) . '</th><th>' . $this->escape($lang->get('admin.extension.th_version')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.common.actions')) . '</th></tr></thead><tbody>'
             . $moduleRows
             . '</tbody></table></section>';
     }
@@ -675,6 +676,7 @@ final class ExtensionAdmin extends BaseController
      */
     private function pluginBindingBlock(string $plugin, array $meta, array $config, array $values): string
     {
+        $lang = $this->app->lang;
         $binding = $config['binding'] ?? null;
         if (!is_array($binding)) {
             return '';
@@ -685,7 +687,7 @@ final class ExtensionAdmin extends BaseController
             return '';
         }
 
-        $label = (string) ($binding['label'] ?? '设为当前 Provider');
+        $label = (string) ($binding['label'] ?? 'admin.extension.current_provider');
         $help = trim((string) ($binding['help'] ?? ''));
         $current = (string) $this->app->settings->get($systemKey, '');
         $bindValue = (bool) ($values['bind_as_active'] ?? false);
@@ -693,13 +695,13 @@ final class ExtensionAdmin extends BaseController
         $enabled = (bool) ($meta['enabled'] ?? false);
         $enabledHint = $enabled
             ? ''
-            : '<div class="fp-notice-warn fp-help-text">当前插件处于停用状态，勾选后不会切换系统默认 Provider。</div>';
+            : '<div class="fp-notice-warn fp-help-text">' . $this->escape($lang->get('admin.extension.bind_disabled_warn')) . '</div>';
 
         return '<label class="fp-check-row"><input type="checkbox" name="bind_as_active" value="1"' . $checked . '>'
-            . $this->escape($label)
+            . $this->escape($lang->get($label))
             . '</label>'
-            . '<div class="muted">当前 system_setting.' . $this->escape($systemKey) . ' = <strong>' . $this->escape($current === '' ? '(空)' : $current) . '</strong></div>'
-            . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($help) . '</div>' : '')
+            . '<div class="muted">' . $this->escape($lang->get('admin.extension.current_provider')) . ' system_setting.' . $this->escape($systemKey) . ' = <strong>' . $this->escape($current === '' ? $lang->get('admin.common.empty') : $current) . '</strong></div>'
+            . ($help !== '' ? '<div class="muted fp-help-text">' . $this->escape($lang->get($help)) . '</div>' : '')
             . $enabledHint;
     }
 

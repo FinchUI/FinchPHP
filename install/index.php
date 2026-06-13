@@ -926,6 +926,7 @@ function fp_install_render(array $state): void
         .lang-switch { text-align: right; margin-bottom: 16px; }
         .lang-switch a { margin-left: 12px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: #24292f; }
         .lang-switch a.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+        .db-fields { margin-top: 16px; }
         @media (max-width: 720px) { .grid, .checks { grid-template-columns: 1fr; } .steps { flex-wrap: wrap; gap: 8px; } .step { flex: 0 0 calc(50% - 4px); font-size: 13px; padding: 10px 6px; } }
     </style>
 </head>

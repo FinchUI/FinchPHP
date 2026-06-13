@@ -1603,7 +1603,7 @@ $result = $fp->ai->chat($modelId, [
 | XSS 过滤 | 输出时 `esc_html()` / `esc_attr()`；Quill 富文本经 HtmlCleaner 白名单清洗 |
 | SQL 注入 | PDO 预处理语句（强制） |
 | 密码哈希 | `password_hash()` / `password_verify()` |
-| 密码策略 | 后台可配最小长度（默认 8）、字符类型要求（数字/字母/符号）、禁常见弱密码，存 `system_setting` |
+| 密码策略 | 密码至少 8 位，必须同时包含字母和数字（不强制符号/大小写混合），存 `system_setting` |
 | 登录限流 | 同 IP/账号连续 5 次登录失败锁定 10 分钟（`login_fail_count` / `locked_until`） |
 | 验证码 | `CaptchaService` 门面 + 验证码 Provider 插件；预装 `captcha-gd`（GD 图形验证码）默认启用，可替换滑块/hCaptcha/reCAPTCHA |
 | 文件上传 | 白名单扩展名 + MIME 类型验证 + EXIF 剥离（默认，可选保留） + 随机重命名 |
@@ -1653,7 +1653,7 @@ UploadService::store($file):
 
 **密码策略与登录限流**：
 
-- 后台可配密码最小长度（默认 8）、必需字符类型（数字/字母/符号），并校验常见弱密码黑名单，配置存 `system_setting`。
+- 密码至少 8 位，必须同时包含字母和数字（不强制符号/大小写混合）；配置存 `system_setting`。
 - 同 IP / 账号连续 5 次登录失败后锁定 10 分钟，落地 `user` 表的 `login_fail_count` / `locked_until` 字段，登录成功后清零。
 
 **会话固定与 Cookie 安全**：

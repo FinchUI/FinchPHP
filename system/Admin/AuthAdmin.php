@@ -13,6 +13,8 @@ use Finch\Core\Response;
 
 final class AuthAdmin extends BaseController
 {
+    use AdminLayout;
+
     public function login(): Response
     {
         if ($this->app->isLoggedIn) {
@@ -56,25 +58,45 @@ final class AuthAdmin extends BaseController
     private function loginForm(string $error = ''): string
     {
         $token = $this->app->session->csrfToken();
-        $errorHtml = $error === '' ? '' : '<div style="color:#b42318;margin-bottom:1rem">' . $this->escape($error) . '</div>';
+        $username = trim((string) $this->request->post('username', ''));
+        $remember = (string) $this->request->post('remember', '') === '1';
+        $errorHtml = $error === '' ? '' : '<div class="fp-auth-error">' . $this->escape($error) . '</div>';
 
-        return '<main style="max-width:360px;margin:8vh auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">'
-            . '<h1 style="font-size:1.6rem;margin-bottom:1rem">Finch 后台登录</h1>'
+        return '<main class="fp-auth-wrap">'
+            . '<section class="fp-auth-card">'
+            . '<div class="fp-auth-head">'
+            . '<div class="fp-auth-logo" aria-hidden="true">FP</div>'
+            . '<div>'
+            . '<h1>后台登录</h1>'
+            . '<p>欢迎回来，请登录后继续管理站点内容。</p>'
+            . '</div>'
+            . '</div>'
             . $errorHtml
-            . '<form method="post" action="' . $this->adminUrl('/admin/login') . '" style="display:grid;gap:.8rem">'
+            . '<form method="post" action="' . $this->adminUrl('/admin/login') . '" class="fp-auth-form">'
             . '<input type="hidden" name="_token" value="' . $this->escape($token) . '">'
-            . '<label>用户名<input name="username" autocomplete="username" style="width:100%;box-sizing:border-box;padding:.55rem;margin-top:.25rem"></label>'
-            . '<label>密码<input type="password" name="password" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding:.55rem;margin-top:.25rem"></label>'
-            . '<label style="display:flex;gap:.45rem;align-items:center"><input type="checkbox" name="remember" value="1">记住我</label>'
-            . '<button type="submit" style="padding:.65rem;border:0;background:#1f6feb;color:#fff;cursor:pointer">登录</button>'
-            . '</form></main>';
+            . '<label class="fp-auth-field">用户名'
+            . '<input name="username" autocomplete="username" value="' . $this->escape($username) . '" placeholder="请输入用户名">'
+            . '</label>'
+            . '<label class="fp-auth-field">密码'
+            . '<input type="password" name="password" autocomplete="current-password" placeholder="请输入密码">'
+            . '</label>'
+            . '<label class="fp-auth-remember"><input type="checkbox" name="remember" value="1" ' . ($remember ? 'checked' : '') . '>记住我</label>'
+            . '<button type="submit">登录</button>'
+            . '</form>'
+            . '<div class="fp-auth-footer"><a href="/">返回前台</a></div>'
+            . '</section>'
+            . '</main>';
     }
 
     private function layout(string $title, string $body): string
     {
+        $assets = $this->resolveAdminStyleAssets();
+
         return '<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8">'
             . '<meta name="viewport" content="width=device-width, initial-scale=1">'
-            . '<title>' . $this->escape($title) . ' - Finch PHP</title></head>'
-            . '<body style="background:#f6f8fa;margin:0">' . $body . '</body></html>';
+            . '<title>' . $this->escape($title) . ' - Finch PHP</title>'
+            . $this->adminStyleLinks($assets['css'])
+            . '</head>'
+            . '<body class="fp-auth-body">' . $body . $this->adminScriptTags($assets['js']) . '</body></html>';
     }
 }

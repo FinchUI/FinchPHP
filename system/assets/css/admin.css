@@ -213,7 +213,7 @@ th {
     color: #334155;
 }
 
-input,
+input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
     width: 100%;
@@ -301,6 +301,110 @@ legend {
     text-decoration: none;
     border-color: #bfdbfe;
     background: #f8fbff;
+}
+
+.fp-auth-body {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(circle at 18% 18%, rgba(59, 130, 246, 0.12), transparent 40%),
+        radial-gradient(circle at 82% 12%, rgba(37, 99, 235, 0.12), transparent 38%),
+        var(--finch-admin-bg);
+}
+
+.fp-auth-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.fp-auth-card {
+    width: min(420px, 100%);
+    background: #fff;
+    border: 1px solid var(--finch-admin-border);
+    border-radius: 14px;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+    padding: 22px;
+}
+
+.fp-auth-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.fp-auth-logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.fp-auth-head h1 {
+    margin: 0;
+    font-size: 1.28rem;
+}
+
+.fp-auth-head p {
+    margin: 4px 0 0;
+    color: var(--finch-admin-muted);
+    font-size: 0.9rem;
+}
+
+.fp-auth-error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    font-size: 0.92rem;
+}
+
+.fp-auth-form {
+    display: grid;
+    gap: 12px;
+}
+
+.fp-auth-field {
+    font-size: 0.92rem;
+    color: #334155;
+    display: grid;
+    gap: 6px;
+}
+
+.fp-auth-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #475569;
+    font-size: 0.92rem;
+}
+
+.fp-auth-remember input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.fp-auth-footer {
+    margin-top: 12px;
+    text-align: center;
+    color: var(--finch-admin-muted);
+    font-size: 0.9rem;
+}
+
+.fp-auth-footer a {
+    color: #334155;
 }
 
 @media (max-width: 1080px) {

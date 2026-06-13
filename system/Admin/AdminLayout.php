@@ -75,16 +75,16 @@ trait AdminLayout
     private function adminMenuItems(): array
     {
         return [
-            ['path' => '/admin', 'label' => '仪表盘', 'icon' => 'ti ti-layout-dashboard'],
-            ['path' => '/admin/posts', 'label' => '文章', 'icon' => 'ti ti-article'],
-            ['path' => '/admin/pages', 'label' => '页面', 'icon' => 'ti ti-file-text'],
-            ['path' => '/admin/categories', 'label' => '分类', 'icon' => 'ti ti-category'],
-            ['path' => '/admin/tags', 'label' => '标签', 'icon' => 'ti ti-tags'],
-            ['path' => '/admin/comments', 'label' => '评论', 'icon' => 'ti ti-message-circle'],
-            ['path' => '/admin/users', 'label' => '用户', 'icon' => 'ti ti-users'],
-            ['path' => '/admin/tokens', 'label' => 'Token', 'icon' => 'ti ti-key'],
-            ['path' => '/admin/extensions', 'label' => '扩展', 'icon' => 'ti ti-puzzle'],
-            ['path' => '/admin/uploads', 'label' => '媒体库', 'icon' => 'ti ti-photo-up'],
+            ['path' => '/admin', 'label' => 'admin.menu.dashboard', 'icon' => 'ti ti-layout-dashboard'],
+            ['path' => '/admin/posts', 'label' => 'admin.menu.posts', 'icon' => 'ti ti-article'],
+            ['path' => '/admin/pages', 'label' => 'admin.menu.pages', 'icon' => 'ti ti-file-text'],
+            ['path' => '/admin/categories', 'label' => 'admin.menu.categories', 'icon' => 'ti ti-category'],
+            ['path' => '/admin/tags', 'label' => 'admin.menu.tags', 'icon' => 'ti ti-tags'],
+            ['path' => '/admin/comments', 'label' => 'admin.menu.comments', 'icon' => 'ti ti-message-circle'],
+            ['path' => '/admin/users', 'label' => 'admin.menu.users', 'icon' => 'ti ti-users'],
+            ['path' => '/admin/tokens', 'label' => 'admin.menu.tokens', 'icon' => 'ti ti-key'],
+            ['path' => '/admin/extensions', 'label' => 'admin.menu.extensions', 'icon' => 'ti ti-puzzle'],
+            ['path' => '/admin/uploads', 'label' => 'admin.menu.uploads', 'icon' => 'ti ti-photo-up'],
         ];
     }
 
@@ -107,7 +107,7 @@ trait AdminLayout
     {
         $user = $this->app->user;
 
-        return (string) ($user?->display_name ?: $user?->username ?: '管理员');
+        return (string) ($user?->display_name ?: $user?->username ?: $this->app->lang->get('admin.topbar.admin'));
     }
 
     /** @param list<string> $css */

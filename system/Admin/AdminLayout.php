@@ -14,11 +14,13 @@ trait AdminLayout
     {
         $body = $this->normalizeAdminLinks($body);
         $assets = $this->resolveAdminStyleAssets();
+        $editorAssets = $this->resolveEditorAssets();
 
         return '<!DOCTYPE html><html lang="' . $this->escape($this->app->lang->locale()) . '"><head><meta charset="utf-8">'
             . '<meta name="viewport" content="width=device-width, initial-scale=1">'
             . '<title>' . $this->escape($title) . ' - Finch PHP</title>'
             . $this->adminStyleLinks($assets['css'])
+            . $this->adminStyleLinks($editorAssets['css'])
             . '</head><body class="fp-admin-body">'
             . '<div class="fp-admin-shell">'
             . $this->adminSidebar()
@@ -28,6 +30,7 @@ trait AdminLayout
             . '</div>'
             . '</div>'
             . $this->adminScriptTags($assets['js'])
+            . $this->adminScriptTags($editorAssets['js'])
             . '</body></html>';
     }
 

@@ -304,11 +304,30 @@ a:hover {
 }
 
 .fp-tab-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 6px;
     font-weight: 500;
+    color: #24292f;
+    text-decoration: none;
+    transition: background-color .15s, color .15s, box-shadow .15s;
+}
+
+.fp-tab-link:hover {
+    background-color: #e7ebf0;
+    color: #24292f;
 }
 
 .fp-tab-link.fp-tab-active {
-    font-weight: 700;
+    background-color: #0969da;
+    color: #fff;
+    font-weight: 600;
+}
+
+.fp-tab-link.fp-tab-active:hover {
+    background-color: #0550ae;
+    color: #fff;
 }
 
 .fp-help-text {

@@ -129,7 +129,7 @@ final class SettingAdmin extends BaseController
         'site_description' => ['label' => 'admin.settings.site_description', 'type' => 'text'],
         'site_keywords' => ['label' => 'admin.settings.site_keywords', 'type' => 'text'],
         'admin_language' => ['label' => 'admin.settings.admin_language', 'type' => 'select', 'options' => ['zh-cn' => '简体中文', 'zh-tw' => '繁體中文', 'en' => 'English']],
-        'site_timezone' => ['label' => 'admin.settings.site_timezone', 'type' => 'text', 'placeholder' => 'Asia/Shanghai'],
+        'site_timezone' => ['label' => 'admin.settings.site_timezone', 'type' => 'timezone'],
         'maintenance_mode' => ['label' => 'admin.settings.maintenance_mode', 'type' => 'checkbox'],
 
         'posts_per_page' => ['label' => 'admin.settings.posts_per_page', 'type' => 'number'],

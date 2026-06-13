@@ -20,6 +20,7 @@ final class TokenAdmin extends BaseController
 
     public function index(): Response
     {
+        $lang = $this->app->lang;
         $page = max(1, (int) $this->request->query('page', 1));
         $pageData = ApiToken::query()->orderBy('id', 'DESC')->paginate($page, 20);
 
@@ -37,7 +38,7 @@ final class TokenAdmin extends BaseController
             }
         }
 
-        return $this->html($this->adminShell('API Token 管理', $this->content($pageData, $users)));
+        return $this->html($this->adminShell($lang->get('admin.token.title'), $this->content($pageData, $users)));
     }
 
     public function issue(): Response

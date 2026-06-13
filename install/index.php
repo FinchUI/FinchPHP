@@ -850,8 +850,8 @@ function fp_install_render(array $state): void
         * { box-sizing: border-box; }
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #24292f; background: var(--bg); }
         main { width: min(960px, calc(100% - 32px)); margin: 32px auto; }
-        .panel { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 32px; }
-        h1 { margin: 0 0 8px; font-size: 28px; }
+        .panel { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 16px; }
+        h1 { margin: 0 0 16px; font-size: 28px; }
         h2 { margin: 0 0 16px; font-size: 18px; }
         p { color: var(--muted); line-height: 1.6; }
         .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }

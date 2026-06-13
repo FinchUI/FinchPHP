@@ -18,6 +18,7 @@ function fp_install_languages(): array
 {
     return [
         'zh-cn' => '简体中文',
+        'zh-tw' => '繁體中文',
         'en' => 'English',
     ];
 }

@@ -37,6 +37,9 @@ final class LinkAdmin extends BaseController
         $addUrl = '/admin/links/create?group=' . rawurlencode($group);
         $searchPanel = $group === 'navbar' ? $this->searchPanel($token) : '';
 
+        $linkCss = '<link rel="stylesheet" href="/content/plugins/link-manager/assets/css/link-manager.css">';
+        $linkJs = '<script defer src="/content/plugins/link-manager/assets/js/link-manager.js"></script>';
+
         $body = '<section class="panel"><h1>' . $this->escape($lang->get('admin.link.title')) . '</h1>'
             . $saved
             . '<div class="actions fp-actions-gap-bottom">' . $groupTabs . '</div>'
@@ -62,7 +65,13 @@ final class LinkAdmin extends BaseController
             . '</form>'
             . '</section>';
 
-        return $this->html($this->adminShell($lang->get('admin.link.title'), $body));
+        $html = $this->adminShell($lang->get('admin.link.title'), $body);
+
+        // 注入链接管理中心的 CSS/JS 到 </head> 和 </body> 前
+        $html = str_replace('</head>', $linkCss . "\n</head>", $html);
+        $html = str_replace('</body>', $linkJs . "\n</body>", $html);
+
+        return $this->html($html);
     }
 
     public function create(): Response

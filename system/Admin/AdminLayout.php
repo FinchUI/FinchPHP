@@ -82,10 +82,10 @@ trait AdminLayout
             ['path' => '/admin/tags', 'label' => 'admin.menu.tags', 'icon' => 'ti ti-tags'],
             ['path' => '/admin/comments', 'label' => 'admin.menu.comments', 'icon' => 'ti ti-message-circle'],
             ['path' => '/admin/users', 'label' => 'admin.menu.users', 'icon' => 'ti ti-users'],
-            ['path' => '/admin/modules', 'label' => 'admin.menu.modules', 'icon' => 'ti ti-box'],
             ['path' => '/admin/tokens', 'label' => 'admin.menu.tokens', 'icon' => 'ti ti-key'],
-            ['path' => '/admin/themes', 'label' => 'admin.menu.themes', 'icon' => 'ti ti-palette'],
             ['path' => '/admin/extensions', 'label' => 'admin.menu.extensions', 'icon' => 'ti ti-puzzle'],
+            ['path' => '/admin/modules', 'label' => 'admin.menu.modules', 'icon' => 'ti ti-box'],
+            ['path' => '/admin/themes', 'label' => 'admin.menu.themes', 'icon' => 'ti ti-palette'],
             ['path' => '/admin/ai', 'label' => 'admin.menu.ai', 'icon' => 'ti ti-robot'],
             ['path' => '/admin/uploads', 'label' => 'admin.menu.uploads', 'icon' => 'ti ti-photo-up'],
         ];

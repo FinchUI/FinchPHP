@@ -12,7 +12,7 @@ return [
     'admin.menu.comments' => '評論',
     'admin.menu.users' => '使用者',
     'admin.menu.tokens' => 'Token',
-    'admin.menu.extensions' => '擴充套件',
+    'admin.menu.extensions' => '外掛',
     'admin.menu.modules' => '模組',
     'admin.menu.themes' => '主題',
     'admin.menu.ai' => 'AI',
@@ -225,7 +225,7 @@ return [
     'admin.token.user_prefix' => '使用者#',
 
     // ========== 擴充套件 ==========
-    'admin.extension.title' => '擴充套件管理',
+    'admin.extension.title' => '外掛管理',
     'admin.extension.theme_switched' => '主題已切換。',
     'admin.extension.theme_switch_failed' => '主題切換失敗。',
     'admin.extension.module_updated' => '模組狀態已更新。',

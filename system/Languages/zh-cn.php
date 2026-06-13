@@ -12,7 +12,7 @@ return [
     'admin.menu.comments' => '评论',
     'admin.menu.users' => '用户',
     'admin.menu.tokens' => 'Token',
-    'admin.menu.extensions' => '扩展',
+    'admin.menu.extensions' => '插件',
     'admin.menu.modules' => '模块',
     'admin.menu.themes' => '主题',
     'admin.menu.ai' => 'AI',
@@ -225,7 +225,7 @@ return [
     'admin.token.user_prefix' => '用户#',
 
     // ========== 扩展 ==========
-    'admin.extension.title' => '扩展管理',
+    'admin.extension.title' => '插件管理',
     'admin.extension.theme_switched' => '主题已切换。',
     'admin.extension.theme_switch_failed' => '主题切换失败。',
     'admin.extension.module_updated' => '模块状态已更新。',

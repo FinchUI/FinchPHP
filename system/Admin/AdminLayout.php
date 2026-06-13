@@ -46,7 +46,10 @@ trait AdminLayout
 
         foreach ($this->adminMenuItems() as $item) {
             $active = $this->isMenuActive($item['path']) ? ' active' : '';
-            $html .= '<a class="fp-admin-nav-link' . $active . '" href="' . $this->adminUrl($item['path']) . '">' . $this->escape($item['label']) . '</a>';
+            $html .= '<a class="fp-admin-nav-link' . $active . '" href="' . $this->adminUrl($item['path']) . '">'
+                . '<span class="fp-admin-nav-icon ' . $this->escape($item['icon']) . '" aria-hidden="true"></span>'
+                . '<span class="fp-admin-nav-label">' . $this->escape($item['label']) . '</span>'
+                . '</a>';
         }
 
         return $html . '</nav></aside>';
@@ -59,29 +62,29 @@ trait AdminLayout
             . '<h1>' . $this->escape($title) . '</h1>'
             . '</div>'
             . '<div class="fp-admin-topbar-actions">'
-            . '<span class="fp-admin-welcome">欢迎，' . $this->escape($this->currentAdminName()) . '</span>'
-            . '<a class="fp-admin-top-link" href="' . $this->adminUrl('/admin/settings') . '">设置</a>'
-            . '<a class="fp-admin-top-link" href="/">前台</a>'
+            . '<span class="fp-admin-welcome"><span class="ti ti-user-circle" aria-hidden="true"></span>欢迎，' . $this->escape($this->currentAdminName()) . '</span>'
+            . '<a class="fp-admin-top-link" href="' . $this->adminUrl('/admin/settings') . '"><span class="ti ti-settings" aria-hidden="true"></span><span>设置</span></a>'
+            . '<a class="fp-admin-top-link" href="/"><span class="ti ti-world" aria-hidden="true"></span><span>前台</span></a>'
             . '<form method="post" action="' . $this->adminUrl('/admin/logout') . '" class="fp-admin-logout-form">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-            . '<button type="submit" class="secondary">退出登录</button>'
+            . '<button type="submit" class="secondary"><span class="ti ti-logout" aria-hidden="true"></span><span>退出登录</span></button>'
             . '</form></div></header>';
     }
 
-    /** @return list<array{path: string, label: string}> */
+    /** @return list<array{path: string, label: string, icon: string}> */
     private function adminMenuItems(): array
     {
         return [
-            ['path' => '/admin', 'label' => '仪表盘'],
-            ['path' => '/admin/posts', 'label' => '文章'],
-            ['path' => '/admin/pages', 'label' => '页面'],
-            ['path' => '/admin/categories', 'label' => '分类'],
-            ['path' => '/admin/tags', 'label' => '标签'],
-            ['path' => '/admin/comments', 'label' => '评论'],
-            ['path' => '/admin/users', 'label' => '用户'],
-            ['path' => '/admin/tokens', 'label' => 'Token'],
-            ['path' => '/admin/extensions', 'label' => '扩展'],
-            ['path' => '/admin/uploads', 'label' => '媒体库'],
+            ['path' => '/admin', 'label' => '仪表盘', 'icon' => 'ti ti-layout-dashboard'],
+            ['path' => '/admin/posts', 'label' => '文章', 'icon' => 'ti ti-article'],
+            ['path' => '/admin/pages', 'label' => '页面', 'icon' => 'ti ti-file-text'],
+            ['path' => '/admin/categories', 'label' => '分类', 'icon' => 'ti ti-category'],
+            ['path' => '/admin/tags', 'label' => '标签', 'icon' => 'ti ti-tags'],
+            ['path' => '/admin/comments', 'label' => '评论', 'icon' => 'ti ti-message-circle'],
+            ['path' => '/admin/users', 'label' => '用户', 'icon' => 'ti ti-users'],
+            ['path' => '/admin/tokens', 'label' => 'Token', 'icon' => 'ti ti-key'],
+            ['path' => '/admin/extensions', 'label' => '扩展', 'icon' => 'ti ti-puzzle'],
+            ['path' => '/admin/uploads', 'label' => '媒体库', 'icon' => 'ti ti-photo-up'],
         ];
     }
 

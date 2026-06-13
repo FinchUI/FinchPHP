@@ -20,6 +20,27 @@ final class DashboardAdmin extends BaseController
         $siteName = $this->app->settings->get('site_name', 'Finch');
         $user = $this->app->user;
         $u = fn (string $path): string => $this->adminUrl($path);
+        $shortcuts = [
+            ['path' => '/admin/posts', 'label' => '文章', 'icon' => 'ti ti-article'],
+            ['path' => '/admin/pages', 'label' => '页面', 'icon' => 'ti ti-file-text'],
+            ['path' => '/admin/categories', 'label' => '分类', 'icon' => 'ti ti-category'],
+            ['path' => '/admin/tags', 'label' => '标签', 'icon' => 'ti ti-tags'],
+            ['path' => '/admin/comments', 'label' => '评论', 'icon' => 'ti ti-message-circle'],
+            ['path' => '/admin/users', 'label' => '用户', 'icon' => 'ti ti-users'],
+            ['path' => '/admin/tokens', 'label' => 'Token', 'icon' => 'ti ti-key'],
+            ['path' => '/admin/extensions', 'label' => '扩展', 'icon' => 'ti ti-puzzle'],
+            ['path' => '/admin/uploads', 'label' => '媒体库', 'icon' => 'ti ti-photo-up'],
+            ['path' => '/admin/settings', 'label' => '系统设置', 'icon' => 'ti ti-settings'],
+        ];
+
+        $shortcutHtml = '';
+        foreach ($shortcuts as $item) {
+            $shortcutHtml .= '<a class="fp-shortcut" href="' . $u($item['path']) . '">' 
+                . '<span class="fp-shortcut-icon ' . $this->escape($item['icon']) . '" aria-hidden="true"></span>'
+                . '<span>' . $this->escape($item['label']) . '</span>'
+                . '</a>';
+        }
+
         $body = '<section class="panel">'
             . '<h2>站点概览</h2>'
             . '<div class="fp-dashboard-grid">'
@@ -31,16 +52,7 @@ final class DashboardAdmin extends BaseController
             . '<section class="panel">'
             . '<h2>常用入口</h2>'
             . '<div class="fp-shortcuts">'
-            . '<a class="fp-shortcut" href="' . $u('/admin/posts') . '">文章</a>'
-            . '<a class="fp-shortcut" href="' . $u('/admin/pages') . '">页面</a>'
-            . '<a class="fp-shortcut" href="' . $u('/admin/categories') . '">分类</a>'
-            . '<a class="fp-shortcut" href="' . $u('/admin/tags') . '">标签</a>'
-            . '<a class="fp-shortcut" href="' . $u('/admin/comments') . '">评论</a>'
-            . '<a class="fp-shortcut" href="' . $u('/admin/users') . '">用户</a>'
-            . '<a class="fp-shortcut" href="' . $u('/admin/tokens') . '">Token</a>'
-            . '<a class="fp-shortcut" href="' . $u('/admin/extensions') . '">扩展</a>'
-            . '<a class="fp-shortcut" href="' . $u('/admin/uploads') . '">媒体库</a>'
-            . '<a class="fp-shortcut" href="' . $u('/admin/settings') . '">系统设置</a>'
+            . $shortcutHtml
             . '</div>'
             . '</section>';
 

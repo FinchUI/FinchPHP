@@ -565,11 +565,13 @@ final class ExtensionAdmin extends BaseController
                 ? '<a href="' . $this->escape($settingsPage) . '">' . $this->escape($lang->get('admin.common.config')) . '</a>'
                 : '<span class="muted">-</span>';
 
+            $iconHtml = $this->pluginIcon($id, (string) ($plugin['name'] ?? ''), (string) ($plugin['path'] ?? ''));
+
             $pluginRows .= '<tr>'
+                . '<td>' . $iconHtml . '</td>'
                 . '<td>' . $this->escape($id) . '</td>'
                 . '<td>' . $this->escape((string) ($plugin['name'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($plugin['version'] ?? '')) . '</td>'
-                . '<td>' . $this->escape((string) ($plugin['menu_location'] ?? 'hidden')) . '</td>'
                 . '<td>' . ((bool) ($plugin['preinstalled'] ?? false) ? $this->escape($lang->get('admin.common.yes')) : $this->escape($lang->get('admin.common.no'))) . '</td>'
                 . '<td>' . ($hasRuntime ? $this->escape($lang->get('admin.common.has')) : $this->escape($lang->get('admin.common.none'))) . '</td>'
                 . '<td>' . ($enabled ? '<strong>' . $this->escape($lang->get('admin.common.enable')) . '</strong>' : $this->escape($lang->get('admin.common.disable'))) . '</td>'

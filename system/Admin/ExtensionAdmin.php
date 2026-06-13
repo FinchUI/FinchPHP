@@ -427,12 +427,13 @@ final class ExtensionAdmin extends BaseController
 
     public function pluginSettings(): Response
     {
+        $lang = $this->app->lang;
         $plugin = trim((string) $this->request->query('plugin', ''));
         $meta = $this->pluginMeta($plugin);
         $config = $this->pluginConfig($plugin);
 
         if ($plugin === '' || $meta === null || $config === null || !(bool) ($meta['preinstalled'] ?? false)) {
-            return $this->html($this->adminShell('插件配置', '<section class="panel"><h1>插件配置</h1><div class="fp-error-text">未找到可配置的内置插件。</div><p><a href="/admin/extensions">返回扩展管理</a></p></section>'), 404);
+            return $this->html($this->adminShell($lang->get('admin.extension.plugin_config'), '<section class="panel"><h1>' . $this->escape($lang->get('admin.extension.plugin_config')) . '</h1><div class="fp-error-text">' . $this->escape($lang->get('admin.extension.plugin_not_found')) . '</div><p><a href="/admin/extensions">' . $this->escape($lang->get('admin.extension.back_extensions')) . '</a></p></section>'), 404);
         }
 
         $values = $this->pluginSettingsValues($plugin, $config);
@@ -440,16 +441,16 @@ final class ExtensionAdmin extends BaseController
         $bind = (string) $this->request->query('bind', '');
         $notice = '';
         if ($saved === '1') {
-            $notice .= '<div class="fp-notice-success">插件配置已保存。</div>';
+            $notice .= '<div class="fp-notice-success">' . $this->escape($lang->get('admin.extension.plugin_saved')) . '</div>';
         } elseif ($saved === '0') {
-            $notice .= '<div class="fp-error-text">插件配置保存失败，请检查输入后重试。</div>';
+            $notice .= '<div class="fp-error-text">' . $this->escape($lang->get('admin.extension.plugin_save_failed')) . '</div>';
         }
 
         if ($bind === '0') {
-            $notice .= '<div class="fp-notice-warn">插件当前为停用状态，未切换为系统默认 Provider。</div>';
+            $notice .= '<div class="fp-notice-warn">' . $this->escape($lang->get('admin.extension.plugin_disabled_warn')) . '</div>';
         }
 
-        $status = (bool) ($meta['enabled'] ?? false) ? '<strong>启用</strong>' : '停用';
+        $status = (bool) ($meta['enabled'] ?? false) ? '<strong>' . $this->escape($lang->get('admin.common.enable')) . '</strong>' : $this->escape($lang->get('admin.common.disable'));
         $fields = '';
         foreach (($config['fields'] ?? []) as $field) {
             if (!is_array($field)) {
@@ -462,19 +463,19 @@ final class ExtensionAdmin extends BaseController
         $bindingBlock = $this->pluginBindingBlock($plugin, $meta, $config, $values);
         $token = $this->escape($this->app->session->csrfToken());
 
-        $body = '<section class="panel"><h1>' . $this->escape((string) ($config['title'] ?? $plugin)) . '</h1>'
+        $body = '<section class="panel"><h1>' . $this->escape($lang->get((string) ($config['title'] ?? $plugin))) . '</h1>'
             . $notice
-            . '<p class="muted">' . $this->escape((string) ($config['description'] ?? '')) . '</p>'
-            . '<p>插件 ID：<strong>' . $this->escape($plugin) . '</strong>；当前状态：' . $status . '</p>'
+            . '<p class="muted">' . $this->escape($lang->get((string) ($config['description'] ?? ''))) . '</p>'
+            . '<p>' . $this->escape($lang->get('admin.extension.plugin_id')) . '：<strong>' . $this->escape($plugin) . '</strong>；' . $this->escape($lang->get('admin.extension.current_status')) . '：' . $status . '</p>'
             . '<form method="post" action="/admin/extensions/plugin/settings?plugin=' . rawurlencode($plugin) . '" class="fp-form-grid">'
             . '<input type="hidden" name="_token" value="' . $token . '">'
             . $bindingBlock
             . $fields
-            . '<div class="actions"><button type="submit">保存配置</button><a href="/admin/extensions">返回扩展管理</a></div>'
+            . '<div class="actions"><button type="submit">' . $this->escape($lang->get('admin.extension.save_config')) . '</button><a href="/admin/extensions">' . $this->escape($lang->get('admin.extension.back_extensions')) . '</a></div>'
             . '</form>'
             . '</section>';
 
-        return $this->html($this->adminShell('插件配置', $body));
+        return $this->html($this->adminShell($lang->get('admin.extension.plugin_config'), $body));
     }
 
     public function savePluginSettings(): Response

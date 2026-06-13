@@ -62,7 +62,7 @@ final class TagAdmin extends BaseController
      */
     private function pageContent(array $items, array $errors = []): string
     {
-        $saved = $this->request->query('saved') === '1' ? '<div style="color:#067647;margin:0 0 1rem">保存成功。</div>' : '';
+        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">保存成功。</div>' : '';
 
         $rows = '';
         foreach ($items as $item) {
@@ -72,29 +72,29 @@ final class TagAdmin extends BaseController
                 . '<td>' . $this->escape((string) $item['slug']) . '</td>'
                 . '<td>' . (int) $item['post_count'] . '</td>'
                 . '<td>'
-                . '<form method="post" action="/admin/tags/' . (int) $item['id'] . '/delete" style="display:inline">'
+                . '<form method="post" action="/admin/tags/' . (int) $item['id'] . '/delete" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-                . '<button type="submit" style="border:1px solid #d0d7de;background:#fff;padding:.25rem .5rem">删除</button>'
+                . '<button type="submit" class="secondary fp-btn-compact">删除</button>'
                 . '</form>'
                 . '</td>'
                 . '</tr>';
         }
 
         if ($rows === '') {
-            $rows = '<tr><td colspan="5" style="text-align:center;color:#57606a">暂无标签</td></tr>';
+            $rows = '<tr><td colspan="5" class="muted fp-table-empty">暂无标签</td></tr>';
         }
 
-        $nameError = isset($errors['name']) ? '<div style="color:#b42318">' . $this->escape($errors['name'][0]) . '</div>' : '';
+        $nameError = isset($errors['name']) ? '<div class="fp-error-text">' . $this->escape($errors['name'][0]) . '</div>' : '';
 
         return '<h1>标签管理</h1>'
             . $saved
-            . '<form method="post" action="/admin/tags" style="display:grid;gap:.8rem;max-width:680px;margin:0 0 1.2rem">'
+            . '<form method="post" action="/admin/tags" class="fp-form-grid fp-form-grid-sm">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-            . '<div><label>名称<input name="name" style="display:block;width:100%;box-sizing:border-box;padding:.5rem;margin-top:.25rem"></label>' . $nameError . '</div>'
-            . '<div><label>Slug<input name="slug" style="display:block;width:100%;box-sizing:border-box;padding:.5rem;margin-top:.25rem"></label></div>'
-            . '<button type="submit" style="width:max-content;padding:.65rem 1rem;border:0;background:#1f6feb;color:#fff">保存标签</button>'
+            . '<div><label class="fp-field">名称<input name="name"></label>' . $nameError . '</div>'
+            . '<div><label class="fp-field">Slug<input name="slug"></label></div>'
+            . '<button type="submit" class="fp-btn-wide">保存标签</button>'
             . '</form>'
-            . '<table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;background:#fff">'
+            . '<table>'
             . '<thead><tr><th>ID</th><th>名称</th><th>Slug</th><th>文章数</th><th>操作</th></tr></thead><tbody>'
             . $rows
             . '</tbody></table>';

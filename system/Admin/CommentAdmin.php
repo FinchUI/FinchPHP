@@ -68,32 +68,32 @@ final class CommentAdmin extends BaseController
                 . '<td>' . (int) $item['id'] . '</td>'
                 . '<td>' . $this->escape((string) ($item['post_title'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($item['author_name'] ?? '')) . '</td>'
-                . '<td style="max-width:320px">' . $this->escape((string) ($item['content'] ?? '')) . '</td>'
+                . '<td class="fp-comment-content">' . $this->escape((string) ($item['content'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($item['status'] ?? '')) . '</td>'
                 . '<td>'
-                . '<form method="post" action="/admin/comments/' . (int) $item['id'] . '/approve" style="display:inline">'
+                . '<form method="post" action="/admin/comments/' . (int) $item['id'] . '/approve" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-                . '<button type="submit" style="border:1px solid #d0d7de;background:#fff;padding:.25rem .5rem">通过</button>'
+                . '<button type="submit" class="secondary fp-btn-compact">通过</button>'
                 . '</form> '
-                . '<form method="post" action="/admin/comments/' . (int) $item['id'] . '/reject" style="display:inline">'
+                . '<form method="post" action="/admin/comments/' . (int) $item['id'] . '/reject" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-                . '<button type="submit" style="border:1px solid #d0d7de;background:#fff;padding:.25rem .5rem">驳回</button>'
+                . '<button type="submit" class="secondary fp-btn-compact">驳回</button>'
                 . '</form> '
-                . '<form method="post" action="/admin/comments/' . (int) $item['id'] . '/delete" style="display:inline">'
+                . '<form method="post" action="/admin/comments/' . (int) $item['id'] . '/delete" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-                . '<button type="submit" style="border:1px solid #d0d7de;background:#fff;padding:.25rem .5rem">删除</button>'
+                . '<button type="submit" class="secondary fp-btn-compact">删除</button>'
                 . '</form>'
                 . '</td>'
                 . '</tr>';
         }
 
         if ($rows === '') {
-            $rows = '<tr><td colspan="6" style="text-align:center;color:#57606a">暂无评论</td></tr>';
+            $rows = '<tr><td colspan="6" class="muted fp-table-empty">暂无评论</td></tr>';
         }
 
         return '<h1>评论管理</h1>'
-            . '<p><a href="/admin/comments">全部</a> · <a href="/admin/comments?status=pending">待审核</a> · <a href="/admin/comments?status=approved">已通过</a> · <a href="/admin/comments?status=rejected">已驳回</a></p>'
-            . '<table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;background:#fff">'
+            . '<p class="fp-comment-filters"><a href="/admin/comments">全部</a> · <a href="/admin/comments?status=pending">待审核</a> · <a href="/admin/comments?status=approved">已通过</a> · <a href="/admin/comments?status=rejected">已驳回</a></p>'
+            . '<table>'
             . '<thead><tr><th>ID</th><th>文章</th><th>作者</th><th>内容</th><th>状态</th><th>操作</th></tr></thead><tbody>' . $rows . '</tbody></table>';
     }
 

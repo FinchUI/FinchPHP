@@ -17,7 +17,7 @@ final class PostController extends BaseController
     {
         $post = $this->postService()->findPublishedBySlug($slug, 'article');
         if ($post === null) {
-            return $this->html('<h1>文章不存在</h1>', 404);
+            return $this->html($this->app->template->render('404'), 404);
         }
 
         return $this->html($this->app->template->render('single', ['post' => $post]));

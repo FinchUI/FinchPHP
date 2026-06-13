@@ -20,6 +20,15 @@ final class SettingAdmin extends BaseController
      * @var array<string, array{label:string,keys:list<string>,bools:list<string>,rules:array<string,string>}>
      */
     private const GROUPS = [
+        'global' => [
+            'label' => 'admin.settings.group_global',
+            'keys' => [
+                'maintenance_mode',
+                'debug_mode',
+            ],
+            'bools' => ['maintenance_mode', 'debug_mode'],
+            'rules' => [],
+        ],
         'basic' => [
             'label' => 'admin.settings.group_basic',
             'keys' => [
@@ -30,9 +39,8 @@ final class SettingAdmin extends BaseController
                 'site_keywords',
                 'admin_language',
                 'site_timezone',
-                'maintenance_mode',
             ],
-            'bools' => ['maintenance_mode'],
+            'bools' => [],
             'rules' => [
                 'site_name' => 'required|max:100',
                 'site_url' => 'max:255',
@@ -130,7 +138,8 @@ final class SettingAdmin extends BaseController
         'site_keywords' => ['label' => 'admin.settings.site_keywords', 'type' => 'text'],
         'admin_language' => ['label' => 'admin.settings.admin_language', 'type' => 'select', 'options' => ['zh-cn' => '简体中文', 'zh-tw' => '繁體中文', 'en' => 'English']],
         'site_timezone' => ['label' => 'admin.settings.site_timezone', 'type' => 'timezone'],
-        'maintenance_mode' => ['label' => 'admin.settings.maintenance_mode', 'type' => 'checkbox'],
+        'maintenance_mode' => ['label' => 'admin.settings.maintenance_mode', 'type' => 'checkbox', 'help' => 'admin.settings.maintenance_mode_help'],
+        'debug_mode' => ['label' => 'admin.settings.debug_mode', 'type' => 'checkbox', 'help' => 'admin.settings.debug_mode_help'],
 
         'posts_per_page' => ['label' => 'admin.settings.posts_per_page', 'type' => 'number'],
         'feed_items' => ['label' => 'admin.settings.feed_items', 'type' => 'number'],

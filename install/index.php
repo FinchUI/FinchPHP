@@ -965,7 +965,7 @@ function fp_install_render(array $state): void
             <h2><?php echo fp_install_e($t['installed_title']); ?></h2>
             <p><?php echo fp_install_e($t['installed_desc']); ?></p>
             <div class="actions">
-                <a class="button" href="../admin"><?php echo fp_install_e($t['enter_admin']); ?></a>
+                <a class="button" href="../index.php?fp=admin"><?php echo fp_install_e($t['enter_admin']); ?></a>
                 <a class="button secondary" href="../"><?php echo fp_install_e($t['visit_home']); ?></a>
             </div>
         </section>
@@ -981,10 +981,10 @@ function fp_install_render(array $state): void
             <p><?php echo sprintf(fp_install_e($t['success_desc']), count((array) ($state['applied'] ?? []))); ?></p>
             <div style="background: #f6f8fa; border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin: 16px 0;">
                 <p style="margin: 0 0 8px;"><strong><?php echo fp_install_e($t['success_home_url_label']); ?>：</strong><br><a href="<?php echo fp_install_e($siteUrl ?: '../'); ?>"><?php echo fp_install_e($siteUrl ?: '../'); ?></a></p>
-                <p style="margin: 0;"><strong><?php echo fp_install_e($t['success_admin_url_label']); ?>：</strong><br><a href="<?php echo fp_install_e($siteUrl ? $siteUrl . '/admin/login' : '../admin/login'); ?>"><?php echo fp_install_e($siteUrl ? $siteUrl . '/admin/login' : '../admin/login'); ?></a></p>
+                <p style="margin: 0;"><strong><?php echo fp_install_e($t['success_admin_url_label']); ?>：</strong><br><a href="<?php echo fp_install_e($siteUrl ? $siteUrl . '/index.php?fp=admin/login' : '../index.php?fp=admin/login'); ?>"><?php echo fp_install_e($siteUrl ? $siteUrl . '/index.php?fp=admin/login' : '../index.php?fp=admin/login'); ?></a></p>
             </div>
             <div class="actions">
-                <a class="button" href="<?php echo fp_install_e($siteUrl ? $siteUrl . '/admin/login' : '../admin/login'); ?>"><?php echo fp_install_e($t['login_admin']); ?></a>
+                <a class="button" href="<?php echo fp_install_e($siteUrl ? $siteUrl . '/index.php?fp=admin/login' : '../index.php?fp=admin/login'); ?>"><?php echo fp_install_e($t['login_admin']); ?></a>
                 <a class="button secondary" href="<?php echo fp_install_e($siteUrl ?: '../'); ?>"><?php echo fp_install_e($t['visit_home']); ?></a>
             </div>
         </section>

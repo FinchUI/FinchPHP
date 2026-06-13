@@ -37,7 +37,7 @@ abstract class BaseController
 
     protected function redirect(string $url, int $status = 302): Response
     {
-        return (new Response())->redirect($url, $status);
+        return (new Response())->redirect($this->adminUrl($url), $status);
     }
 
     protected function currentUser(): mixed

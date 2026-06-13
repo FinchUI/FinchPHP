@@ -223,7 +223,7 @@ final class SettingAdmin extends BaseController
     {
         $config = self::GROUPS[$group];
         $saved = $this->request->query('saved') === '1'
-            ? '<div style="color:#067647">设置已保存。</div>'
+            ? '<div class="fp-notice-success">设置已保存。</div>'
             : '';
 
         $fields = '';
@@ -234,21 +234,21 @@ final class SettingAdmin extends BaseController
         return '<section class="panel"><h1>系统设置</h1>'
             . $saved
             . $this->tabs($group)
-            . '<form method="post" action="/admin/settings?group=' . $this->escape($group) . '" style="display:grid;gap:12px;max-width:760px">'
+            . '<form method="post" action="/admin/settings?group=' . $this->escape($group) . '" class="fp-form-grid">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . $fields
-            . '<button type="submit" style="width:max-content">保存设置</button>'
+            . '<button type="submit" class="fp-btn-wide">保存设置</button>'
             . '</form>'
             . '</section>';
     }
 
     private function tabs(string $group): string
     {
-        $parts = ['<div class="actions" style="margin-bottom:12px">'];
+        $parts = ['<div class="actions fp-actions-gap-bottom">'];
         foreach (self::GROUPS as $name => $item) {
             $url = '/admin/settings?group=' . rawurlencode($name);
-            $style = $name === $group ? ' style="font-weight:600"' : '';
-            $parts[] = '<a href="' . $this->escape($url) . '"' . $style . '>' . $this->escape($item['label']) . '</a>';
+            $active = $name === $group ? ' fp-tab-active' : '';
+            $parts[] = '<a class="fp-tab-link' . $active . '" href="' . $this->escape($url) . '">' . $this->escape($item['label']) . '</a>';
         }
         $parts[] = '</div>';
 
@@ -264,15 +264,15 @@ final class SettingAdmin extends BaseController
         $meta = self::FIELDS[$key] ?? ['label' => $key, 'type' => 'text'];
         $label = (string) $meta['label'];
         $type = (string) $meta['type'];
-        $help = isset($meta['help']) ? '<div class="muted" style="margin-top:4px">' . $this->escape((string) $meta['help']) . '</div>' : '';
+        $help = isset($meta['help']) ? '<div class="muted fp-help-text">' . $this->escape((string) $meta['help']) . '</div>' : '';
         $error = isset($errors[$key][0])
-            ? '<div style="color:#b42318;margin-top:4px">' . $this->escape($errors[$key][0]) . '</div>'
+            ? '<div class="fp-error-text">' . $this->escape($errors[$key][0]) . '</div>'
             : '';
 
         if ($type === 'checkbox') {
             $checked = (bool) ($settings[$key] ?? false) ? 'checked' : '';
 
-            return '<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="' . $this->escape($key) . '" value="1" ' . $checked . '>'
+            return '<label class="fp-check-row"><input type="checkbox" name="' . $this->escape($key) . '" value="1" ' . $checked . '>'
                 . $this->escape($label)
                 . '</label>'
                 . $help

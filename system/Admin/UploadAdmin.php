@@ -76,17 +76,17 @@ final class UploadAdmin extends BaseController
             $rows = '<tr><td colspan="7" class="muted">' . $this->escape($lang->get('admin.upload.empty')) . '</td></tr>';
         }
 
-        return '<section class="panel"><h1>媒体库</h1>'
+        return '<section class="panel"><h1>' . $this->escape($lang->get('admin.upload.title')) . '</h1>'
             . $saved
             . $errorHtml
             . '<form method="post" action="/admin/uploads/store" enctype="multipart/form-data" class="fp-form-grid fp-form-grid-upload">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-            . '<label>文件<input type="file" name="file" required></label>'
-            . '<label>关联文章 ID（可空）<input type="number" name="post_id" min="1" placeholder="例如 12"></label>'
-            . '<div class="actions"><button type="submit">上传文件</button></div>'
+            . '<label>' . $this->escape($lang->get('admin.upload.file')) . '<input type="file" name="file" required></label>'
+            . '<label>' . $this->escape($lang->get('admin.upload.post_id')) . '<input type="number" name="post_id" min="1" placeholder="例如 12"></label>'
+            . '<div class="actions"><button type="submit">' . $this->escape($lang->get('admin.upload.upload_btn')) . '</button></div>'
             . '</form>'
             . '</section>'
-            . '<section class="panel"><table><thead><tr><th>ID</th><th>预览</th><th>文件</th><th>MIME</th><th>大小(B)</th><th>尺寸</th><th>上传时间</th></tr></thead><tbody>'
+            . '<section class="panel"><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.upload.preview')) . '</th><th>' . $this->escape($lang->get('admin.upload.th_file')) . '</th><th>' . $this->escape($lang->get('admin.upload.th_mime')) . '</th><th>' . $this->escape($lang->get('admin.upload.th_size')) . '</th><th>' . $this->escape($lang->get('admin.upload.th_dimensions')) . '</th><th>' . $this->escape($lang->get('admin.upload.th_created_at')) . '</th></tr></thead><tbody>'
             . $rows
             . '</tbody></table>'
             . $this->pager($pageData)
@@ -98,18 +98,21 @@ final class UploadAdmin extends BaseController
      */
     private function pager(array $pageData): string
     {
+        $lang = $this->app->lang;
         $page = (int) $pageData['page'];
         $lastPage = max(1, (int) $pageData['last_page']);
+        $total = (int) $pageData['total'];
 
         $parts = ['<div class="actions fp-actions-gap-top">'];
         if ($page > 1) {
-            $parts[] = '<a href="/admin/uploads?page=' . ($page - 1) . '">上一页</a>';
+            $parts[] = '<a href="/admin/uploads?page=' . ($page - 1) . '">' . $this->escape($lang->get('admin.common.prev_page')) . '</a>';
         }
 
-        $parts[] = '<span class="muted">第 ' . $page . ' / ' . $lastPage . ' 页，共 ' . (int) $pageData['total'] . ' 条</span>';
+        $pageText = str_replace([':page', ':last', ':total'], [(string)$page, (string)$lastPage, (string)$total], $lang->get('admin.common.page_info'));
+        $parts[] = '<span class="muted">' . $this->escape($pageText) . '</span>';
 
         if ($page < $lastPage) {
-            $parts[] = '<a href="/admin/uploads?page=' . ($page + 1) . '">下一页</a>';
+            $parts[] = '<a href="/admin/uploads?page=' . ($page + 1) . '">' . $this->escape($lang->get('admin.common.next_page')) . '</a>';
         }
 
         $parts[] = '</div>';

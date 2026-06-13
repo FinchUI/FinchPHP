@@ -1286,6 +1286,35 @@ final class Router
             'handler'    => 'Finch\\Admin\\LinkAdmin::search',
         ]);
 
+        // ── 开发模式 (Active) ──
+
+        $this->add('admin_dev_reinstall_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/dev-mode/reinstall',
+            'method'     => 'POST',
+            'middleware'  => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\DevModeAdmin::reinstall',
+        ]);
+
+        $this->add('admin_dev_seed_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/dev-mode/seed',
+            'method'     => 'POST',
+            'middleware'  => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\DevModeAdmin::seed',
+        ]);
+
+        $this->add('admin_dev_clean_active', [
+            'type'       => 'active',
+            'key'        => 'fp',
+            'value'      => 'admin/dev-mode/clean',
+            'method'     => 'POST',
+            'middleware'  => ['auth', 'role:access_admin', 'csrf'],
+            'handler'    => 'Finch\\Admin\\DevModeAdmin::clean',
+        ]);
+
         // ── 主题管理 (Active) ──
 
         $this->add('admin_themes_active', [

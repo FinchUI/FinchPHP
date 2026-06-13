@@ -19,6 +19,7 @@ final class UserAdmin extends BaseController
 
     public function index(): Response
     {
+        $lang = $this->app->lang;
         $page = max(1, (int) $this->request->query('page', 1));
         $q = trim((string) $this->request->query('q', ''));
 
@@ -30,11 +31,12 @@ final class UserAdmin extends BaseController
         $pageData = $query->paginate($page, 20);
         $roleMap = $this->roleMap();
 
-        return $this->html($this->adminShell('用户管理', $this->content($pageData, $roleMap, $q)));
+        return $this->html($this->adminShell($lang->get('admin.user.title'), $this->content($pageData, $roleMap, $q)));
     }
 
     public function save(): Response
     {
+        $lang = $this->app->lang;
         $id = (int) $this->request->post('id', 0);
         if ($id <= 0) {
             return $this->redirect('/admin/users');
@@ -62,7 +64,7 @@ final class UserAdmin extends BaseController
             }
             $pageData = $query->paginate($page, 20);
 
-            return $this->html($this->adminShell('用户管理', $this->content($pageData, $this->roleMap(), $q, $validator->errors())), 422);
+            return $this->html($this->adminShell($lang->get('admin.user.title'), $this->content($pageData, $this->roleMap(), $q, $validator->errors())), 422);
         }
 
         $email = trim((string) $this->request->post('email', ''));
@@ -75,8 +77,8 @@ final class UserAdmin extends BaseController
             }
             $pageData = $query->paginate($page, 20);
 
-            return $this->html($this->adminShell('用户管理', $this->content($pageData, $this->roleMap(), $q, [
-                'email' => ['邮箱已被其他用户占用。'],
+            return $this->html($this->adminShell($lang->get('admin.user.title'), $this->content($pageData, $this->roleMap(), $q, [
+                'email' => [$lang->get('admin.user.email_taken')],
             ])), 422);
         }
 
@@ -121,7 +123,8 @@ final class UserAdmin extends BaseController
      */
     private function content(array $pageData, array $roleMap, string $q, array $errors = []): string
     {
-        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">用户信息已保存。</div>' : '';
+        $lang = $this->app->lang;
+        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">' . $this->escape($lang->get('admin.user.saved')) . '</div>' : '';
 
         $rows = '';
         foreach ($pageData['data'] as $user) {
@@ -145,26 +148,26 @@ final class UserAdmin extends BaseController
                 . '<form method="post" action="' . $this->escape($baseAction) . '" class="fp-form-stack">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
                 . '<input type="hidden" name="id" value="' . $uid . '">'
-                . '<input type="text" name="display_name" value="' . $this->escape((string) ($user['display_name'] ?? '')) . '" placeholder="显示名称">'
-                . '<input type="email" name="email" value="' . $this->escape((string) ($user['email'] ?? '')) . '" placeholder="邮箱">'
+                . '<input type="text" name="display_name" value="' . $this->escape((string) ($user['display_name'] ?? '')) . '" placeholder="' . $this->escape($lang->get('admin.user.display_name')) . '">'
+                . '<input type="email" name="email" value="' . $this->escape((string) ($user['email'] ?? '')) . '" placeholder="' . $this->escape($lang->get('admin.user.email')) . '">'
                 . '<select name="role_id">' . $roleOptions . '</select>'
                 . '<select name="status">'
                 . $this->option('active', 'active', (string) ($user['status'] ?? 'active'))
                 . $this->option('disabled', 'disabled', (string) ($user['status'] ?? 'active'))
                 . $this->option('pending', 'pending', (string) ($user['status'] ?? 'active'))
                 . '</select>'
-                . '<input type="password" name="password" placeholder="留空则不修改密码">'
-                . '<button type="submit">保存</button>'
+                . '<input type="password" name="password" placeholder="' . $this->escape($lang->get('admin.user.password_placeholder')) . '">'
+                . '<button type="submit">' . $this->escape($lang->get('admin.common.save')) . '</button>'
                 . '</form>'
                 . '</td>'
-                . '<td>' . $this->escape((string) ($roleMap[$currentRoleId] ?? '未知角色')) . '</td>'
+                . '<td>' . $this->escape((string) ($roleMap[$currentRoleId] ?? $lang->get('admin.user.unknown_role'))) . '</td>'
                 . '<td>' . $this->escape((string) ($user['status'] ?? '')) . '</td>'
                 . '<td>' . $this->escape((string) ($user['last_login_at'] ?? '')) . '</td>'
                 . '</tr>';
         }
 
         if ($rows === '') {
-            $rows = '<tr><td colspan="6" class="muted">暂无用户</td></tr>';
+            $rows = '<tr><td colspan="6" class="muted">' . $this->escape($lang->get('admin.user.empty')) . '</td></tr>';
         }
 
         $errorList = '';
@@ -175,15 +178,15 @@ final class UserAdmin extends BaseController
             $errorList .= '<div class="fp-error-text">' . $this->escape($field . ': ' . $messages[0]) . '</div>';
         }
 
-        return '<section class="panel"><h1>用户管理</h1>'
+        return '<section class="panel"><h1>' . $this->escape($lang->get('admin.user.title')) . '</h1>'
             . $saved
             . $errorList
             . '<form method="get" action="/admin/users" class="fp-search-form">'
-            . '<input name="q" value="' . $this->escape($q) . '" placeholder="按用户名搜索">'
-            . '<button type="submit">搜索</button>'
+            . '<input name="q" value="' . $this->escape($q) . '" placeholder="' . $this->escape($lang->get('admin.user.search_placeholder')) . '">'
+            . '<button type="submit">' . $this->escape($lang->get('admin.user.search')) . '</button>'
             . '</form>'
             . '</section>'
-            . '<section class="panel"><table><thead><tr><th>ID</th><th>用户名</th><th>编辑</th><th>角色</th><th>状态</th><th>上次登录</th></tr></thead><tbody>'
+            . '<section class="panel"><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.user.th_username')) . '</th><th>' . $this->escape($lang->get('admin.user.th_edit')) . '</th><th>' . $this->escape($lang->get('admin.user.th_role')) . '</th><th>' . $this->escape($lang->get('admin.common.status')) . '</th><th>' . $this->escape($lang->get('admin.user.th_last_login')) . '</th></tr></thead><tbody>'
             . $rows
             . '</tbody></table>'
             . $this->pager($pageData, $q)
@@ -195,18 +198,22 @@ final class UserAdmin extends BaseController
      */
     private function pager(array $pageData, string $q): string
     {
+        $lang = $this->app->lang;
         $page = (int) $pageData['page'];
         $lastPage = max(1, (int) $pageData['last_page']);
+        $total = (int) $pageData['total'];
+
+        $pageText = str_replace([':page', ':last', ':total'], [(string) $page, (string) $lastPage, (string) $total], $lang->get('admin.common.page_info'));
 
         $parts = ['<div class="actions fp-actions-gap-top">'];
         if ($page > 1) {
-            $parts[] = '<a href="' . $this->pagerUrl($page - 1, $q) . '">上一页</a>';
+            $parts[] = '<a href="' . $this->pagerUrl($page - 1, $q) . '">' . $this->escape($lang->get('admin.common.prev_page')) . '</a>';
         }
 
-        $parts[] = '<span class="muted">第 ' . $page . ' / ' . $lastPage . ' 页，共 ' . (int) $pageData['total'] . ' 条</span>';
+        $parts[] = '<span class="muted">' . $this->escape($pageText) . '</span>';
 
         if ($page < $lastPage) {
-            $parts[] = '<a href="' . $this->pagerUrl($page + 1, $q) . '">下一页</a>';
+            $parts[] = '<a href="' . $this->pagerUrl($page + 1, $q) . '">' . $this->escape($lang->get('admin.common.next_page')) . '</a>';
         }
 
         $parts[] = '</div>';
@@ -227,6 +234,7 @@ final class UserAdmin extends BaseController
     /** @return array<int,string> */
     private function roleMap(): array
     {
+        $lang = $this->app->lang;
         $rows = Role::query()->orderBy('id')->get();
         $map = [];
         foreach ($rows as $row) {
@@ -234,7 +242,7 @@ final class UserAdmin extends BaseController
             if ($id <= 0) {
                 continue;
             }
-            $map[$id] = (string) ($row['name'] ?? ('角色' . $id));
+            $map[$id] = (string) ($row['name'] ?? ($lang->get('admin.user.role_prefix') . $id));
         }
 
         return $map;

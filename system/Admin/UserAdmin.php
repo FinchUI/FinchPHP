@@ -50,7 +50,7 @@ final class UserAdmin extends BaseController
             'email' => 'required|email|max:100',
             'status' => 'required|in:active,disabled,pending',
             'role_id' => 'required|numeric|min:1',
-            'password' => 'max:255',
+            'password' => ['max:255', 'min:8', 'regex:/[A-Za-z]/', 'regex:/[0-9]/'],
         ]);
 
         if ($validator->fails()) {

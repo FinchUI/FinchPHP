@@ -136,6 +136,15 @@ final class App
             $this->services['errorHandler']->setDebug((bool) $debugMode);
         }
 
+        // 自动执行未运行的迁移（系统升级时新加入的迁移文件）
+        try {
+            $migrationsPath = FP_SYSTEM_DIR . '/Database/Migrations';
+            $migrator = new \Finch\Database\Migrator($db, $migrationsPath);
+            $migrator->run();
+        } catch (\Throwable $e) {
+            $logger->warning('自动迁移失败：' . $e->getMessage());
+        }
+
         $request = $this->services['request'];
         $sessionConfig = array_merge($config->section('cookie'), $config->section('session'));
         $session = new Session($sessionConfig, $request);

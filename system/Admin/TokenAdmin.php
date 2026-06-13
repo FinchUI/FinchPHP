@@ -43,6 +43,7 @@ final class TokenAdmin extends BaseController
 
     public function issue(): Response
     {
+        $lang = $this->app->lang;
         $validator = $this->validate([
             'user_id' => 'required|numeric|min:1',
             'name' => 'required|max:100',
@@ -54,7 +55,7 @@ final class TokenAdmin extends BaseController
             $page = max(1, (int) $this->request->query('page', 1));
             $pageData = ApiToken::query()->orderBy('id', 'DESC')->paginate($page, 20);
 
-            return $this->html($this->adminShell('API Token 管理', $this->content($pageData, $this->userMap($pageData), $validator->errors())), 422);
+            return $this->html($this->adminShell($lang->get('admin.token.title'), $this->content($pageData, $this->userMap($pageData), $validator->errors())), 422);
         }
 
         $userId = (int) $this->request->post('user_id', 0);
@@ -106,6 +107,7 @@ final class TokenAdmin extends BaseController
      */
     private function content(array $pageData, array $users, array $errors = []): string
     {
+        $lang = $this->app->lang;
         $issued = $this->request->query('issued') === '1';
         $revoked = $this->request->query('revoked') === '1';
 
@@ -114,7 +116,7 @@ final class TokenAdmin extends BaseController
             $plain = (string) $this->app->session->get('issued_plain_token', '');
             $tokenId = (int) $this->app->session->get('issued_token_id', 0);
             if ($plain !== '' && $tokenId > 0) {
-                $notice = '<div class="fp-notice-success">Token 已签发（ID ' . $tokenId . '），明文仅显示一次：</div>'
+                $notice = '<div class="fp-notice-success">' . $this->escape($lang->get('admin.token.issued')) . '（ID ' . $tokenId . '），' . $this->escape($lang->get('admin.token.plain_once')) . '</div>'
                     . '<div class="fp-token-plain">' . $this->escape($plain) . '</div>';
             }
             $this->app->session->forget('issued_plain_token');
@@ -122,7 +124,7 @@ final class TokenAdmin extends BaseController
         }
 
         if ($revoked) {
-            $notice .= '<div class="fp-notice-success fp-notice-gap-top">Token 已撤销。</div>';
+            $notice .= '<div class="fp-notice-success fp-notice-gap-top">' . $this->escape($lang->get('admin.token.revoked')) . '</div>';
         }
 
         foreach ($errors as $field => $messages) {
@@ -138,7 +140,7 @@ final class TokenAdmin extends BaseController
             $userId = (int) ($row['user_id'] ?? 0);
             $rows .= '<tr>'
                 . '<td>' . $id . '</td>'
-                . '<td>' . $this->escape((string) ($users[$userId] ?? ('用户#' . $userId))) . '</td>'
+                . '<td>' . $this->escape((string) ($users[$userId] ?? ($lang->get('admin.token.user_prefix') . $userId))) . '</td>'
                 . '<td>' . $this->escape((string) ($row['name'] ?? '')) . '</td>'
                 . '<td><code>' . $this->escape((string) ($row['abilities'] ?? '[]')) . '</code></td>'
                 . '<td>' . $this->escape((string) ($row['expires_at'] ?? '')) . '</td>'
@@ -147,14 +149,14 @@ final class TokenAdmin extends BaseController
                 . '<form method="post" action="/admin/tokens/revoke?page=' . (int) $pageData['page'] . '" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
                 . '<input type="hidden" name="id" value="' . $id . '">'
-                . '<button type="submit" class="secondary">撤销</button>'
+                . '<button type="submit" class="secondary">' . $this->escape($lang->get('admin.token.revoke')) . '</button>'
                 . '</form>'
                 . '</td>'
                 . '</tr>';
         }
 
         if ($rows === '') {
-            $rows = '<tr><td colspan="7" class="muted">暂无 Token</td></tr>';
+            $rows = '<tr><td colspan="7" class="muted">' . $this->escape($lang->get('admin.token.empty')) . '</td></tr>';
         }
 
         $userOptions = '';
@@ -164,21 +166,21 @@ final class TokenAdmin extends BaseController
                 continue;
             }
 
-            $userOptions .= '<option value="' . $uid . '">' . $this->escape((string) ($u['username'] ?? ('用户#' . $uid))) . '</option>';
+            $userOptions .= '<option value="' . $uid . '">' . $this->escape((string) ($u['username'] ?? ($lang->get('admin.token.user_prefix') . $uid))) . '</option>';
         }
 
-        return '<section class="panel"><h1>API Token 管理</h1>'
+        return '<section class="panel"><h1>' . $this->escape($lang->get('admin.token.title')) . '</h1>'
             . $notice
             . '<form method="post" action="/admin/tokens/issue" class="fp-form-grid fp-form-grid-token">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
-            . '<label>用户<select name="user_id">' . $userOptions . '</select></label>'
-            . '<label>名称<input name="name" placeholder="例如：miniapp"></label>'
-            . '<label>能力（逗号分隔）<input name="abilities" value="*" placeholder="posts:read,uploads:create"></label>'
-            . '<label>过期天数（0=不过期）<input type="number" name="expires_days" min="0" max="3650" value="0"></label>'
-            . '<button type="submit">签发 Token</button>'
+            . '<label>' . $this->escape($lang->get('admin.token.th_user')) . '<select name="user_id">' . $userOptions . '</select></label>'
+            . '<label>' . $this->escape($lang->get('admin.token.th_name')) . '<input name="name" placeholder="例如：miniapp"></label>'
+            . '<label>' . $this->escape($lang->get('admin.token.abilities')) . '<input name="abilities" value="*" placeholder="posts:read,uploads:create"></label>'
+            . '<label>' . $this->escape($lang->get('admin.token.expires_days')) . '<input type="number" name="expires_days" min="0" max="3650" value="0"></label>'
+            . '<button type="submit">' . $this->escape($lang->get('admin.token.issue')) . '</button>'
             . '</form>'
             . '</section>'
-            . '<section class="panel"><table><thead><tr><th>ID</th><th>用户</th><th>名称</th><th>能力</th><th>过期</th><th>最近使用</th><th>操作</th></tr></thead><tbody>'
+            . '<section class="panel"><table><thead><tr><th>ID</th><th>' . $this->escape($lang->get('admin.token.th_user')) . '</th><th>' . $this->escape($lang->get('admin.token.th_name')) . '</th><th>' . $this->escape($lang->get('admin.token.th_abilities')) . '</th><th>' . $this->escape($lang->get('admin.token.th_expires')) . '</th><th>' . $this->escape($lang->get('admin.token.th_last_used')) . '</th><th>操作</th></tr></thead><tbody>'
             . $rows
             . '</tbody></table>'
             . $this->pager($pageData)
@@ -190,18 +192,21 @@ final class TokenAdmin extends BaseController
      */
     private function pager(array $pageData): string
     {
+        $lang = $this->app->lang;
         $page = (int) $pageData['page'];
         $lastPage = max(1, (int) $pageData['last_page']);
+        $total = (int) $pageData['total'];
 
         $parts = ['<div class="actions fp-actions-gap-top">'];
         if ($page > 1) {
-            $parts[] = '<a href="/admin/tokens?page=' . ($page - 1) . '">上一页</a>';
+            $parts[] = '<a href="/admin/tokens?page=' . ($page - 1) . '">' . $this->escape($lang->get('admin.common.prev_page')) . '</a>';
         }
 
-        $parts[] = '<span class="muted">第 ' . $page . ' / ' . $lastPage . ' 页，共 ' . (int) $pageData['total'] . ' 条</span>';
+        $pageText = str_replace([':page', ':last', ':total'], [(string)$page, (string)$lastPage, (string)$total], $lang->get('admin.common.page_info'));
+        $parts[] = '<span class="muted">' . $this->escape($pageText) . '</span>';
 
         if ($page < $lastPage) {
-            $parts[] = '<a href="/admin/tokens?page=' . ($page + 1) . '">下一页</a>';
+            $parts[] = '<a href="/admin/tokens?page=' . ($page + 1) . '">' . $this->escape($lang->get('admin.common.next_page')) . '</a>';
         }
 
         $parts[] = '</div>';
@@ -215,6 +220,7 @@ final class TokenAdmin extends BaseController
      */
     private function userMap(array $pageData): array
     {
+        $lang = $this->app->lang;
         $map = [];
         foreach ($pageData['data'] as $row) {
             $uid = is_numeric($row['user_id'] ?? null) ? (int) $row['user_id'] : 0;
@@ -223,7 +229,7 @@ final class TokenAdmin extends BaseController
             }
 
             $user = User::find($uid);
-            $map[$uid] = $user instanceof User ? (string) ($user->username ?? ('用户#' . $uid)) : ('用户#' . $uid);
+            $map[$uid] = $user instanceof User ? (string) ($user->username ?? ($lang->get('admin.token.user_prefix') . $uid)) : ($lang->get('admin.token.user_prefix') . $uid);
         }
 
         return $map;

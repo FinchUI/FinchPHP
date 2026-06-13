@@ -21,13 +21,15 @@ final class UploadAdmin extends BaseController
 
     public function index(): Response
     {
+        $lang = $this->app->lang;
         $page = max(1, (int) $this->request->query('page', 1));
 
-        return $this->html($this->adminShell('媒体库', $this->content($this->service()->page($page, 20))));
+        return $this->html($this->adminShell($lang->get('admin.upload.title'), $this->content($this->service()->page($page, 20))));
     }
 
     public function store(): Response
     {
+        $lang = $this->app->lang;
         $postIdInput = $this->request->post('post_id');
         $postId = is_numeric($postIdInput) ? (int) $postIdInput : null;
         $userId = isset($this->app->user) && $this->app->user !== null ? (int) $this->app->user->id : null;
@@ -37,7 +39,7 @@ final class UploadAdmin extends BaseController
         } catch (RuntimeException $e) {
             $data = $this->service()->page(1, 20);
 
-            return $this->html($this->adminShell('媒体库', $this->content($data, $e->getMessage())), 422);
+            return $this->html($this->adminShell($lang->get('admin.upload.title'), $this->content($data, $e->getMessage())), 422);
         }
 
         return $this->redirect('/admin/uploads?saved=1');
@@ -48,7 +50,8 @@ final class UploadAdmin extends BaseController
      */
     private function content(array $pageData, string $error = ''): string
     {
-        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">上传成功。</div>' : '';
+        $lang = $this->app->lang;
+        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">' . $this->escape($lang->get('admin.message.upload_success')) . '</div>' : '';
         $errorHtml = $error !== '' ? '<div class="fp-error-text">' . $this->escape($error) . '</div>' : '';
 
         $rows = '';
@@ -70,7 +73,7 @@ final class UploadAdmin extends BaseController
         }
 
         if ($rows === '') {
-            $rows = '<tr><td colspan="7" class="muted">暂无上传文件</td></tr>';
+            $rows = '<tr><td colspan="7" class="muted">' . $this->escape($lang->get('admin.upload.empty')) . '</td></tr>';
         }
 
         return '<section class="panel"><h1>媒体库</h1>'

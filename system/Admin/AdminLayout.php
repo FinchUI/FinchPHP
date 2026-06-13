@@ -38,11 +38,11 @@ trait AdminLayout
             . '<div class="fp-admin-brand">'
             . '<div class="fp-admin-brand-mark" aria-hidden="true">FP</div>'
             . '<div class="fp-admin-brand-text">'
-            . '<strong>Finch Admin</strong>'
+            . '<strong>' . $this->escape($this->app->lang->get('admin.topbar.brand')) . '</strong>'
             . '<small>' . $this->escape($siteName) . '</small>'
             . '</div>'
             . '</div>'
-            . '<nav class="fp-admin-nav" aria-label="后台主菜单">';
+            . '<nav class="fp-admin-nav" aria-label="' . $this->escape($this->app->lang->get('admin.topbar.nav_label')) . '">';
 
         foreach ($this->adminMenuItems() as $item) {
             $active = $this->isMenuActive($item['path']) ? ' active' : '';

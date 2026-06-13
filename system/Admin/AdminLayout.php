@@ -115,7 +115,7 @@ trait AdminLayout
     {
         $links = '';
         foreach ($css as $href) {
-            $links .= '<link rel="stylesheet" href="' . $this->escape($href) . '">';
+            $links .= '<link rel="stylesheet" href="' . $this->escape($this->assetUrlWithVersion($href)) . '">';
         }
 
         return $links;
@@ -126,7 +126,7 @@ trait AdminLayout
     {
         $tags = '';
         foreach ($js as $src) {
-            $tags .= '<script defer src="' . $this->escape($src) . '"></script>';
+            $tags .= '<script defer src="' . $this->escape($this->assetUrlWithVersion($src)) . '"></script>';
         }
 
         return $tags;
@@ -135,13 +135,30 @@ trait AdminLayout
     /** @return array{css: list<string>, js: list<string>} */
     private function resolveAdminStyleAssets(): array
     {
-        $baseCss = '/system/assets/css/admin.css';
+        $fallbackCss = [
+            '/content/plugins/tabler/assets/css/tabler.min.css',
+            '/content/plugins/tabler/assets/css/tabler-icons.min.css',
+            '/content/plugins/tabler/assets/css/admin.css',
+        ];
+        $fallbackJs = [
+            '/content/plugins/tabler/assets/js/tabler.min.js',
+            '/content/plugins/tabler/assets/js/admin.js',
+        ];
+
         if (isset($this->app->asset)) {
-            $baseCss = $this->app->asset->systemAsset('css/admin.css');
+            $fallbackCss = [
+                $this->app->asset->pluginAsset('tabler', 'css/tabler.min.css'),
+                $this->app->asset->pluginAsset('tabler', 'css/tabler-icons.min.css'),
+                $this->app->asset->pluginAsset('tabler', 'css/admin.css'),
+            ];
+            $fallbackJs = [
+                $this->app->asset->pluginAsset('tabler', 'js/tabler.min.js'),
+                $this->app->asset->pluginAsset('tabler', 'js/admin.js'),
+            ];
         }
 
-        $css = [];
-        $js = [];
+        $css = $fallbackCss;
+        $js = $fallbackJs;
 
         $provider = $this->app->hooks->filter('fp_provider_admin_style_tabler_resolve', null, [
             'request' => $this->request,
@@ -149,11 +166,17 @@ trait AdminLayout
         ]);
 
         if (is_array($provider)) {
-            $css = $this->normalizeAssetList($provider['css'] ?? []);
-            $js = $this->normalizeAssetList($provider['js'] ?? []);
-        }
+            $providedCss = $this->normalizeAssetList($provider['css'] ?? []);
+            $providedJs = $this->normalizeAssetList($provider['js'] ?? []);
 
-        $css[] = $baseCss;
+            if ($providedCss !== []) {
+                $css = $providedCss;
+            }
+
+            if ($providedJs !== []) {
+                $js = $providedJs;
+            }
+        }
 
         return [
             'css' => array_values(array_unique($css)),
@@ -227,6 +250,71 @@ trait AdminLayout
         return $dynamic;
     }
 
+    private function assetUrlWithVersion(string $url): string
+    {
+        $parts = parse_url($url);
+        if (!is_array($parts)) {
+            return $url;
+        }
+
+        $path = $parts['path'] ?? null;
+        if (!is_string($path) || $path === '' || !str_starts_with($path, '/')) {
+            return $url;
+        }
+
+        $file = FP_PATH . $path;
+        if (!is_file($file)) {
+            return $url;
+        }
+
+        $query = [];
+        if (isset($parts['query']) && is_string($parts['query']) && $parts['query'] !== '') {
+            parse_str($parts['query'], $query);
+        }
+
+        $query['_v'] = (string) filemtime($file);
+        $parts['query'] = http_build_query($query);
+
+        return $this->buildUrlFromParts($parts);
+    }
+
+    /** @param array<string, mixed> $parts */
+    private function buildUrlFromParts(array $parts): string
+    {
+        $url = '';
+        if (isset($parts['scheme']) && is_string($parts['scheme']) && $parts['scheme'] !== '') {
+            $url .= $parts['scheme'] . '://';
+        }
+
+        if (isset($parts['user']) && is_string($parts['user']) && $parts['user'] !== '') {
+            $url .= $parts['user'];
+            if (isset($parts['pass']) && is_string($parts['pass']) && $parts['pass'] !== '') {
+                $url .= ':' . $parts['pass'];
+            }
+            $url .= '@';
+        }
+
+        if (isset($parts['host']) && is_string($parts['host']) && $parts['host'] !== '') {
+            $url .= $parts['host'];
+        }
+
+        if (isset($parts['port']) && is_int($parts['port'])) {
+            $url .= ':' . $parts['port'];
+        }
+
+        $url .= (string) ($parts['path'] ?? '');
+
+        if (isset($parts['query']) && is_string($parts['query']) && $parts['query'] !== '') {
+            $url .= '?' . $parts['query'];
+        }
+
+        if (isset($parts['fragment']) && is_string($parts['fragment']) && $parts['fragment'] !== '') {
+            $url .= '#' . $parts['fragment'];
+        }
+
+        return $url;
+    }
+
     /** @param array<string, list<string>> $errors */
     private function fieldError(string $name, array $errors): string
     {
@@ -234,6 +322,6 @@ trait AdminLayout
             return '';
         }
 
-        return '<div style="color:#b42318;margin-top:4px">' . $this->escape($errors[$name][0]) . '</div>';
+        return '<div class="fp-error-text">' . $this->escape($errors[$name][0]) . '</div>';
     }
 }

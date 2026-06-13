@@ -32,7 +32,7 @@ final class PostAdmin extends BaseController
                 . '<td>' . $this->escape((string) ($post['updated_at'] ?? '')) . '</td>'
                 . '<td class="actions">'
                 . '<a href="/admin/posts/edit?id=' . (int) $post['id'] . '">编辑</a>'
-                . '<form method="post" action="/admin/posts/' . ($status === 'trash' ? 'restore' : 'trash') . '" style="display:inline">'
+                . '<form method="post" action="/admin/posts/' . ($status === 'trash' ? 'restore' : 'trash') . '" class="fp-inline-form">'
                 . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
                 . '<input type="hidden" name="id" value="' . (int) $post['id'] . '">'
                 . '<button type="submit" class="secondary">' . ($status === 'trash' ? '恢复' : '回收站') . '</button>'
@@ -149,7 +149,7 @@ final class PostAdmin extends BaseController
         $selectedIds = array_map('intval', is_array($post['category_ids'] ?? null) ? $post['category_ids'] : []);
         foreach ($categories as $category) {
             $cid = (int) $category['id'];
-            $categoryOptions .= '<label style="display:flex;gap:6px;align-items:center">'
+            $categoryOptions .= '<label class="fp-check-row">'
                 . '<input type="checkbox" name="category_ids[]" value="' . $cid . '" ' . (in_array($cid, $selectedIds, true) ? 'checked' : '') . '>'
                 . $this->escape((string) $category['name'])
                 . '</label>';
@@ -158,10 +158,10 @@ final class PostAdmin extends BaseController
         $tags = is_array($post['tag_names'] ?? null)
             ? implode(', ', $post['tag_names'])
             : (string) ($post['tags'] ?? '');
-        $saved = $this->request->query('saved') === '1' ? '<div style="color:#067647">保存成功。</div>' : '';
+        $saved = $this->request->query('saved') === '1' ? '<div class="fp-notice-success">保存成功。</div>' : '';
 
         return '<section class="panel"><h1>' . ($id > 0 ? '编辑文章' : '新建文章') . '</h1>' . $saved
-            . '<form method="post" action="' . $this->escape($action) . '" style="display:grid;gap:12px">'
+            . '<form method="post" action="' . $this->escape($action) . '" class="fp-form-grid">'
             . '<input type="hidden" name="_token" value="' . $this->escape($this->app->session->csrfToken()) . '">'
             . ($id > 0 ? '<input type="hidden" name="id" value="' . $id . '">' : '')
             . '<label>标题<input name="title" value="' . $this->escape((string) ($post['title'] ?? '')) . '">' . $this->fieldError('title', $errors) . '</label>'

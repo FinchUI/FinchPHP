@@ -3,7 +3,15 @@
 declare(strict_types=1);
 
 return static function (\Finch\App $app, array $meta = []): void {
-    $app->hooks->add('fp_provider_admin_style_tabler_resolve', static function (mixed $value, array $payload = []): mixed {
+    $asset = static function (string $path) use ($app): string {
+        if (isset($app->asset)) {
+            return $app->asset->pluginAsset('tabler', ltrim($path, '/'));
+        }
+
+        return '/content/plugins/tabler/assets/' . ltrim($path, '/');
+    };
+
+    $app->hooks->add('fp_provider_admin_style_tabler_resolve', static function (mixed $value, array $payload = []) use ($asset): mixed {
         if ($value !== null) {
             return $value;
         }
@@ -12,11 +20,13 @@ return static function (\Finch\App $app, array $meta = []): void {
             'ok' => true,
             'provider' => 'tabler',
             'css' => [
-                'https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css',
-                'https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.40.0/tabler-icons.min.css',
+                $asset('css/tabler.min.css'),
+                $asset('css/tabler-icons.min.css'),
+                $asset('css/admin.css'),
             ],
             'js' => [
-                'https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js',
+                $asset('js/tabler.min.js'),
+                $asset('js/admin.js'),
             ],
             'message' => 'tabler style provider ready',
         ];
